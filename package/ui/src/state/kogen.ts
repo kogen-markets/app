@@ -1,14 +1,19 @@
 import { atom, atomFamily } from "recoil";
-import { localStorageEffect, LOCAL_STORAGE_SELECTED_DENS } from "./effects";
+import {
+  localStorageEffect,
+  LOCAL_STORAGE_SELECTED_DENS,
+  LOCAL_STORAGE_DARK_MODE,
+} from "./effects";
 
 export const densInitializedState = atom({
   key: "densInitializedState",
   default: false,
 });
 
-export const darkModeState = atom({
+export const darkModeState = atom<"dark" | "light" | "auto">({
   key: "darkModeState",
-  default: true,
+  default: "dark",
+  effects: [localStorageEffect(LOCAL_STORAGE_DARK_MODE)],
 });
 
 export const selectedDensState = atomFamily<string | null, string | null>({

@@ -4,18 +4,23 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  Typography,
+  alpha,
 } from "@mui/material";
 import { Link as MuiLink } from "@mui/material";
 import { Fragment } from "react";
 
-import MarkEmailUnreadIcon from "@mui/icons-material/MarkEmailUnread";
+import AltRouteIcon from "@mui/icons-material/AltRoute";
+import QuizIcon from "@mui/icons-material/Quiz";
 
 import { Link, useLocation } from "react-router-dom";
+import ThemeSelector from "../../components/theme-selector";
+import { useTheme } from "@emotion/react";
 
 export default function Menu() {
   const location = useLocation();
   const currentPathname: string = location.pathname;
+  //@ts-ignore
+  const isDarkTheme = useTheme().palette.mode === "dark";
 
   function getPathnameElements(n: number): string {
     return currentPathname
@@ -26,48 +31,96 @@ export default function Menu() {
 
   return (
     <Fragment>
-      <Box>
-        <MuiLink
-          to="/"
-          color={"secondary"}
-          sx={{
-            textDecoration: "none",
-            display: "flex",
-            justifyContent: "center",
-            py: 3,
-          }}
-          component={Link}
-        >
-          <img
-            src="/logo-small.png"
-            width="66%"
-            style={{ margin: "40px auto" }}
-          />
-        </MuiLink>
-      </Box>
-      <List
-        sx={{ width: "100%", maxWidth: 360 }}
-        component="nav"
-        aria-labelledby="notification-type"
-        // subheader={
-        //   <ListSubheader component="div" sx={{ background: "none" }}>
-        //     Menu section
-        //   </ListSubheader>
-        // }
+      <Box
+        sx={{
+          height: "100%",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
+          pb: 1,
+        }}
       >
-        <List component="div" disablePadding>
-          <ListItemButton
-            component={Link}
-            to={"/"}
-            selected={getPathnameElements(2) === "/"}
+        <Box>
+          <Box>
+            <MuiLink
+              to="/"
+              color={"secondary"}
+              sx={{
+                textDecoration: "none",
+                display: "flex",
+                justifyContent: "center",
+                py: 3,
+              }}
+              component={Link}
+            >
+              {isDarkTheme ? (
+                <img
+                  src="/logo-small-dark.png"
+                  width="66%"
+                  style={{ margin: "40px auto" }}
+                />
+              ) : (
+                <img
+                  src="/logo-small-light.png"
+                  width="66%"
+                  style={{ margin: "40px auto" }}
+                />
+              )}
+            </MuiLink>
+          </Box>
+          <List
+            sx={{ width: "100%", maxWidth: 360 }}
+            component="nav"
+            aria-labelledby="options"
           >
-            <ListItemIcon>
-              <MarkEmailUnreadIcon />
-            </ListItemIcon>
-            <ListItemText primary="Menu item" />
-          </ListItemButton>
-        </List>
-      </List>
+            <List
+              component="div"
+              sx={{
+                "&& .Mui-selected": {
+                  backgroundColor: (theme) =>
+                    alpha(theme.palette.secondary.main, 0.2),
+                },
+                "& .MuiListItemButton-root": {
+                  mx: 2,
+                  my: 1,
+                  borderRadius: "5px",
+                  border: (theme) =>
+                    "1px solid " + alpha(theme.palette.secondary.light, 0.2),
+                  "&:hover": {
+                    backgroundColor: (theme) =>
+                      alpha(theme.palette.secondary.main, 0.2) + "!important",
+                  },
+                },
+              }}
+            >
+              <ListItemButton
+                component={Link}
+                to={"/options"}
+                selected={getPathnameElements(1) === "/options"}
+              >
+                <ListItemIcon>
+                  <AltRouteIcon />
+                </ListItemIcon>
+                <ListItemText primary="Options" />
+              </ListItemButton>
+              <ListItemButton
+                component={Link}
+                to={"/help"}
+                disabled
+                selected={getPathnameElements(1) === "/help"}
+              >
+                <ListItemIcon>
+                  <QuizIcon />
+                </ListItemIcon>
+                <ListItemText primary="Help" />
+              </ListItemButton>
+            </List>
+          </List>
+        </Box>
+        <Box sx={{ mx: "auto" }}>
+          <ThemeSelector />
+        </Box>
+      </Box>
     </Fragment>
   );
 }

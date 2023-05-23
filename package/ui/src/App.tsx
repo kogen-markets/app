@@ -1,12 +1,18 @@
-import { lazy } from "react";
+import { Suspense, lazy } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import {
+  createBrowserRouter,
+  Navigate,
+  Outlet,
+  RouterProvider,
+} from "react-router-dom";
 import { Provider as RollbarProvider, ErrorBoundary } from "@rollbar/react";
 import { RecoilRoot } from "recoil";
 import KeplrWatcher from "./components/keplr-watcher";
 import AppLayout from "./layout/app";
 import rollbar from "./lib/rollbar";
 import Error from "./pages/error";
+import Loading from "./components/loading";
 
 const IndexPage = lazy(() => import("./pages/index"));
 
@@ -19,7 +25,21 @@ const router = createBrowserRouter([
         <Error />
       </div>
     ),
-    children: [{ index: true, element: <IndexPage /> }],
+    children: [
+      { index: true, element: <Navigate to="/options" replace /> },
+      {
+        path: "options",
+        element: (
+          <Suspense fallback={<Loading />}>
+            <Outlet />
+          </Suspense>
+        ),
+        children: [
+          { index: true, element: <Navigate to="call" replace /> },
+          { path: "call", element: <IndexPage /> },
+        ],
+      },
+    ],
   },
 ]);
 

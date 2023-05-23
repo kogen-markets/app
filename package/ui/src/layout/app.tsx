@@ -21,9 +21,11 @@ import { darkModeState } from "../state/kogen";
 export default function App() {
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
   const darkMode = useRecoilValue(darkModeState);
+  const useDarkTheme =
+    darkMode === "auto" ? prefersDarkMode : darkMode === "dark";
 
   return (
-    <ThemeProvider theme={prefersDarkMode || darkMode ? darkTheme : lightTheme}>
+    <ThemeProvider theme={useDarkTheme ? darkTheme : lightTheme}>
       <Helmet>
         <title>Kogen Markets</title>
       </Helmet>
