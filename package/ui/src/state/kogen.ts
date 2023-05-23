@@ -10,6 +10,11 @@ export const densInitializedState = atom({
   default: false,
 });
 
+export const drawerOpenedState = atom({
+  key: "drawerOpenedState",
+  default: false,
+});
+
 export const darkModeState = atom<"dark" | "light" | "auto">({
   key: "darkModeState",
   default: "dark",

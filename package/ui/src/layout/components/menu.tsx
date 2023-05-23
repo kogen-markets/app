@@ -69,7 +69,7 @@ export default function Menu() {
             </MuiLink>
           </Box>
           <List
-            sx={{ width: "100%", maxWidth: 360 }}
+            sx={{ width: "100%" }}
             component="nav"
             aria-labelledby="options"
           >

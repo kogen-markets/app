@@ -6,6 +6,8 @@ import {
   ThemeProvider,
   useMediaQuery,
   alpha,
+  Drawer,
+  IconButton,
 } from "@mui/material";
 import { Container } from "@mui/system";
 import { Helmet } from "react-helmet";
@@ -15,12 +17,14 @@ import Header from "./components/header";
 import Footer from "./components/footer";
 import Menu from "./components/menu";
 import Snackbar from "../components/snackbar";
-import { useRecoilValue } from "recoil";
-import { darkModeState } from "../state/kogen";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { darkModeState, drawerOpenedState } from "../state/kogen";
+import CloseIcon from "@mui/icons-material/Close";
 
 export default function App() {
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
   const darkMode = useRecoilValue(darkModeState);
+  const [drawerOpened, setDrawerOpened] = useRecoilState(drawerOpenedState);
   const useDarkTheme =
     darkMode === "auto" ? prefersDarkMode : darkMode === "dark";
 
@@ -32,10 +36,23 @@ export default function App() {
       <Snackbar />
       <CssBaseline />
 
+      <Drawer open={drawerOpened} onClose={() => setDrawerOpened(false)}>
+        <Box sx={{ textAlign: "right", p: 3 }}>
+          <IconButton
+            aria-label="delete"
+            onClick={() => setDrawerOpened(false)}
+          >
+            <CloseIcon fontSize="inherit" />
+          </IconButton>
+        </Box>
+        <Menu />
+      </Drawer>
+
       <Box sx={{}}>
         <Box
           sx={{
-            width: "min(300px,30%)",
+            width: { xs: 0, sm: "min(300px,30%)" },
+            display: { xs: "none", sm: "block" },
             position: "fixed",
             height: "100vh",
           }}
@@ -44,7 +61,7 @@ export default function App() {
         </Box>
         <Box
           sx={{
-            ml: "min(300px,30%)",
+            ml: { xs: 0, sm: "min(300px,30%)" },
             height: "500px",
             minHeight: "100vh",
             p: 0,
