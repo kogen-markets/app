@@ -1,0 +1,10 @@
+encryptionsalt: v1:gjpNoGNup/4=:v1:4mGZd8Jezul/Qebk:95ggjQTRg9a7D6cKEjSVw/A3dqAsdA==
+config:
+  aws:region: eu-central-1
+  backend:API_DOMAIN: api.dev.kogen.janfabian.cz
+  backend:ROUTE53_ZONE_NAME: janfabian.cz
+  landing:API_DOMAIN: dev.kogen.janfabian.cz
+  landing:ROUTE53_ZONE_NAME: janfabian.cz
+  pulumi:env_files: []
+  webapp:API_DOMAIN: app.dev.kogen.janfabian.cz
+  webapp:ROUTE53_ZONE_NAME: janfabian.cz

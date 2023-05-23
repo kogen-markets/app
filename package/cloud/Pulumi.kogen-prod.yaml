@@ -1,0 +1,16 @@
+encryptionsalt: v1:CW9kczZXTBU=:v1:1gB+5xxtCs6svOli:L0f4+8wtXGUyIJD18VsJTiVl8QfRJw==
+config:
+  aws:region: eu-central-1
+  backend:API_DOMAIN: api.kogen.janfabian.cz
+  backend:ROUTE53_ZONE_NAME: janfabian.cz
+  landing:API_DOMAIN: kogen.janfabian.cz
+  landing:ROUTE53_ZONE_NAME: janfabian.cz
+  injective:rpcs:
+    [
+      "https://k8s.global.mainnet.tm.injective.network/",
+      "https://rpc.injective.posthuman.digital/",
+      "https://injective-rpc.bharvest.io/",
+    ]
+  pulumi:env_files: []
+  webapp:API_DOMAIN: app.kogen.janfabian.cz
+  webapp:ROUTE53_ZONE_NAME: janfabian.cz

@@ -1,0 +1,21 @@
+{
+    "name": "@kogen/kogen-cloud",
+    "main": "index.ts",
+    "devDependencies": {
+        "@types/node": "18",
+        "@typescript-eslint/eslint-plugin": "5.59.2",
+        "@typescript-eslint/parser": "5.59.2",
+        "eslint": "8.40.0",
+        "eslint-config-prettier": "8.8.0",
+        "eslint-plugin-prettier": "4.2.1",
+        "prettier": "2.8.8",
+        "typescript": "5.0.4"
+    },
+    "dependencies": {
+        "@pulumi/aws": "5.40.0",
+        "@pulumi/aws-native": "0.60.0",
+        "@pulumi/awsx": "1.0.2",
+        "@pulumi/pulumi": "3.66.0",
+        "esbuild": "0.17.18"
+    }
+}
