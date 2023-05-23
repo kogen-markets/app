@@ -14,7 +14,7 @@ import rollbar from "./lib/rollbar";
 import Error from "./pages/error";
 import Loading from "./components/loading";
 
-const IndexPage = lazy(() => import("./pages/index"));
+const OptionsPage = lazy(() => import("./pages/options/index"));
 
 const router = createBrowserRouter([
   {
@@ -36,7 +36,7 @@ const router = createBrowserRouter([
         ),
         children: [
           { index: true, element: <Navigate to="call" replace /> },
-          { path: "call", element: <IndexPage /> },
+          { path: "call", element: <OptionsPage /> },
         ],
       },
     ],

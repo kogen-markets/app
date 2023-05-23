@@ -7,12 +7,7 @@ import { Fragment } from "react";
 
 function InstallButton() {
   return (
-    <Button
-      color="bluegreen"
-      variant="outlined"
-      href="https://www.keplr.app/"
-      rel="noreferrer"
-    >
+    <Button variant="outlined" href="https://www.keplr.app/" rel="noreferrer">
       Install Keplr
     </Button>
   );
@@ -23,7 +18,6 @@ function ConnectButton() {
 
   return (
     <Button
-      color="bluegreen"
       variant="contained"
       disableElevation
       onClick={connect}
@@ -49,7 +43,11 @@ export default function KeplrButton() {
     return <ConnectButton />;
   }
 
-  console.log(keplr);
-
-  return <Fragment>Keplr connected</Fragment>;
+  return (
+    <Fragment>
+      <Button variant="outlined" href="" disabled>
+        Keplr connected
+      </Button>
+    </Fragment>
+  );
 }
