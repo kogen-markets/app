@@ -4,6 +4,7 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  Typography,
   alpha,
 } from "@mui/material";
 import { Link as MuiLink } from "@mui/material";
@@ -119,6 +120,11 @@ export default function Menu() {
         </Box>
         <Box sx={{ mx: "auto" }}>
           <ThemeSelector />
+          <Box sx={{ textAlign: "center", mt: 1 }}>
+            <Typography variant="caption">
+              {new Date().getFullYear()}
+            </Typography>
+          </Box>
         </Box>
       </Box>
     </Fragment>

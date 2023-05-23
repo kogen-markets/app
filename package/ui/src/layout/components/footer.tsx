@@ -9,7 +9,6 @@ export default function Footer() {
       sx={{ my: 5, textAlign: "center" }}
     >
       <Grid item>
-        <Typography variant="caption">{new Date().getFullYear()}</Typography>
         <br />
       </Grid>
     </Grid>
