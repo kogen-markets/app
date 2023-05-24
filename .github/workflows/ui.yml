@@ -63,6 +63,7 @@ jobs:
       - run: npm ci
       - run: npm run -w @kogen/kogen-ui build:${{ matrix.environment }}
         env:
+          NODE_OPTIONS: "--max_old_space_size=8192"
           VITE_FRONTEND_URL: ${{ env.webapp_url }}
           VITE_BACKEND_URL: ${{ env.backend_url }}
           VITE_INJECTIVE_RPCS: ${{ env.injective_rpcs }}
