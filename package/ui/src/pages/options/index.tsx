@@ -12,7 +12,7 @@ export default function Options() {
 
       <Grid container direction="row" justifyContent="left" alignItems="center">
         <Grid item xs={12} md={8} lg={6}>
-          <Card sx={{ p: 3, mt: 4, boxShadow: 2 }} variant="outlined">
+          <Card sx={{ p: 3, mt: 4 }} variant="outlined">
             <CallForm />
           </Card>
         </Grid>

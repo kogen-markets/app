@@ -4,7 +4,6 @@ import {
   darkScrollbar,
   responsiveFontSizes,
 } from "@mui/material";
-import { shadows } from "@mui/system";
 
 const dummyTheme = createTheme({});
 
@@ -53,6 +52,8 @@ const abstractTheme = {
   },
 };
 
+const defaultShadows = createTheme().shadows;
+
 export const darkTheme = responsiveFontSizes(
   createTheme(
     {
@@ -75,6 +76,7 @@ export const darkTheme = responsiveFontSizes(
           styleOverrides: {
             root: {
               background: alpha(abstractTheme.palette.gamboge.light, 0.1),
+              boxShadow: defaultShadows[2],
             },
           },
         },
@@ -95,6 +97,15 @@ export const lightTheme = responsiveFontSizes(
       typography: {
         allVariants: {
           color: abstractTheme.palette.richBlack.main,
+        },
+      },
+      components: {
+        MuiCard: {
+          styleOverrides: {
+            root: {
+              background: alpha(abstractTheme.palette.richBlack.main, 0.05),
+            },
+          },
         },
       },
     },

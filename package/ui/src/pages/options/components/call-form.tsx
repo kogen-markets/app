@@ -116,12 +116,12 @@ export default function CallForm() {
         spacing={3}
       >
         <Grid item xs={12} sm={6}>
+          <Typography variant="caption">Price</Typography>
           <MemoTextField
             error={Boolean(invalidOptionPrice)}
             fullWidth
             helperText={(invalidOptionPrice as string) || " "}
             id="option-price"
-            label={"Price"}
             name="optionPrice"
             onBlur={setOptionPriceBlurred as any}
             onChange={onChange as any}
@@ -140,12 +140,12 @@ export default function CallForm() {
           />
         </Grid>
         <Grid item xs={12} sm={6}>
+          <Typography variant="caption">Price</Typography>
           <MemoTextField
             error={Boolean(invalidOptionSize)}
             fullWidth
             helperText={(invalidOptionSize as string) || " "}
             id="option-size"
-            label={"Size"}
             name="optionSize"
             onBlur={setOptionSizeBlurred as any}
             onChange={onChange as any}
