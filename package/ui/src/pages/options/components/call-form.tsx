@@ -140,7 +140,7 @@ export default function CallForm() {
           />
         </Grid>
         <Grid item xs={12} sm={6}>
-          <Typography variant="caption">Price</Typography>
+          <Typography variant="caption">Size</Typography>
           <MemoTextField
             error={Boolean(invalidOptionSize)}
             fullWidth
@@ -174,6 +174,7 @@ export default function CallForm() {
         )}
       </Box>
 
+      <Divider sx={{ mt: 2 }} />
       <Box sx={{ textAlign: "right" }}>
         <Button
           variant="outlined"
