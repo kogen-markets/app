@@ -182,7 +182,7 @@ export default function CallForm() {
         <Button
           variant="outlined"
           size="large"
-          sx={{ mt: 2, width: "50%" }}
+          sx={{ mt: 2, width: { xs: "100%", lg: "50%" } }}
           onClick={async () => {
             setSnackbar({ message: "Please confirm the transaction" });
             await createOrder();

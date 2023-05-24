@@ -65,10 +65,14 @@ export const darkTheme = responsiveFontSizes(
       components: {
         MuiCssBaseline: {
           styleOverrides: {
+            html: {
+              overflow: "auto",
+            },
             body: {
               ...darkScrollbar(),
               backgroundColor: "#131e2b",
               backgroundImage: `linear-gradient(to left top, #131e2b, #13202f, #122234, #122338, #11253d) !important`,
+              overflow: "auto",
             },
           },
         },

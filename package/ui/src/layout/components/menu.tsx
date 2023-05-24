@@ -50,22 +50,14 @@ export default function Menu() {
                 textDecoration: "none",
                 display: "flex",
                 justifyContent: "center",
-                py: 3,
+                my: { xs: 1, lg: 5 },
               }}
               component={Link}
             >
               {isDarkTheme ? (
-                <img
-                  src="/logo-small-dark.png"
-                  width="66%"
-                  style={{ margin: "40px auto" }}
-                />
+                <img src="/logo-small-dark.png" width="66%" />
               ) : (
-                <img
-                  src="/logo-small-light.png"
-                  width="66%"
-                  style={{ margin: "40px auto" }}
-                />
+                <img src="/logo-small-light.png" width="66%" />
               )}
             </MuiLink>
           </Box>

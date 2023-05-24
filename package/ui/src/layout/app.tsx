@@ -69,7 +69,7 @@ export default function App() {
         >
           <Header />
 
-          <Box sx={{ px: 4, py: 2 }}>
+          <Box sx={{ px: { xs: 2, lg: 4 }, py: 2 }}>
             <Outlet />
           </Box>
 
