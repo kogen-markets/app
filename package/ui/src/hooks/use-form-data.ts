@@ -9,7 +9,8 @@ export default function useFormData(initial: object, parsers: any = {}) {
   const onChange = useCallback(
     (
       e: { target: HTMLInputElement },
-      getValue = (target: HTMLInputElement) => target.value
+      getValue = (target: HTMLInputElement) =>
+        target.valueAsNumber ?? target.value
     ) => {
       const target = e.target;
       setFormState((x) => x.setIn(target.name.split("."), getValue(target)));
