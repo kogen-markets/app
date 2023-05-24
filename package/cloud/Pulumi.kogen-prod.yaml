@@ -5,12 +5,14 @@ config:
   backend:ROUTE53_ZONE_NAME: janfabian.cz
   landing:API_DOMAIN: kogen.janfabian.cz
   landing:ROUTE53_ZONE_NAME: janfabian.cz
-  injective:rpcs:
-    [
-      "https://k8s.global.mainnet.tm.injective.network/",
-      "https://rpc.injective.posthuman.digital/",
-      "https://injective-rpc.bharvest.io/",
-    ]
+  # injective:rpcs:
+  #   [
+  #     "https://k8s.global.mainnet.tm.injective.network/",
+  #     "https://rpc.injective.posthuman.digital/",
+  #     "https://injective-rpc.bharvest.io/",
+  #   ]
+  injective:rpcs: ["https://k8s.testnet.tm.injective.network:443"]
+  injective:lcd: https://k8s.testnet.lcd.injective.network
   pulumi:env_files: []
   webapp:API_DOMAIN: app.kogen.janfabian.cz
   webapp:ROUTE53_ZONE_NAME: janfabian.cz

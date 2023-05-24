@@ -9,12 +9,13 @@ import {
   Typography,
 } from "@mui/material";
 import { Fragment, useMemo } from "react";
-import useFormData from "../../../hooks/use-form-data";
-import Joi from "joi";
 import { useRecoilState } from "recoil";
+import Joi from "joi";
+import useFormData from "../../../hooks/use-form-data";
 import { snackbarState } from "../../../state/snackbar";
 import { MemoTextField } from "../../../components/memo-textfield";
 import useFormValidation from "../../../hooks/use-form-validation";
+import { useInjectiveCallOptionMutation } from "../tx/injective";
 
 export const TYPES = {
   ASK: "ask",
@@ -47,7 +48,6 @@ export default function CallForm() {
   );
 
   const [, setSnackbar] = useRecoilState(snackbarState);
-  const inProgress = false;
 
   const isBid = useMemo(() => formState.get("type") === TYPES.BID, [formState]);
   const collateral = useMemo(() => {
@@ -65,6 +65,9 @@ export default function CallForm() {
       };
     }
   }, [formState]);
+
+  const { mutateAsync: createOrder, isLoading: isCreateOrderLoading } =
+    useInjectiveCallOptionMutation();
 
   return (
     <Fragment>
@@ -182,8 +185,8 @@ export default function CallForm() {
           sx={{ mt: 2, width: "50%" }}
           onClick={async () => {
             setSnackbar({ message: "Please confirm the transaction" });
+            await createOrder();
             // try {
-            //   await updateNotifications(encryptedEmail);
             //   setSnackbar({
             //     message: `Email notification for ${selectedDens} successfully created`,
             //   });
@@ -195,9 +198,9 @@ export default function CallForm() {
             // }
           }}
           color={isBid ? "secondary" : "primary"}
-          disabled={inProgress}
+          disabled={isCreateOrderLoading}
         >
-          {inProgress ? (
+          {isCreateOrderLoading ? (
             <Fragment>
               <CircularProgress size={15} sx={{ mr: 1 }} /> Loading
             </Fragment>

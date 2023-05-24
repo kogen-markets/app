@@ -33,9 +33,42 @@ export const keplrState = atom<{
   },
 });
 
-export const INJECTIVE_RPCS = JSON.parse(
-  import.meta.env.VITE_INJECTIVE_RPCS
-) as string[];
+export const injectiveKeplrState = selector({
+  key: "injectiveKeplrState",
+  get: async ({ get }) => {
+    const keplr = get(keplrState);
+    const chain = get(chainState);
+    if (!keplr.account) {
+      return null;
+    }
+
+    if (!window.getOfflineSignerAuto || !window.keplr) {
+      return null;
+    }
+
+    const offlineSigner = await window.getOfflineSignerAuto(chain.chainId);
+    const accounts = await offlineSigner.getAccounts();
+    const key = await window.keplr.getKey(chain.chainId);
+
+    return {
+      offlineSigner,
+      accounts,
+      key,
+    };
+  },
+});
+
+export const rpcsState = selector<string[]>({
+  key: "rpcsState",
+  get: async ({ get }) => {
+    const chain = get(chainState);
+    if (chain.chainId === "injective-1") {
+      return JSON.parse(import.meta.env.VITE_INJECTIVE_RPCS) as string[];
+    }
+
+    throw new Error("unknown chainId " + chain.chainId);
+  },
+});
 
 export const signClientState = selector<SigningCosmWasmClient | null>({
   key: "signClientState",
@@ -54,11 +87,12 @@ export const signClientState = selector<SigningCosmWasmClient | null>({
 
     const clientIx = get(clientIxState);
     const chain = get(chainState);
+    const rpcs = get(rpcsState);
     const offlineSigner = await window.getOfflineSignerAuto(chain.chainId);
-    for (let i = 0; i < INJECTIVE_RPCS.length; i++) {
+    for (let i = 0; i < rpcs.length; i++) {
       try {
         const client = await SigningCosmWasmClient.connectWithSigner(
-          INJECTIVE_RPCS[(clientIx + i) % INJECTIVE_RPCS.length],
+          rpcs[(clientIx + i) % rpcs.length],
           offlineSigner
         );
 
@@ -79,10 +113,11 @@ export const clientState = selector<CosmWasmClient | null>({
     const { CosmWasmClient } = await import("@cosmjs/cosmwasm-stargate");
 
     const clientIx = get(clientIxState);
-    for (let i = 0; i < INJECTIVE_RPCS.length; i++) {
+    const rpcs = get(rpcsState);
+    for (let i = 0; i < rpcs.length; i++) {
       try {
         const client = await CosmWasmClient.connect(
-          INJECTIVE_RPCS[(clientIx + i) % INJECTIVE_RPCS.length]
+          rpcs[(clientIx + i) % rpcs.length]
         );
 
         return client;
