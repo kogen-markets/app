@@ -1,35 +1,40 @@
 import { Box, Divider, Typography, alpha } from "@mui/material";
-import { useQuery } from "@tanstack/react-query";
 import { Fragment } from "react";
 import { clientState, contractsState } from "../../../state/cosmos";
 import useTryNextClient from "../../../hooks/use-try-next-client";
 import { useRecoilValue } from "recoil";
+import {
+  useKogenMarketsAsksQuery,
+  useKogenMarketsBidsQuery,
+} from "../../../codegen/KogenMarkets.react-query";
+import { KogenMarketsQueryClient } from "../../../codegen/KogenMarkets.client";
 
 export default function Orderbook() {
   const contracts = useRecoilValue(contractsState);
   const client = useRecoilValue(clientState);
   const tryNextClient = useTryNextClient();
 
-  const bids = useQuery<any>(
-    ["get_bids"],
-    async () => {
-      if (!client) {
-        return [];
-      }
+  const kogenClient = new KogenMarketsQueryClient(client, contracts);
 
-      const notifications = await client.queryContractSmart(contracts, {
-        bids: {},
-      });
-
-      return notifications;
-    },
-    {
-      enabled: Boolean(client),
+  const bids = useKogenMarketsBidsQuery({
+    client: kogenClient,
+    args: {},
+    options: {
       staleTime: 3000000,
       onError: tryNextClient,
       suspense: true,
-    }
-  );
+    },
+  });
+
+  const asks = useKogenMarketsAsksQuery({
+    client: kogenClient,
+    args: {},
+    options: {
+      staleTime: 3000000,
+      onError: tryNextClient,
+      suspense: true,
+    },
+  });
 
   return (
     <Fragment>

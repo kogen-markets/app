@@ -122,7 +122,7 @@ export const signClientState = selector<SigningCosmWasmClient | null>({
   },
 });
 
-export const clientState = selector<CosmWasmClient | null>({
+export const clientState = selector<CosmWasmClient>({
   key: "clientState",
   dangerouslyAllowMutability: true,
   get: async ({ get }) => {
@@ -142,7 +142,7 @@ export const clientState = selector<CosmWasmClient | null>({
       }
     }
 
-    return null;
+    throw new Error("no rpc client");
   },
 });
 
