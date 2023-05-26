@@ -16,23 +16,19 @@ import { snackbarState } from "../../../state/snackbar";
 import { MemoTextField } from "../../../components/memo-textfield";
 import useFormValidation from "../../../hooks/use-form-validation";
 import { useInjectiveCallOptionMutation } from "../tx/injective";
-
-export const TYPES = {
-  ASK: "ask",
-  BID: "bid",
-};
+import { ORDER_TYPES } from "../../../types/types";
 
 export const optionSizeValidator = Joi.number();
 export const optionPriceValidator = Joi.number();
 export const callFormValidator = Joi.object({
-  type: Joi.string().allow(...Object.values(TYPES)),
+  type: Joi.string().allow(...Object.values(ORDER_TYPES)),
   optionSize: optionSizeValidator,
   optionPrice: optionPriceValidator,
 }).unknown(true);
 
 export default function CallForm() {
   const { formState, onChange, setFormState } = useFormData({
-    type: TYPES.ASK,
+    type: ORDER_TYPES.ASK,
     optionSize: 0.1,
     optionPrice: 10,
   });
@@ -49,19 +45,24 @@ export default function CallForm() {
 
   const [, setSnackbar] = useRecoilState(snackbarState);
 
-  const isBid = useMemo(() => formState.get("type") === TYPES.BID, [formState]);
+  const isBid = useMemo(
+    () => formState.get("type") === ORDER_TYPES.BID,
+    [formState]
+  );
   const collateral = useMemo(() => {
-    if (formState.get("type") === TYPES.BID) {
+    if (formState.get("type") === ORDER_TYPES.BID) {
       return {
         amount:
           formState.get("optionSize") * (formState.get("optionPrice") + 15),
-        denom: "USDT",
+        denom: "peggy0x87aB3B4C8661e07D6372361211B96ed4Dc36B1B5",
+        symbol: "USDT",
       };
     }
-    if (formState.get("type") === TYPES.ASK) {
+    if (formState.get("type") === ORDER_TYPES.ASK) {
       return {
         amount: formState.get("optionSize"),
-        denom: "ATOM",
+        denom: "factory/inj17vytdwqczqz72j65saukplrktd4gyfme5agf6c/atom",
+        symbol: "ATOM",
       };
     }
   }, [formState]);
@@ -74,18 +75,18 @@ export default function CallForm() {
       <Typography variant="caption">Order type</Typography>
       <ButtonGroup variant="outlined" aria-label="call option" fullWidth>
         <Button
-          onClick={() => setFormState((x) => x.set("type", TYPES.ASK))}
+          onClick={() => setFormState((x) => x.set("type", ORDER_TYPES.ASK))}
           variant={
-            formState.get("type") === TYPES.ASK ? "contained" : "outlined"
+            formState.get("type") === ORDER_TYPES.ASK ? "contained" : "outlined"
           }
           disableElevation
         >
           ASK
         </Button>
         <Button
-          onClick={() => setFormState((x) => x.set("type", TYPES.BID))}
+          onClick={() => setFormState((x) => x.set("type", ORDER_TYPES.BID))}
           variant={
-            formState.get("type") === TYPES.BID ? "contained" : "outlined"
+            formState.get("type") === ORDER_TYPES.BID ? "contained" : "outlined"
           }
           color="secondary"
           disableElevation
@@ -172,7 +173,7 @@ export default function CallForm() {
         <Typography variant="caption">Collateral</Typography>
         {Boolean(collateral?.amount) && (
           <Typography variant="body1" sx={{ mb: 2 }}>
-            You need to deposit {collateral?.amount} {collateral?.denom}
+            You need to deposit {collateral?.amount} {collateral?.symbol}
           </Typography>
         )}
       </Box>
@@ -185,17 +186,30 @@ export default function CallForm() {
           sx={{ mt: 2, width: { xs: "100%", lg: "50%" } }}
           onClick={async () => {
             setSnackbar({ message: "Please confirm the transaction" });
-            await createOrder();
-            // try {
-            //   setSnackbar({
-            //     message: `Email notification for ${selectedDens} successfully created`,
-            //   });
-            //   navigate("../");
-            // } catch (e: any) {
-            //   setSnackbar({
-            //     message: "Error creating notifications: " + e.message,
-            //   });
-            // }
+            if (!collateral) {
+              return null;
+            }
+            try {
+              await createOrder({
+                type: formState.get("type"),
+                price: "" + formState.get("optionPrice") * 1e6,
+                quantity: "" + formState.get("optionSize") * 1e6,
+                funds: [
+                  {
+                    amount: "" + collateral.amount * 1e6,
+                    denom: collateral.denom,
+                  },
+                ],
+              });
+
+              setSnackbar({
+                message: `Order successfully created`,
+              });
+            } catch (e: any) {
+              setSnackbar({
+                message: "Error creating order: " + e.message,
+              });
+            }
           }}
           color={isBid ? "secondary" : "primary"}
           disabled={isCreateOrderLoading}

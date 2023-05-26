@@ -8,7 +8,7 @@ import { localStorageEffect, LOCAL_STORAGE_KEPLR_INTERACTED } from "./effects";
 export const chainState = atom({
   key: "chainState",
   default: {
-    chainId: "injective-1",
+    chainId: "injective-888",
   },
 });
 
@@ -42,11 +42,11 @@ export const injectiveKeplrState = selector({
       return null;
     }
 
-    if (!window.getOfflineSignerAuto || !window.keplr) {
+    if (!window.getOfflineSigner || !window.keplr) {
       return null;
     }
 
-    const offlineSigner = await window.getOfflineSignerAuto(chain.chainId);
+    const offlineSigner = await window.getOfflineSigner(chain.chainId);
     const accounts = await offlineSigner.getAccounts();
     const key = await window.keplr.getKey(chain.chainId);
 
@@ -64,6 +64,22 @@ export const rpcsState = selector<string[]>({
     const chain = get(chainState);
     if (chain.chainId === "injective-1") {
       return JSON.parse(import.meta.env.VITE_INJECTIVE_RPCS) as string[];
+    }
+
+    if (chain.chainId === "injective-888") {
+      return JSON.parse(import.meta.env.VITE_INJECTIVE_RPCS) as string[];
+    }
+
+    throw new Error("unknown chainId " + chain.chainId);
+  },
+});
+
+export const contractsState = selector<string>({
+  key: "contractsState",
+  get: async ({ get }) => {
+    const chain = get(chainState);
+    if (chain.chainId === "injective-888") {
+      return "inj1wgdksr96ej24aateq0yqjdua0xf5gxrr3rwwuk";
     }
 
     throw new Error("unknown chainId " + chain.chainId);
