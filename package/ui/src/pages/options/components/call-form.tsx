@@ -9,7 +9,7 @@ import {
   Typography,
 } from "@mui/material";
 import { Fragment, useMemo } from "react";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import Joi from "joi";
 import useFormData from "../../../hooks/use-form-data";
 import { snackbarState } from "../../../state/snackbar";
@@ -17,6 +17,9 @@ import { MemoTextField } from "../../../components/memo-textfield";
 import useFormValidation from "../../../hooks/use-form-validation";
 import { useInjectiveCallOptionMutation } from "../tx/injective";
 import { ORDER_TYPES } from "../../../types/types";
+import { kogenMarketsQueryClientState } from "../../../state/kogen";
+import { useKogenMarketsConfigQuery } from "../../../codegen/KogenMarkets.react-query";
+import useTryNextClient from "../../../hooks/use-try-next-client";
 
 export const optionSizeValidator = Joi.number();
 export const optionPriceValidator = Joi.number();
@@ -27,6 +30,9 @@ export const callFormValidator = Joi.object({
 }).unknown(true);
 
 export default function CallForm() {
+  const tryNextClient = useTryNextClient();
+  const kogenClient = useRecoilValue(kogenMarketsQueryClientState);
+
   const { formState, onChange, setFormState } = useFormData({
     type: ORDER_TYPES.ASK,
     optionSize: 0.1,

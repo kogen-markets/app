@@ -1,7 +1,8 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRecoilValue } from "recoil";
 import {
   chainState,
+  contractsState,
   injectiveKeplrState,
   keplrState,
 } from "../../../state/cosmos";
@@ -9,13 +10,14 @@ import { MsgExecuteContract } from "@injectivelabs/sdk-ts";
 import { WalletStrategy, MsgBroadcaster } from "@injectivelabs/wallet-ts";
 import { ChainId } from "@injectivelabs/ts-types";
 import { Network } from "@injectivelabs/networks";
-import { getConfig } from "../../../lib/config";
 import { ORDER_TYPE } from "../../../types/types";
 
 export function useInjectiveCallOptionMutation() {
   const chain = useRecoilValue(chainState);
+  const queryClient = useQueryClient();
 
   const injectiveKeplr = useRecoilValue(injectiveKeplrState);
+  const contracts = useRecoilValue(contractsState);
   const keplr = useRecoilValue(keplrState);
   return useMutation(
     ["callOption"],
@@ -42,7 +44,7 @@ export function useInjectiveCallOptionMutation() {
       }
 
       const orderMsg = MsgExecuteContract.fromJSON({
-        contractAddress: getConfig(chain.chainId).optionsContract,
+        contractAddress: contracts,
         sender: keplr.account,
         msg: {
           [`${type}_order`]: {
@@ -68,6 +70,12 @@ export function useInjectiveCallOptionMutation() {
       });
 
       console.log(result);
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries([{ method: "asks" }]);
+        queryClient.invalidateQueries([{ method: "bids" }]);
+      },
     }
   );
 }

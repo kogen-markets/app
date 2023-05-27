@@ -1,9 +1,11 @@
-import { atom, atomFamily } from "recoil";
+import { atom, atomFamily, selector } from "recoil";
 import {
   localStorageEffect,
   LOCAL_STORAGE_SELECTED_DENS,
   LOCAL_STORAGE_DARK_MODE,
 } from "./effects";
+import { KogenMarketsQueryClient } from "../codegen/KogenMarkets.client";
+import { clientState, contractsState } from "./cosmos";
 
 export const densInitializedState = atom({
   key: "densInitializedState",
@@ -19,6 +21,16 @@ export const darkModeState = atom<"dark" | "light" | "auto">({
   key: "darkModeState",
   default: "dark",
   effects: [localStorageEffect(LOCAL_STORAGE_DARK_MODE)],
+});
+
+export const kogenMarketsQueryClientState = selector<KogenMarketsQueryClient>({
+  key: "kogenMarketsQueryClientState",
+  get: async ({ get }) => {
+    const contracts = get(contractsState);
+    const client = get(clientState);
+
+    return new KogenMarketsQueryClient(client, contracts);
+  },
 });
 
 export const selectedDensState = atomFamily<string | null, string | null>({

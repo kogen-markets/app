@@ -39,14 +39,14 @@ export const kogenMarketsQueryKeys = {
     [
       { ...kogenMarketsQueryKeys.contract[0], address: contractAddress },
     ] as const,
-  getConfig: (
+  config: (
     contractAddress: string | undefined,
     args?: Record<string, unknown>
   ) =>
     [
       {
         ...kogenMarketsQueryKeys.address(contractAddress)[0],
-        method: "get_config",
+        method: "config",
         args,
       },
     ] as const,
@@ -68,17 +68,17 @@ export const kogenMarketsQueryKeys = {
     ] as const,
 };
 export const kogenMarketsQueries = {
-  getConfig: <TData = Config>({
+  config: <TData = Config>({
     client,
     options,
-  }: KogenMarketsGetConfigQuery<TData>): UseQueryOptions<
+  }: KogenMarketsConfigQuery<TData>): UseQueryOptions<
     Config,
     Error,
     TData
   > => ({
-    queryKey: kogenMarketsQueryKeys.getConfig(client?.contractAddress),
+    queryKey: kogenMarketsQueryKeys.config(client?.contractAddress),
     queryFn: () =>
-      client ? client.getConfig() : Promise.reject(new Error("Invalid client")),
+      client ? client.config() : Promise.reject(new Error("Invalid client")),
     ...options,
     enabled:
       !!client && (options?.enabled != undefined ? options.enabled : true),
@@ -185,18 +185,18 @@ export function useKogenMarketsBidsQuery<TData = ArrayOfOrdersResponse>({
     }
   );
 }
-export type KogenMarketsGetConfigQuery<TData> = KogenMarketsReactQuery<
+export type KogenMarketsConfigQuery<TData> = KogenMarketsReactQuery<
   Config,
   TData
 >;
-export function useKogenMarketsGetConfigQuery<TData = Config>({
+export function useKogenMarketsConfigQuery<TData = Config>({
   client,
   options,
-}: KogenMarketsGetConfigQuery<TData>) {
+}: KogenMarketsConfigQuery<TData>) {
   return useQuery<Config, Error, TData>(
-    kogenMarketsQueryKeys.getConfig(client?.contractAddress),
+    kogenMarketsQueryKeys.config(client?.contractAddress),
     () =>
-      client ? client.getConfig() : Promise.reject(new Error("Invalid client")),
+      client ? client.config() : Promise.reject(new Error("Invalid client")),
     {
       ...options,
       enabled:

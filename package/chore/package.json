@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 0"
+    "test": "echo \"Error: no test specified\" && exit 0",
+    "codegen": "node ts-codegen.mjs && npx eslint --fix ../ui/src/codegen/*"
   },
   "author": "",
   "license": "ISC",

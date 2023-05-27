@@ -25,7 +25,7 @@ import {
 } from "./KogenMarkets.types";
 export interface KogenMarketsReadOnlyInterface {
   contractAddress: string;
-  getConfig: () => Promise<Config>;
+  config: () => Promise<Config>;
   bids: ({ price }: { price?: Uint128 }) => Promise<ArrayOfOrdersResponse>;
   asks: ({ price }: { price?: Uint128 }) => Promise<ArrayOfOrdersResponse>;
 }
@@ -36,14 +36,14 @@ export class KogenMarketsQueryClient implements KogenMarketsReadOnlyInterface {
   constructor(client: CosmWasmClient, contractAddress: string) {
     this.client = client;
     this.contractAddress = contractAddress;
-    this.getConfig = this.getConfig.bind(this);
+    this.config = this.config.bind(this);
     this.bids = this.bids.bind(this);
     this.asks = this.asks.bind(this);
   }
 
-  getConfig = async (): Promise<Config> => {
+  config = async (): Promise<Config> => {
     return this.client.queryContractSmart(this.contractAddress, {
-      get_config: {},
+      config: {},
     });
   };
   bids = async ({
