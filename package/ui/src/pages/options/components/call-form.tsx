@@ -179,7 +179,8 @@ export default function CallForm() {
         <Typography variant="caption">Collateral</Typography>
         {Boolean(collateral?.amount) && (
           <Typography variant="body1" sx={{ mb: 2 }}>
-            You need to deposit {collateral?.amount} {collateral?.symbol}
+            You need to deposit {collateral?.amount?.toPrecision(4)}{" "}
+            {collateral?.symbol}
           </Typography>
         )}
       </Box>
@@ -198,11 +199,11 @@ export default function CallForm() {
             try {
               await createOrder({
                 type: formState.get("type"),
-                price: "" + formState.get("optionPrice") * 1e6,
-                quantity: "" + formState.get("optionSize") * 1e6,
+                price: "" + Math.ceil(formState.get("optionPrice") * 1e6),
+                quantity: "" + Math.ceil(formState.get("optionSize") * 1e6),
                 funds: [
                   {
-                    amount: "" + collateral.amount * 1e6,
+                    amount: "" + Math.ceil(collateral.amount * 1e6),
                     denom: collateral.denom,
                   },
                 ],
