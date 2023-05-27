@@ -64,7 +64,7 @@ function OrdersItem({
           fontWeight: "bold",
           display: "flex",
           width: "30%",
-          justifyContent: "right",
+          justifyContent: "space-between",
           alignItems: "center",
           gap: 1,
         }}
