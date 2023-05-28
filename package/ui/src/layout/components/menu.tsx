@@ -55,9 +55,9 @@ export default function Menu() {
               component={Link}
             >
               {isDarkTheme ? (
-                <img src="/logo-small-dark.png" width="66%" />
+                <img src="/kogen-logo-dark.png" width="100%" />
               ) : (
-                <img src="/logo-small-light.png" width="66%" />
+                <img src="/kogen-logo-white.png" width="100%" />
               )}
             </MuiLink>
           </Box>

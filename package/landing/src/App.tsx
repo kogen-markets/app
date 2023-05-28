@@ -9,7 +9,6 @@ import {
   Typography,
   Link,
   Alert,
-  Divider,
 } from "@mui/material";
 import { darkTheme, lightTheme } from "@kogen/kogen-ui/src/lib/theme";
 
@@ -32,9 +31,13 @@ function App() {
             },
           }}
         >
-          <img src="/kogen-logo-small.png" />
+          {prefersDarkMode ? (
+            <img src="/kogen-logo-dark.png" />
+          ) : (
+            <img src="/kogen-logo-white.png" />
+          )}
         </Box>
-        <Alert severity="info" variant="outlined">
+        <Alert severity="warning" variant="outlined">
           Please note that Kogen is currently in active development. While we
           strive to offer you the best user experience possible, it's important
           to be aware that there may be occasional glitches or limitations as we
@@ -70,7 +73,7 @@ function App() {
             <Button
               variant="contained"
               disableElevation
-              color="primary"
+              color="secondary"
               size="large"
               href={import.meta.env.VITE_FRONTEND_URL}
             >

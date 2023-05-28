@@ -63,17 +63,19 @@ function OrdersItem({
           fontFamily: "monospace",
           fontWeight: "bold",
           display: "flex",
-          width: "30%",
+          width: "40%",
           justifyContent: "space-between",
           alignItems: "center",
           gap: 1,
         }}
         color={color}
       >
-        {includesSender(order.orders, keplr.account) && (
-          <AdjustIcon fontSize="inherit" color={color} sx={{ pb: "2px" }} />
-        )}
         <span>
+          {includesSender(order.orders, keplr.account) && (
+            <AdjustIcon fontSize="inherit" color={color} sx={{ pb: "2px" }} />
+          )}
+        </span>
+        <span style={{ flexGrow: 1, textAlign: "right" }}>
           {formatDecimals(order.price, config.data?.quote_decimals)
             .toFixed(3)
             .toString()}
@@ -127,7 +129,7 @@ export default function Orderbook() {
           >
             <Typography
               variant="caption"
-              sx={{ display: "inline-block", width: "30%", textAlign: "right" }}
+              sx={{ display: "inline-block", width: "40%", textAlign: "right" }}
             >
               Price <strong>USDT</strong>
             </Typography>
@@ -154,7 +156,10 @@ export default function Orderbook() {
           {bids.data?.map((bid, ix) => (
             <Box
               key={ix}
-              sx={{ display: "flex", justifyContent: "space-between" }}
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+              }}
             >
               <OrdersItem order={bid} color="secondary" />
             </Box>

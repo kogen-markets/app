@@ -9,7 +9,18 @@ export default function ThemeSelector() {
   const [darkMode, setDarkMode] = useRecoilState(darkModeState);
 
   return (
-    <ButtonGroup variant="outlined" aria-label="outlined button group">
+    <ButtonGroup
+      color="secondary"
+      variant="outlined"
+      aria-label="outlined button group"
+      sx={{
+        opacity: 0.5,
+        transition: "opacity .2s ease-in-out",
+        "&:hover": {
+          opacity: 1,
+        },
+      }}
+    >
       <Button
         onClick={() => setDarkMode("light")}
         variant={darkMode === "light" ? "contained" : "outlined"}
