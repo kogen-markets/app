@@ -90,6 +90,7 @@ export const darkTheme = responsiveFontSizes(
   ),
   { factor: 10 }
 );
+
 export const lightTheme = responsiveFontSizes(
   createTheme(
     {
@@ -104,6 +105,16 @@ export const lightTheme = responsiveFontSizes(
         },
       },
       components: {
+        MuiCssBaseline: {
+          styleOverrides: {
+            html: {
+              overflow: "auto",
+            },
+            body: {
+              overflow: "auto",
+            },
+          },
+        },
         MuiCard: {
           styleOverrides: {
             root: {

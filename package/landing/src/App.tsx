@@ -18,6 +18,21 @@ function App() {
   return (
     <ThemeProvider theme={prefersDarkMode ? darkTheme : lightTheme}>
       <CssBaseline />
+      <Box
+        sx={{
+          opacity: 0.5,
+          zIndex: -1,
+          position: "fixed",
+          left: 0,
+          top: 0,
+          width: "100%",
+          height: "100%",
+          backgroundImage: 'url("/kogen-background.jpg")',
+          backgroundRepeat: "no-repeat",
+          backgroundPosition: "0",
+          backgroundSize: "cover",
+        }}
+      ></Box>
       <Container maxWidth="md">
         <Box
           sx={{
@@ -37,13 +52,21 @@ function App() {
             <img src="/kogen-logo-white.png" />
           )}
         </Box>
-        <Alert severity="warning" variant="outlined">
+        <Alert
+          severity="warning"
+          variant="outlined"
+          sx={{ backdropFilter: "blur(5px)" }}
+        >
           Please note that Kogen is currently in active development. While we
           strive to offer you the best user experience possible, it's important
           to be aware that there may be occasional glitches or limitations as we
           continue to refine and enhance the platform.
         </Alert>
-        <Card sx={{ p: 3, mt: 4 }} variant="outlined" color="secondary">
+        <Card
+          sx={{ p: 3, mt: 4, backdropFilter: "blur(5px)" }}
+          variant="outlined"
+          color="secondary"
+        >
           <Typography variant="body1" sx={{ mb: 2 }}>
             Welcome to Kogen, the ultimate decentralized options trading tool
             designed to revolutionize the way you trade call options. Built on
