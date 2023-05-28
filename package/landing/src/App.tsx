@@ -42,7 +42,8 @@ function App() {
             flexDirection: "column",
             justifyContent: "center",
             "& img": {
-              height: "130px",
+              maxHeight: "130px",
+              maxWidth: "100%",
             },
           }}
         >
