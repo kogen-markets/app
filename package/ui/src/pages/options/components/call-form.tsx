@@ -18,7 +18,6 @@ import useFormValidation from "../../../hooks/use-form-validation";
 import { useInjectiveCallOptionMutation } from "../tx/injective";
 import { ORDER_TYPES } from "../../../types/types";
 import { kogenMarketsQueryClientState } from "../../../state/kogen";
-import { useKogenMarketsConfigQuery } from "../../../codegen/KogenMarkets.react-query";
 import useTryNextClient from "../../../hooks/use-try-next-client";
 
 export const optionSizeValidator = Joi.number();
@@ -34,7 +33,7 @@ export default function CallForm() {
   const kogenClient = useRecoilValue(kogenMarketsQueryClientState);
 
   const { formState, onChange, setFormState } = useFormData({
-    type: ORDER_TYPES.ASK,
+    type: ORDER_TYPES.BID,
     optionSize: 0.1,
     optionPrice: 10,
   });
@@ -81,15 +80,6 @@ export default function CallForm() {
       <Typography variant="caption">Order type</Typography>
       <ButtonGroup variant="outlined" aria-label="call option" fullWidth>
         <Button
-          onClick={() => setFormState((x) => x.set("type", ORDER_TYPES.ASK))}
-          variant={
-            formState.get("type") === ORDER_TYPES.ASK ? "contained" : "outlined"
-          }
-          disableElevation
-        >
-          ASK
-        </Button>
-        <Button
           onClick={() => setFormState((x) => x.set("type", ORDER_TYPES.BID))}
           variant={
             formState.get("type") === ORDER_TYPES.BID ? "contained" : "outlined"
@@ -98,6 +88,15 @@ export default function CallForm() {
           disableElevation
         >
           BID
+        </Button>
+        <Button
+          onClick={() => setFormState((x) => x.set("type", ORDER_TYPES.ASK))}
+          variant={
+            formState.get("type") === ORDER_TYPES.ASK ? "contained" : "outlined"
+          }
+          disableElevation
+        >
+          ASK
         </Button>
       </ButtonGroup>
       <Divider sx={{ my: 2 }} />
