@@ -70,8 +70,9 @@ export const darkTheme = responsiveFontSizes(
             },
             body: {
               ...darkScrollbar(),
-              backgroundColor: "#131e2b",
-              backgroundImage: `linear-gradient(to left top, #131e2b, #13202f, #122234, #122338, #11253d) !important`,
+              background: "#131e2b",
+              backgroundImage:
+                "linear-gradient(330deg, rgba(19,30,43,1) 0%, rgba(16,40,69,1) 60%, rgba(27,56,91,1) 100%)",
               overflow: "auto",
             },
           },
