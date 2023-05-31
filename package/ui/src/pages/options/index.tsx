@@ -1,9 +1,10 @@
-import { Card, Grid, Typography } from "@mui/material";
+import { Card, Grid, Paper, Typography } from "@mui/material";
 
 import { Fragment, Suspense } from "react";
 import CallForm from "./components/call-form";
 import Orderbook from "./components/order-book";
 import Loading from "../../components/loading";
+import YourPosition from "./components/your-position";
 
 export default function Options() {
   return (
@@ -20,16 +21,19 @@ export default function Options() {
         spacing={4}
       >
         <Grid item xs={12} lg={6}>
-          <Card sx={{ p: 3 }} variant="outlined">
+          <Card sx={{ p: 3, height: "450px" }} variant="outlined">
             <CallForm />
+          </Card>
+          <Card sx={{ mt: 4, px: 3, py: 2 }} variant="outlined">
+            <YourPosition />
           </Card>
         </Grid>
         <Grid item xs={12} lg={3}>
-          <Card sx={{ p: 1 }} variant="outlined">
+          <Paper sx={{ p: 1, height: "450px" }} variant="outlined">
             <Suspense fallback={<Loading />}>
               <Orderbook />
             </Suspense>
-          </Card>
+          </Paper>
         </Grid>
       </Grid>
     </Fragment>

@@ -24,6 +24,8 @@ import {
   OrdersResponse,
   OrderBookItem,
   Config,
+  LockedAmountResponse,
+  PositionResponse,
 } from "./KogenMarkets.types";
 import {
   KogenMarketsQueryClient,
@@ -63,6 +65,28 @@ export const kogenMarketsQueryKeys = {
       {
         ...kogenMarketsQueryKeys.address(contractAddress)[0],
         method: "asks",
+        args,
+      },
+    ] as const,
+  lockedAmount: (
+    contractAddress: string | undefined,
+    args?: Record<string, unknown>
+  ) =>
+    [
+      {
+        ...kogenMarketsQueryKeys.address(contractAddress)[0],
+        method: "locked_amount",
+        args,
+      },
+    ] as const,
+  position: (
+    contractAddress: string | undefined,
+    args?: Record<string, unknown>
+  ) =>
+    [
+      {
+        ...kogenMarketsQueryKeys.address(contractAddress)[0],
+        method: "position",
         args,
       },
     ] as const,
@@ -123,6 +147,46 @@ export const kogenMarketsQueries = {
     enabled:
       !!client && (options?.enabled != undefined ? options.enabled : true),
   }),
+  lockedAmount: <TData = LockedAmountResponse>({
+    client,
+    args,
+    options,
+  }: KogenMarketsLockedAmountQuery<TData>): UseQueryOptions<
+    LockedAmountResponse,
+    Error,
+    TData
+  > => ({
+    queryKey: kogenMarketsQueryKeys.lockedAmount(client?.contractAddress, args),
+    queryFn: () =>
+      client
+        ? client.lockedAmount({
+            owner: args.owner,
+          })
+        : Promise.reject(new Error("Invalid client")),
+    ...options,
+    enabled:
+      !!client && (options?.enabled != undefined ? options.enabled : true),
+  }),
+  position: <TData = PositionResponse>({
+    client,
+    args,
+    options,
+  }: KogenMarketsPositionQuery<TData>): UseQueryOptions<
+    PositionResponse,
+    Error,
+    TData
+  > => ({
+    queryKey: kogenMarketsQueryKeys.position(client?.contractAddress, args),
+    queryFn: () =>
+      client
+        ? client.position({
+            owner: args.owner,
+          })
+        : Promise.reject(new Error("Invalid client")),
+    ...options,
+    enabled:
+      !!client && (options?.enabled != undefined ? options.enabled : true),
+  }),
 };
 export interface KogenMarketsReactQuery<TResponse, TData = TResponse> {
   client: KogenMarketsQueryClient | undefined;
@@ -132,6 +196,58 @@ export interface KogenMarketsReactQuery<TResponse, TData = TResponse> {
   > & {
     initialData?: undefined;
   };
+}
+export interface KogenMarketsPositionQuery<TData>
+  extends KogenMarketsReactQuery<PositionResponse, TData> {
+  args: {
+    owner: Addr;
+  };
+}
+export function useKogenMarketsPositionQuery<TData = PositionResponse>({
+  client,
+  args,
+  options,
+}: KogenMarketsPositionQuery<TData>) {
+  return useQuery<PositionResponse, Error, TData>(
+    kogenMarketsQueryKeys.position(client?.contractAddress, args),
+    () =>
+      client
+        ? client.position({
+            owner: args.owner,
+          })
+        : Promise.reject(new Error("Invalid client")),
+    {
+      ...options,
+      enabled:
+        !!client && (options?.enabled != undefined ? options.enabled : true),
+    }
+  );
+}
+export interface KogenMarketsLockedAmountQuery<TData>
+  extends KogenMarketsReactQuery<LockedAmountResponse, TData> {
+  args: {
+    owner: Addr;
+  };
+}
+export function useKogenMarketsLockedAmountQuery<TData = LockedAmountResponse>({
+  client,
+  args,
+  options,
+}: KogenMarketsLockedAmountQuery<TData>) {
+  return useQuery<LockedAmountResponse, Error, TData>(
+    kogenMarketsQueryKeys.lockedAmount(client?.contractAddress, args),
+    () =>
+      client
+        ? client.lockedAmount({
+            owner: args.owner,
+          })
+        : Promise.reject(new Error("Invalid client")),
+    {
+      ...options,
+      enabled:
+        !!client && (options?.enabled != undefined ? options.enabled : true),
+    }
+  );
 }
 export interface KogenMarketsAsksQuery<TData>
   extends KogenMarketsReactQuery<ArrayOfOrdersResponse, TData> {

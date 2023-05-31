@@ -47,6 +47,16 @@ export type QueryMsg =
       asks: {
         price?: Uint128 | null;
       };
+    }
+  | {
+      locked_amount: {
+        owner: Addr;
+      };
+    }
+  | {
+      position: {
+        owner: Addr;
+      };
     };
 export type ArrayOfOrdersResponse = OrdersResponse[];
 export interface OrdersResponse {
@@ -55,16 +65,23 @@ export interface OrdersResponse {
 }
 export interface OrderBookItem {
   owner: Addr;
-  quantity: Uint128;
+  quantity_in_base: Uint128;
 }
 export interface Config {
   base_decimals: number;
   base_denom: string;
   expiry: Timestamp;
   instantiated: Timestamp;
-  min_order_quantity: Uint128;
+  min_order_quantity_in_base: Uint128;
   owner: Addr;
   quote_decimals: number;
   quote_denom: string;
-  strike_price: Uint128;
+  strike_price_in_quote: Uint128;
+}
+export interface LockedAmountResponse {
+  locked_base_denom: Uint128;
+  locked_quote_denom: Uint128;
+}
+export interface PositionResponse {
+  position_in_base: number;
 }

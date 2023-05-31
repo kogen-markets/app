@@ -2,7 +2,6 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRecoilValue } from "recoil";
 import {
   chainState,
-  contractsState,
   injectiveKeplrState,
   keplrState,
 } from "../../../state/cosmos";
@@ -11,6 +10,7 @@ import { WalletStrategy, MsgBroadcaster } from "@injectivelabs/wallet-ts";
 import { ChainId } from "@injectivelabs/ts-types";
 import { Network } from "@injectivelabs/networks";
 import { ORDER_TYPE } from "../../../types/types";
+import { contractsState } from "../../../state/kogen";
 
 export function useInjectiveCallOptionMutation() {
   const chain = useRecoilValue(chainState);

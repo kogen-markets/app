@@ -5,7 +5,7 @@ import {
   LOCAL_STORAGE_DARK_MODE,
 } from "./effects";
 import { KogenMarketsQueryClient } from "../codegen/KogenMarkets.client";
-import { clientState, contractsState } from "./cosmos";
+import { chainState, clientState } from "./cosmos";
 
 export const densInitializedState = atom({
   key: "densInitializedState",
@@ -21,6 +21,18 @@ export const darkModeState = atom<"dark" | "light" | "auto">({
   key: "darkModeState",
   default: "dark",
   effects: [localStorageEffect(LOCAL_STORAGE_DARK_MODE)],
+});
+
+export const contractsState = selector<string>({
+  key: "contractsState",
+  get: async ({ get }) => {
+    const chain = get(chainState);
+    if (chain.chainId === "injective-888") {
+      return "inj1gk8keltl93vm2u500wq7u8cxv9lh5cux7sx4xh";
+    }
+
+    throw new Error("unknown chainId " + chain.chainId);
+  },
 });
 
 export const kogenMarketsQueryClientState = selector<KogenMarketsQueryClient>({

@@ -22,12 +22,16 @@ import {
   OrdersResponse,
   OrderBookItem,
   Config,
+  LockedAmountResponse,
+  PositionResponse,
 } from "./KogenMarkets.types";
 export interface KogenMarketsReadOnlyInterface {
   contractAddress: string;
   config: () => Promise<Config>;
   bids: ({ price }: { price?: Uint128 }) => Promise<ArrayOfOrdersResponse>;
   asks: ({ price }: { price?: Uint128 }) => Promise<ArrayOfOrdersResponse>;
+  lockedAmount: ({ owner }: { owner: Addr }) => Promise<LockedAmountResponse>;
+  position: ({ owner }: { owner: Addr }) => Promise<PositionResponse>;
 }
 export class KogenMarketsQueryClient implements KogenMarketsReadOnlyInterface {
   client: CosmWasmClient;
@@ -39,6 +43,8 @@ export class KogenMarketsQueryClient implements KogenMarketsReadOnlyInterface {
     this.config = this.config.bind(this);
     this.bids = this.bids.bind(this);
     this.asks = this.asks.bind(this);
+    this.lockedAmount = this.lockedAmount.bind(this);
+    this.position = this.position.bind(this);
   }
 
   config = async (): Promise<Config> => {
@@ -65,6 +71,24 @@ export class KogenMarketsQueryClient implements KogenMarketsReadOnlyInterface {
     return this.client.queryContractSmart(this.contractAddress, {
       asks: {
         price,
+      },
+    });
+  };
+  lockedAmount = async ({
+    owner,
+  }: {
+    owner: Addr;
+  }): Promise<LockedAmountResponse> => {
+    return this.client.queryContractSmart(this.contractAddress, {
+      locked_amount: {
+        owner,
+      },
+    });
+  };
+  position = async ({ owner }: { owner: Addr }): Promise<PositionResponse> => {
+    return this.client.queryContractSmart(this.contractAddress, {
+      position: {
+        owner,
       },
     });
   };

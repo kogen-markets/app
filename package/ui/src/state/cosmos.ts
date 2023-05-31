@@ -74,18 +74,6 @@ export const rpcsState = selector<string[]>({
   },
 });
 
-export const contractsState = selector<string>({
-  key: "contractsState",
-  get: async ({ get }) => {
-    const chain = get(chainState);
-    if (chain.chainId === "injective-888") {
-      return "inj18n6cpshn7e0dm96vyge4sphvjg5hj9he9rcq2m";
-    }
-
-    throw new Error("unknown chainId " + chain.chainId);
-  },
-});
-
 export const signClientState = selector<SigningCosmWasmClient | null>({
   key: "signClientState",
   dangerouslyAllowMutability: true,

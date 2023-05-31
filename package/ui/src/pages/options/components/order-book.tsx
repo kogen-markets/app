@@ -21,7 +21,10 @@ function sumOrders(orders?: OrderBookItem[]) {
     return new Decimal(0);
   }
 
-  return orders.reduce((acc, o) => acc.plus(o.quantity), new Decimal(0));
+  return orders.reduce(
+    (acc, o) => acc.plus(o.quantity_in_base),
+    new Decimal(0)
+  );
 }
 
 function includesSender(orders: OrderBookItem[], sender: string | null) {
