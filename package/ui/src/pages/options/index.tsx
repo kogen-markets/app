@@ -21,15 +21,17 @@ export default function Options() {
         spacing={4}
       >
         <Grid item xs={12} lg={6}>
-          <Card sx={{ p: 3, height: "450px" }} variant="outlined">
+          <Card sx={{ p: 3, minHeight: "450px" }} variant="outlined">
             <CallForm />
           </Card>
           <Card sx={{ mt: 4, px: 3, py: 2 }} variant="outlined">
-            <YourPosition />
+            <Suspense fallback={<Loading />}>
+              <YourPosition />
+            </Suspense>
           </Card>
         </Grid>
         <Grid item xs={12} lg={3}>
-          <Paper sx={{ p: 1, height: "450px" }} variant="outlined">
+          <Paper sx={{ p: 1, minHeight: "450px" }} variant="outlined">
             <Suspense fallback={<Loading />}>
               <Orderbook />
             </Suspense>

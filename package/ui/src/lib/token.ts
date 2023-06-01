@@ -1,5 +1,7 @@
-export function toBaseToken(n: bigint, decimals = 6) {
-  return BigInt(n) / BigInt(Math.pow(10, decimals));
+import Decimal from "decimal.js";
+
+export function toBaseToken(n: Decimal.Value, decimals = 6, fixed = 3) {
+  return new Decimal(n).div(Math.pow(10, decimals)).toFixed(fixed);
 }
 
 export function addressShort(address: string | null) {
