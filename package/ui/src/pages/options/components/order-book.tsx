@@ -73,11 +73,13 @@ function OrdersItem({
         }}
         color={color}
       >
-        <span>
-          {includesSender(order.orders, keplr.account) && (
-            <AdjustIcon fontSize="inherit" color={color} sx={{ pb: "2px" }} />
-          )}
-        </span>
+        {includesSender(order.orders, keplr.account) && (
+          <AdjustIcon
+            fontSize="inherit"
+            color={color}
+            sx={{ fontSize: "12px" }}
+          />
+        )}
         <span style={{ flexGrow: 1, textAlign: "right" }}>
           {formatDecimals(order.price, config.data?.quote_decimals)
             .toFixed(3)

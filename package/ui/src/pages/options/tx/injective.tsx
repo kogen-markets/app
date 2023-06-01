@@ -75,6 +75,8 @@ export function useInjectiveCallOptionMutation() {
       onSuccess: () => {
         queryClient.invalidateQueries([{ method: "asks" }]);
         queryClient.invalidateQueries([{ method: "bids" }]);
+        queryClient.invalidateQueries([{ method: "locked_amount" }]);
+        queryClient.invalidateQueries([{ method: "position" }]);
       },
     }
   );
