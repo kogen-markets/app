@@ -28,7 +28,7 @@ export const contractsState = selector<string>({
   get: async ({ get }) => {
     const chain = get(chainState);
     if (chain.chainId === "injective-888") {
-      return "inj1wf7huqc34utan9jwm36j7rf96at5krkspw5x9g";
+      return "inj164ugkdmfxjqu9ydk585rc69rx2wfpstypya806";
     }
 
     throw new Error("unknown chainId " + chain.chainId);

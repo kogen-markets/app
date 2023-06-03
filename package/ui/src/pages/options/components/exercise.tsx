@@ -1,17 +1,12 @@
 import { Fragment, useState } from "react";
 import { useInjectiveExerciseCallOptionMutation } from "../tx/injective";
-import {
-  Box,
-  Button,
-  CircularProgress,
-  InputAdornment,
-  Typography,
-} from "@mui/material";
+import { Button, CircularProgress, InputAdornment } from "@mui/material";
 import { snackbarState } from "../../../state/snackbar";
 import { useRecoilState } from "recoil";
 import { MemoTextField } from "../../../components/memo-textfield";
 import Joi from "joi";
 import useFormValidation from "../../../hooks/use-form-validation";
+import { toBaseToken } from "../../../lib/token";
 
 export const expiryPriceValidator = Joi.number();
 
@@ -61,11 +56,11 @@ export default function Exercise() {
 
           try {
             await exercise({
-              expiry_price: "16000000",
+              expiry_price: toBaseToken(expiryPrice).toFixed(0),
             });
 
             setSnackbar({
-              message: `Order successfully created`,
+              message: `Option successfully exercised`,
             });
           } catch (e: any) {
             console.log(e);
