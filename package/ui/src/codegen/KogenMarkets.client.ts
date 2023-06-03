@@ -24,6 +24,9 @@ import {
   Config,
   LockedAmountResponse,
   PositionResponse,
+  PositionState,
+  Settlement,
+  Position,
 } from "./KogenMarkets.types";
 export interface KogenMarketsReadOnlyInterface {
   contractAddress: string;
@@ -125,6 +128,16 @@ export interface KogenMarketsInterface extends KogenMarketsReadOnlyInterface {
     memo?: string,
     _funds?: Coin[]
   ) => Promise<ExecuteResult>;
+  exercise: (
+    {
+      expiryPrice,
+    }: {
+      expiryPrice: Uint128;
+    },
+    fee?: number | StdFee | "auto",
+    memo?: string,
+    _funds?: Coin[]
+  ) => Promise<ExecuteResult>;
 }
 export class KogenMarketsClient
   extends KogenMarketsQueryClient
@@ -146,6 +159,7 @@ export class KogenMarketsClient
     this.updateConfig = this.updateConfig.bind(this);
     this.askOrder = this.askOrder.bind(this);
     this.bidOrder = this.bidOrder.bind(this);
+    this.exercise = this.exercise.bind(this);
   }
 
   updateConfig = async (
@@ -209,6 +223,29 @@ export class KogenMarketsClient
         bid_order: {
           price,
           quantity,
+        },
+      },
+      fee,
+      memo,
+      _funds
+    );
+  };
+  exercise = async (
+    {
+      expiryPrice,
+    }: {
+      expiryPrice: Uint128;
+    },
+    fee: number | StdFee | "auto" = "auto",
+    memo?: string,
+    _funds?: Coin[]
+  ): Promise<ExecuteResult> => {
+    return await this.client.execute(
+      this.sender,
+      this.contractAddress,
+      {
+        exercise: {
+          expiry_price: expiryPrice,
         },
       },
       fee,

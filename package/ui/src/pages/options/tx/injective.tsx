@@ -62,6 +62,64 @@ export function useInjectiveCallOptionMutation() {
       const msgBroadcaster = new MsgBroadcaster({
         walletStrategy,
         network: Network.TestnetK8s,
+        simulateTx: true,
+      });
+
+      const result = await msgBroadcaster.broadcast({
+        msgs: [orderMsg],
+        address: keplr.account,
+      });
+
+      console.log(result);
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries([{ method: "asks" }]);
+        queryClient.invalidateQueries([{ method: "bids" }]);
+        queryClient.invalidateQueries([{ method: "locked_amount" }]);
+        queryClient.invalidateQueries([{ method: "position" }]);
+      },
+    }
+  );
+}
+
+export function useInjectiveExerciseCallOptionMutation() {
+  const chain = useRecoilValue(chainState);
+  const queryClient = useQueryClient();
+
+  const injectiveKeplr = useRecoilValue(injectiveKeplrState);
+  const contracts = useRecoilValue(contractsState);
+  const keplr = useRecoilValue(keplrState);
+  return useMutation(
+    ["exercise"],
+    async ({ expiry_price }: { expiry_price: string }) => {
+      if (!injectiveKeplr) {
+        return null;
+      }
+
+      if (!keplr.account) {
+        return null;
+      }
+
+      const orderMsg = MsgExecuteContract.fromJSON({
+        contractAddress: contracts,
+        sender: keplr.account,
+        msg: {
+          exercise: {
+            expiry_price,
+          },
+        },
+        funds: [],
+      });
+
+      const walletStrategy = new WalletStrategy({
+        chainId: chain.chainId as ChainId,
+      });
+
+      const msgBroadcaster = new MsgBroadcaster({
+        walletStrategy,
+        network: Network.TestnetK8s,
+        simulateTx: true,
       });
 
       const result = await msgBroadcaster.broadcast({

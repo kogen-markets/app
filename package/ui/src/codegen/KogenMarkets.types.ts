@@ -33,6 +33,11 @@ export type ExecuteMsg =
         price: Uint128;
         quantity: Uint128;
       };
+    }
+  | {
+      exercise: {
+        expiry_price: Uint128;
+      };
     };
 export type QueryMsg =
   | {
@@ -82,6 +87,11 @@ export interface LockedAmountResponse {
   locked_base_denom: Uint128;
   locked_quote_denom: Uint128;
 }
-export interface PositionResponse {
+export type PositionResponse = Position;
+export type PositionState = "open" | "settled";
+export type Settlement = "i_t_m" | "o_t_m";
+export interface Position {
   position_in_base: number;
+  settled?: PositionState | null;
+  settlement?: Settlement | null;
 }

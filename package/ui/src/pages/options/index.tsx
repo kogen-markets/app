@@ -1,10 +1,11 @@
-import { Card, Grid, Paper, Typography } from "@mui/material";
+import { Box, Card, Grid, Paper, Typography } from "@mui/material";
 
 import { Fragment, Suspense } from "react";
 import CallForm from "./components/call-form";
 import Orderbook from "./components/order-book";
 import Loading from "../../components/loading";
 import YourPosition from "./components/your-position";
+import Exercise from "./components/exercise";
 
 export default function Options() {
   return (
@@ -36,6 +37,9 @@ export default function Options() {
               <Orderbook />
             </Suspense>
           </Paper>
+          <Box sx={{ mt: 4 }}>
+            <Exercise />
+          </Box>
         </Grid>
       </Grid>
     </Fragment>

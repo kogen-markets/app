@@ -17,7 +17,7 @@ import {
 } from "../../../codegen/KogenMarkets.react-query";
 import { useRecoilValue } from "recoil";
 import { kogenMarketsQueryClientState } from "../../../state/kogen";
-import { toBaseToken } from "../../../lib/token";
+import { toUserToken } from "../../../lib/token";
 import useTryNextClient from "../../../hooks/use-try-next-client";
 import { keplrState } from "../../../state/cosmos";
 import { useKogenMarketsConfigQuery } from "../../../codegen/KogenMarkets.react-query";
@@ -78,25 +78,25 @@ export default function YourPosition() {
               sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
             >
               <TableCell align="center">
-                {toBaseToken(
+                {toUserToken(
                   lockedAmount.data?.locked_base_denom || "0",
                   config.data?.base_decimals
-                )}{" "}
+                ).toFixed(3)}{" "}
                 ATOM
               </TableCell>
               <TableCell align="center">
-                {toBaseToken(
+                {toUserToken(
                   lockedAmount.data?.locked_quote_denom || "0",
                   config.data?.quote_decimals
-                )}{" "}
+                ).toFixed(3)}{" "}
                 USDT
               </TableCell>
               <TableCell align="right">
                 <Chip
-                  label={toBaseToken(
+                  label={toUserToken(
                     position.data?.position_in_base || 0,
                     config.data?.base_decimals
-                  )}
+                  ).toFixed(3)}
                   variant="outlined"
                   color={
                     (position.data?.position_in_base || 0) < 0

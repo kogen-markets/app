@@ -18,7 +18,9 @@ import useFormValidation from "../../../hooks/use-form-validation";
 import { useInjectiveCallOptionMutation } from "../tx/injective";
 import { ORDER_TYPES } from "../../../types/types";
 import { kogenMarketsQueryClientState } from "../../../state/kogen";
+import { toBaseToken, toUserToken } from "../../../lib/token";
 import useTryNextClient from "../../../hooks/use-try-next-client";
+import { useKogenMarketsConfigQuery } from "../../../codegen/KogenMarkets.react-query";
 
 export const optionSizeValidator = Joi.number();
 export const optionPriceValidator = Joi.number();
@@ -31,6 +33,14 @@ export const callFormValidator = Joi.object({
 export default function CallForm() {
   const tryNextClient = useTryNextClient();
   const kogenClient = useRecoilValue(kogenMarketsQueryClientState);
+  const config = useKogenMarketsConfigQuery({
+    client: kogenClient,
+    options: {
+      staleTime: 300000,
+      onError: tryNextClient,
+      suspense: true,
+    },
+  });
 
   const { formState, onChange, setFormState } = useFormData({
     type: ORDER_TYPES.BID,
@@ -54,23 +64,42 @@ export default function CallForm() {
     () => formState.get("type") === ORDER_TYPES.BID,
     [formState]
   );
+
   const collateral = useMemo(() => {
+    if (!config.data) {
+      return null;
+    }
+
     if (formState.get("type") === ORDER_TYPES.BID) {
+      const amount_in_base = toBaseToken(
+        formState.get("optionPrice"),
+        config.data.quote_decimals
+      )
+        .add(config.data.strike_price_in_quote)
+        .mul(formState.get("optionSize"));
+
       return {
-        amount:
-          formState.get("optionSize") * (formState.get("optionPrice") + 15),
-        denom: "peggy0x87aB3B4C8661e07D6372361211B96ed4Dc36B1B5",
+        amountBase: amount_in_base.toFixed(0),
+        amount: toUserToken(amount_in_base, config.data.quote_decimals),
+        denom: config.data.quote_denom,
         symbol: "USDT",
       };
     }
+
     if (formState.get("type") === ORDER_TYPES.ASK) {
+      const amount_in_base = toBaseToken(
+        formState.get("optionSize"),
+        config.data.base_decimals
+      );
+
       return {
-        amount: formState.get("optionSize"),
-        denom: "factory/inj17vytdwqczqz72j65saukplrktd4gyfme5agf6c/atom",
+        amountBase: amount_in_base.toFixed(0),
+        amount: toUserToken(amount_in_base, config.data.base_decimals),
+        denom: config.data.base_denom,
         symbol: "ATOM",
       };
     }
-  }, [formState]);
+  }, [formState, config.data]);
 
   const { mutateAsync: createOrder, isLoading: isCreateOrderLoading } =
     useInjectiveCallOptionMutation();
@@ -109,8 +138,18 @@ export default function CallForm() {
         sx={{ mb: 3 }}
       >
         <Grid item xs={12} sm={6}>
-          <Typography variant="caption">Strike</Typography>
-          <Typography variant="body1">$15.00</Typography>
+          {config.data?.strike_price_in_quote && (
+            <Fragment>
+              <Typography variant="caption">Strike</Typography>
+              <Typography variant="body1">
+                $
+                {toUserToken(
+                  config.data?.strike_price_in_quote,
+                  config.data?.quote_decimals
+                ).toFixed(2)}
+              </Typography>
+            </Fragment>
+          )}
         </Grid>
         <Grid item xs={12} sm={6}>
           <Typography variant="caption">Expiry</Typography>
@@ -195,14 +234,21 @@ export default function CallForm() {
             if (!collateral) {
               return null;
             }
+
             try {
               await createOrder({
                 type: formState.get("type"),
-                price: "" + Math.ceil(formState.get("optionPrice") * 1e6),
-                quantity: "" + Math.ceil(formState.get("optionSize") * 1e6),
+                price: toBaseToken(
+                  formState.get("optionPrice"),
+                  config.data?.quote_decimals
+                ).toFixed(0),
+                quantity: toBaseToken(
+                  formState.get("optionSize"),
+                  config.data?.base_decimals
+                ).toFixed(0),
                 funds: [
                   {
-                    amount: "" + Math.ceil(collateral.amount * 1e6),
+                    amount: collateral.amountBase,
                     denom: collateral.denom,
                   },
                 ],

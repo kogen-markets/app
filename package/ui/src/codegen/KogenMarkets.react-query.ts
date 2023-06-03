@@ -26,6 +26,9 @@ import {
   Config,
   LockedAmountResponse,
   PositionResponse,
+  PositionState,
+  Settlement,
+  Position,
 } from "./KogenMarkets.types";
 import {
   KogenMarketsQueryClient,
@@ -318,6 +321,29 @@ export function useKogenMarketsConfigQuery<TData = Config>({
       enabled:
         !!client && (options?.enabled != undefined ? options.enabled : true),
     }
+  );
+}
+export interface KogenMarketsExerciseMutation {
+  client: KogenMarketsClient;
+  msg: {
+    expiryPrice: Uint128;
+  };
+  args?: {
+    fee?: number | StdFee | "auto";
+    memo?: string;
+    funds?: Coin[];
+  };
+}
+export function useKogenMarketsExerciseMutation(
+  options?: Omit<
+    UseMutationOptions<ExecuteResult, Error, KogenMarketsExerciseMutation>,
+    "mutationFn"
+  >
+) {
+  return useMutation<ExecuteResult, Error, KogenMarketsExerciseMutation>(
+    ({ client, msg, args: { fee, memo, funds } = {} }) =>
+      client.exercise(msg, fee, memo, funds),
+    options
   );
 }
 export interface KogenMarketsBidOrderMutation {
