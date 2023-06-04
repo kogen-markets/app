@@ -152,8 +152,20 @@ export default function CallForm() {
           )}
         </Grid>
         <Grid item xs={12} sm={6}>
-          <Typography variant="caption">Expiry</Typography>
-          <Typography variant="body1">15-Sep-2023</Typography>
+          {config.data?.expiry && (
+            <Fragment>
+              <Typography variant="caption">Expiry</Typography>
+              <Typography variant="body1">
+                {new Date(
+                  parseInt(config.data.expiry) / 1000000
+                ).toLocaleDateString(undefined, {
+                  month: "long",
+                  day: "2-digit",
+                  year: "numeric",
+                })}
+              </Typography>
+            </Fragment>
+          )}
         </Grid>
       </Grid>
       <Grid
