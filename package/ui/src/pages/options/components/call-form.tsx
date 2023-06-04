@@ -23,12 +23,7 @@ import useTryNextClient from "../../../hooks/use-try-next-client";
 import { useKogenMarketsConfigQuery } from "../../../codegen/KogenMarkets.react-query";
 
 export const optionSizeValidator = Joi.number();
-export const optionPriceValidator = Joi.number();
-export const callFormValidator = Joi.object({
-  type: Joi.string().allow(...Object.values(ORDER_TYPES)),
-  optionSize: optionSizeValidator,
-  optionPrice: optionPriceValidator,
-}).unknown(true);
+export const optionPriceValidator = Joi.number().greater(0);
 
 export default function CallForm() {
   const tryNextClient = useTryNextClient();
@@ -48,14 +43,34 @@ export default function CallForm() {
     optionPrice: 10,
   });
 
+  const optionSizeValidatorConfig = useMemo(() => {
+    if (!config.data) {
+      return optionSizeValidator;
+    }
+
+    return optionSizeValidator.min(
+      toUserToken(config.data.min_order_quantity_in_base).toNumber()
+    );
+  }, [config]);
+
+  const callFormValidatorConfig = useMemo(
+    () =>
+      Joi.object({
+        type: Joi.string().allow(...Object.values(ORDER_TYPES)),
+        optionSize: optionSizeValidatorConfig,
+        optionPrice: optionPriceValidator,
+      }).unknown(true),
+    [optionSizeValidatorConfig]
+  );
+
   const [invalidOptionSize, setOptionSizeBlurred] = useFormValidation(
     formState.get("optionSize"),
-    optionSizeValidator.messages({})
+    optionSizeValidatorConfig.messages({})
   );
 
   const [invalidOptionPrice, setOptionPriceBlurred] = useFormValidation(
     formState.get("optionPrice"),
-    optionSizeValidator.messages({})
+    optionPriceValidator.messages({})
   );
 
   const [, setSnackbar] = useRecoilState(snackbarState);
@@ -78,6 +93,10 @@ export default function CallForm() {
         .add(config.data.strike_price_in_quote)
         .mul(formState.get("optionSize"));
 
+      if (amount_in_base.isNaN()) {
+        return null;
+      }
+
       return {
         amountBase: amount_in_base.toFixed(0),
         amount: toUserToken(amount_in_base, config.data.quote_decimals),
@@ -92,6 +111,10 @@ export default function CallForm() {
         config.data.base_decimals
       );
 
+      if (amount_in_base.isNaN()) {
+        return null;
+      }
+
       return {
         amountBase: amount_in_base.toFixed(0),
         amount: toUserToken(amount_in_base, config.data.base_decimals),
@@ -100,6 +123,10 @@ export default function CallForm() {
       };
     }
   }, [formState, config.data]);
+
+  const orderCreateEnabled = useMemo(() => {
+    return callFormValidatorConfig.validate(formState.toJSON()).error == null;
+  }, [callFormValidatorConfig, formState]);
 
   const { mutateAsync: createOrder, isLoading: isCreateOrderLoading } =
     useInjectiveCallOptionMutation();
@@ -190,6 +217,12 @@ export default function CallForm() {
             type="number"
             value={formState.get("optionPrice")}
             variant="outlined"
+            FormHelperTextProps={{
+              sx: {
+                minHeight: { md: "60px" },
+                display: "block",
+              },
+            }}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start" sx={{ mr: 3 }}>
@@ -214,6 +247,12 @@ export default function CallForm() {
             type="number"
             value={formState.get("optionSize")}
             variant="outlined"
+            FormHelperTextProps={{
+              sx: {
+                minHeight: { md: "60px" },
+                display: "block",
+              },
+            }}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start" sx={{ mr: 3 }}>
@@ -227,7 +266,7 @@ export default function CallForm() {
 
       <Box>
         <Typography variant="caption">Collateral</Typography>
-        {Boolean(collateral?.amount) && (
+        {Boolean(collateral?.amount) && orderCreateEnabled && (
           <Typography variant="body1" sx={{ mb: 2 }}>
             You need to deposit {collateral?.amount?.toPrecision(4)}{" "}
             {collateral?.symbol}
@@ -276,7 +315,7 @@ export default function CallForm() {
             }
           }}
           color={isBid ? "secondary" : "primary"}
-          disabled={isCreateOrderLoading}
+          disabled={isCreateOrderLoading || !orderCreateEnabled}
         >
           {isCreateOrderLoading ? (
             <Fragment>

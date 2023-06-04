@@ -81,7 +81,7 @@ export default function YourPosition() {
               <TableCell colSpan={2} align="center">
                 Locked balance
               </TableCell>
-              <TableCell align="right">CALL</TableCell>
+              <TableCell align="center">CALL</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -102,7 +102,7 @@ export default function YourPosition() {
                 ).toFixed(3)}{" "}
                 USDT
               </TableCell>
-              <TableCell align="right">
+              <TableCell align="center">
                 <Chip
                   label={toUserToken(
                     position_in_base,
