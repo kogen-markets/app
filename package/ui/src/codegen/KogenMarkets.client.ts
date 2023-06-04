@@ -15,6 +15,7 @@ import {
   Uint64,
   Uint128,
   Addr,
+  Identifier,
   InstantiateMsg,
   ExecuteMsg,
   QueryMsg,

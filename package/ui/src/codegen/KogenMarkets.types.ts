@@ -8,12 +8,15 @@ export type Timestamp = Uint64;
 export type Uint64 = string;
 export type Uint128 = string;
 export type Addr = string;
+export type Identifier = string;
 export interface InstantiateMsg {
   base_decimals?: number | null;
   base_denom: string;
   expiry: Timestamp;
   min_order_quantity: Uint128;
   owner: Addr;
+  pyth_base_price_feed: Identifier;
+  pyth_contract_addr: Addr;
   quote_decimals?: number | null;
   quote_denom: string;
   strike_price: Uint128;
@@ -79,6 +82,8 @@ export interface Config {
   instantiated: Timestamp;
   min_order_quantity_in_base: Uint128;
   owner: Addr;
+  pyth_base_price_feed: Identifier;
+  pyth_contract_addr: Addr;
   quote_decimals: number;
   quote_denom: string;
   strike_price_in_quote: Uint128;
