@@ -268,7 +268,12 @@ export default function CallForm() {
         >
           {isCreateOrderLoading ? (
             <Fragment>
-              <CircularProgress size={15} sx={{ mr: 1 }} /> Loading
+              <CircularProgress
+                size={15}
+                sx={{ mr: 1 }}
+                color={isBid ? "secondary" : "primary"}
+              />{" "}
+              Loading
             </Fragment>
           ) : (
             `Create ${isBid ? "bid" : "ask"} order`
