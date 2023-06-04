@@ -10,7 +10,7 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import { Fragment } from "react";
+import { Fragment, useMemo } from "react";
 import {
   useKogenMarketsLockedAmountQuery,
   useKogenMarketsPositionQuery,
@@ -21,6 +21,7 @@ import { toUserToken } from "../../../lib/token";
 import useTryNextClient from "../../../hooks/use-try-next-client";
 import { keplrState } from "../../../state/cosmos";
 import { useKogenMarketsConfigQuery } from "../../../codegen/KogenMarkets.react-query";
+import Decimal from "decimal.js";
 
 export default function YourPosition() {
   const kogenClient = useRecoilValue(kogenMarketsQueryClientState);
@@ -59,6 +60,16 @@ export default function YourPosition() {
     },
   });
 
+  const position_in_base = useMemo(() => {
+    if (!position.data) {
+      return new Decimal(0);
+    }
+
+    return new Decimal(position.data?.bid_position_in_base || 0).sub(
+      position.data?.ask_position_in_base || 0
+    );
+  }, [position]);
+
   return (
     <Fragment>
       <Typography variant="caption">Your position</Typography>
@@ -94,14 +105,14 @@ export default function YourPosition() {
               <TableCell align="right">
                 <Chip
                   label={toUserToken(
-                    position.data?.position_in_base || 0,
+                    position_in_base,
                     config.data?.base_decimals
                   ).toFixed(3)}
                   variant="outlined"
                   color={
-                    (position.data?.position_in_base || 0) < 0
+                    position_in_base.lessThan(0)
                       ? "primary"
-                      : (position.data?.position_in_base || 0) === 0
+                      : position_in_base.equals(0)
                       ? "default"
                       : "secondary"
                   }

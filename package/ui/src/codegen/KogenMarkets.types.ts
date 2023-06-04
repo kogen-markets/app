@@ -91,7 +91,8 @@ export type PositionResponse = Position;
 export type PositionState = "open" | "settled";
 export type Settlement = "i_t_m" | "o_t_m";
 export interface Position {
-  position_in_base: number;
+  ask_position_in_base: Uint128;
+  bid_position_in_base: Uint128;
   settled?: PositionState | null;
   settlement?: Settlement | null;
 }
