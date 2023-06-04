@@ -38,7 +38,9 @@ export default function Options() {
             </Suspense>
           </Paper>
           <Box sx={{ mt: 4 }}>
-            <Exercise />
+            <Suspense fallback={<Loading />}>
+              <Exercise />
+            </Suspense>
           </Box>
         </Grid>
       </Grid>

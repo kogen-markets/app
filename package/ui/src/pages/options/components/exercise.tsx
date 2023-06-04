@@ -1,16 +1,33 @@
-import { Fragment, useState } from "react";
+import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
 import { useInjectiveExerciseCallOptionMutation } from "../tx/injective";
 import { Button, CircularProgress, InputAdornment } from "@mui/material";
 import { snackbarState } from "../../../state/snackbar";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { MemoTextField } from "../../../components/memo-textfield";
 import Joi from "joi";
 import useFormValidation from "../../../hooks/use-form-validation";
 import { toBaseToken } from "../../../lib/token";
+import { useTheme } from "@emotion/react";
+import { pythServiceState } from "../../../state/cosmos";
+import { useKogenMarketsConfigQuery } from "../../../codegen/KogenMarkets.react-query";
+import useTryNextClient from "../../../hooks/use-try-next-client";
+import { kogenMarketsQueryClientState } from "../../../state/kogen";
+import Decimal from "decimal.js";
 
 export const expiryPriceValidator = Joi.number();
 
 export default function Exercise() {
+  const tryNextClient = useTryNextClient();
+  const kogenClient = useRecoilValue(kogenMarketsQueryClientState);
+  const config = useKogenMarketsConfigQuery({
+    client: kogenClient,
+    options: {
+      staleTime: 300000,
+      onError: tryNextClient,
+      suspense: true,
+    },
+  });
+
   const { mutateAsync: exercise, isLoading: isExerciseLoading } =
     useInjectiveExerciseCallOptionMutation();
 
@@ -21,6 +38,30 @@ export default function Exercise() {
     expiryPrice,
     expiryPriceValidator.messages({})
   );
+
+  //@ts-ignore
+  const isDarkTheme = useTheme().palette.mode === "dark";
+  const pythPriceService = useRecoilValue(pythServiceState);
+
+  const pythPriceServicePriceFeed = useMemo(() => {
+    pythPriceService.searchParams.set(
+      "ids[]",
+      config.data?.pyth_base_price_feed || ""
+    );
+
+    return pythPriceService;
+  }, [config, pythPriceService]);
+
+  const fetchPyth = useCallback(() => {
+    fetch(pythPriceServicePriceFeed)
+      .then((r) => r.json())
+      .then((r) => {
+        const { price, expo } = r[0].price;
+        const n = new Decimal(price).mul(Math.pow(10, expo)).toFixed(3);
+
+        setExpiryPrice(n);
+      });
+  }, [pythPriceServicePriceFeed]);
 
   return (
     <Fragment>
@@ -44,6 +85,19 @@ export default function Exercise() {
               USDT
             </InputAdornment>
           ),
+          endAdornment: (
+            <Button
+              color="secondary"
+              sx={{ height: "100%" }}
+              onClick={fetchPyth}
+            >
+              {isDarkTheme ? (
+                <img src="/pyth_logo_lockup_light.svg" width="50" />
+              ) : (
+                <img src="/pyth_logo_lockup_dark.svg" width="50" />
+              )}
+            </Button>
+          ),
         }}
       />
       <Button
@@ -56,7 +110,10 @@ export default function Exercise() {
 
           try {
             await exercise({
-              expiry_price: toBaseToken(expiryPrice).toFixed(0),
+              expiry_price: toBaseToken(
+                expiryPrice,
+                config.data?.quote_decimals
+              ).toFixed(0),
             });
 
             setSnackbar({

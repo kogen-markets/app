@@ -74,6 +74,28 @@ export const rpcsState = selector<string[]>({
   },
 });
 
+export const pythServiceState = selector<URL>({
+  key: "pythServiceState",
+  get: async ({ get }) => {
+    const chain = get(chainState);
+    if (chain.chainId === "injective-1") {
+      return new URL(
+        "/api/latest_price_feeds",
+        "https://xc-mainnet.pyth.network"
+      );
+    }
+
+    if (chain.chainId === "injective-888") {
+      return new URL(
+        "/api/latest_price_feeds",
+        "https://xc-testnet.pyth.network"
+      );
+    }
+
+    throw new Error("unknown chainId " + chain.chainId);
+  },
+});
+
 export const signClientState = selector<SigningCosmWasmClient | null>({
   key: "signClientState",
   dangerouslyAllowMutability: true,
