@@ -127,7 +127,7 @@ export default function Exercise() {
           }
         }}
         color={"secondary"}
-        disabled={isExerciseLoading}
+        disabled={isExerciseLoading || !expiryPrice}
       >
         {isExerciseLoading ? (
           <Fragment>
