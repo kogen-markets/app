@@ -15,12 +15,12 @@ import useFormData from "../../../hooks/use-form-data";
 import { snackbarState } from "../../../state/snackbar";
 import { MemoTextField } from "../../../components/memo-textfield";
 import useFormValidation from "../../../hooks/use-form-validation";
-import { useInjectiveCallOptionMutation } from "../tx/injective";
 import { ORDER_TYPES } from "../../../types/types";
 import { kogenMarketsQueryClientState } from "../../../state/kogen";
 import { toBaseToken, toUserToken } from "../../../lib/token";
 import useTryNextClient from "../../../hooks/use-try-next-client";
 import { useKogenMarketsConfigQuery } from "../../../codegen/KogenMarkets.react-query";
+import { useCallOptionMutation } from "../tx";
 
 export const optionSizeValidator = Joi.number();
 export const optionPriceValidator = Joi.number().greater(0);
@@ -129,7 +129,7 @@ export default function CallForm() {
   }, [callFormValidatorConfig, formState]);
 
   const { mutateAsync: createOrder, isLoading: isCreateOrderLoading } =
-    useInjectiveCallOptionMutation();
+    useCallOptionMutation();
 
   return (
     <Fragment>

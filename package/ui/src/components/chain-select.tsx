@@ -18,8 +18,8 @@ export default function ChainSelect() {
             })
           }
         >
-          <MenuItem value={"injective-888"}>Injective Testnet</MenuItem>
-          <MenuItem value={"pion-1"}>Neutron Testnet</MenuItem>
+          <MenuItem value={"injective-888"}>Injective (Testnet)</MenuItem>
+          <MenuItem value={"pion-1"}>Neutron (Testnet)</MenuItem>
         </Select>
       </FormControl>
     </Fragment>

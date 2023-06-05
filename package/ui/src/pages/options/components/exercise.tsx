@@ -1,5 +1,4 @@
 import { Fragment, useCallback, useMemo, useState } from "react";
-import { useInjectiveExerciseCallOptionMutation } from "../tx/injective";
 import { Button, CircularProgress, InputAdornment } from "@mui/material";
 import { snackbarState } from "../../../state/snackbar";
 import { useRecoilState, useRecoilValue } from "recoil";
@@ -13,6 +12,7 @@ import { useKogenMarketsConfigQuery } from "../../../codegen/KogenMarkets.react-
 import useTryNextClient from "../../../hooks/use-try-next-client";
 import { kogenMarketsQueryClientState } from "../../../state/kogen";
 import Decimal from "decimal.js";
+import { useExerciseCallOptionMutation } from "../tx";
 
 export const expiryPriceValidator = Joi.number();
 
@@ -29,7 +29,7 @@ export default function Exercise() {
   });
 
   const { mutateAsync: exercise, isLoading: isExerciseLoading } =
-    useInjectiveExerciseCallOptionMutation();
+    useExerciseCallOptionMutation();
 
   const [, setSnackbar] = useRecoilState(snackbarState);
 
