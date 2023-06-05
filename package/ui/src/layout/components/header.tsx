@@ -5,6 +5,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import { drawerOpenedState } from "../../state/kogen";
 import { useRecoilState } from "recoil";
 
+const ChainSelect = lazy(() => import("../../components/chain-select"));
 const KeplrButton = lazy(() => import("../../components/keplr-button"));
 
 export default function Header() {
@@ -34,9 +35,14 @@ export default function Header() {
           </Box>
         </Grid>
         <Grid item xs={6} sm={"auto"} sx={{ textAlign: "right" }}>
-          <Suspense fallback={<Loading />}>
-            <KeplrButton />
-          </Suspense>
+          <Box sx={{ display: "flex", gap: 2, width: "100%" }}>
+            <Suspense fallback={<Loading />}>
+              <ChainSelect />
+            </Suspense>
+            <Suspense fallback={<Loading />}>
+              <KeplrButton />
+            </Suspense>
+          </Box>
         </Grid>
       </Grid>
     </Box>

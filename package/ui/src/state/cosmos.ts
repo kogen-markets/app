@@ -70,6 +70,10 @@ export const rpcsState = selector<string[]>({
       return JSON.parse(import.meta.env.VITE_INJECTIVE_RPCS) as string[];
     }
 
+    if (chain.chainId === "pion-1") {
+      return JSON.parse(import.meta.env.VITE_NEUTRON_RPCS) as string[];
+    }
+
     throw new Error("unknown chainId " + chain.chainId);
   },
 });
@@ -85,7 +89,7 @@ export const pythServiceState = selector<URL>({
       );
     }
 
-    if (chain.chainId === "injective-888") {
+    if (["injective-888", "pion-1"].includes(chain.chainId)) {
       return new URL(
         "/api/latest_price_feeds",
         "https://xc-testnet.pyth.network"

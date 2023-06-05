@@ -1,4 +1,4 @@
-import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
+import { Fragment, useCallback, useMemo, useState } from "react";
 import { useInjectiveExerciseCallOptionMutation } from "../tx/injective";
 import { Button, CircularProgress, InputAdornment } from "@mui/material";
 import { snackbarState } from "../../../state/snackbar";

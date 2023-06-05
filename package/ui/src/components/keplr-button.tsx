@@ -4,6 +4,7 @@ import { keplrState } from "../state/cosmos";
 import Loading from "./loading";
 import useKeplrConnect from "../hooks/use-keplr-connect";
 import { Fragment } from "react";
+import { addressShort } from "../lib/token";
 
 function InstallButton() {
   return (
@@ -46,7 +47,7 @@ export default function KeplrButton() {
   return (
     <Fragment>
       <Button variant="outlined" href="" disabled>
-        Keplr connected
+        {keplr.name} - {addressShort(keplr.account)}
       </Button>
     </Fragment>
   );

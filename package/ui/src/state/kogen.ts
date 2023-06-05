@@ -30,6 +30,9 @@ export const contractsState = selector<string>({
     if (chain.chainId === "injective-888") {
       return "inj1yax3plfpfzlzems9u6rqswse9cn5gt8whh0fxq";
     }
+    if (chain.chainId === "pion-1") {
+      return "neutron1e2aydznpnat7clj9wxpxga888ppmkekz4t284xvyskylk75u228q7dpgwh";
+    }
 
     throw new Error("unknown chainId " + chain.chainId);
   },
