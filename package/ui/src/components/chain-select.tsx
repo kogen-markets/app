@@ -12,8 +12,17 @@ export default function ChainSelect() {
     <Fragment>
       <FormControl>
         <Select
-          MenuProps={{ disableScrollLock: true }}
+          MenuProps={{
+            disableScrollLock: true,
+            color: "secondary",
+            sx: {
+              "&& .Mui-selected": (theme) => ({
+                backgroundColor: theme.palette.secondary.main,
+              }),
+            },
+          }}
           size="small"
+          color="secondary"
           value={chain.chain_id}
           onChange={(event) => {
             const chain = chains.find((c) => c.chain_id === event.target.value);
