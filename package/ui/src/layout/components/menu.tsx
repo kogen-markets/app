@@ -8,7 +8,7 @@ import {
   alpha,
 } from "@mui/material";
 import { Link as MuiLink } from "@mui/material";
-import { Fragment } from "react";
+import { Fragment, Suspense, lazy } from "react";
 
 import AltRouteIcon from "@mui/icons-material/AltRoute";
 import QuizIcon from "@mui/icons-material/Quiz";
@@ -16,6 +16,8 @@ import QuizIcon from "@mui/icons-material/Quiz";
 import { Link, useLocation } from "react-router-dom";
 import ThemeSelector from "../../components/theme-selector";
 import { useTheme } from "@emotion/react";
+import Loading from "../../components/loading";
+const ChainSelect = lazy(() => import("../../components/chain-select"));
 
 export default function Menu() {
   const location = useLocation();
@@ -60,6 +62,11 @@ export default function Menu() {
                 <img src="/kogen-logo-white.png" width="100%" />
               )}
             </MuiLink>
+          </Box>
+          <Box sx={{ display: { xs: "block", sm: "none" }, px: 2 }}>
+            <Suspense fallback={<Loading />}>
+              <ChainSelect FormControlProps={{ fullWidth: true }} />
+            </Suspense>
           </Box>
           <List
             sx={{ width: "100%" }}

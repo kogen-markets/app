@@ -22,21 +22,6 @@ export const keplrInteractedState = atom({
   effects: [localStorageEffect(LOCAL_STORAGE_KEPLR_INTERACTED)],
 });
 
-export const keplrState = atom<{
-  initialized: boolean;
-  isInstalled: boolean;
-  account: string | null;
-  name: string | null;
-}>({
-  key: "keplrState",
-  default: {
-    initialized: false,
-    isInstalled: false,
-    account: null,
-    name: null,
-  },
-});
-
 export const rpcsState = selector<string[]>({
   key: "rpcsState",
   get: async ({ get }) => {

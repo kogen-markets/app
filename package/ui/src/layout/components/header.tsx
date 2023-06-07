@@ -6,7 +6,6 @@ import { drawerOpenedState } from "../../state/kogen";
 import { useRecoilState } from "recoil";
 
 const ChainSelect = lazy(() => import("../../components/chain-select"));
-const KeplrButton = lazy(() => import("../../components/keplr-button"));
 const WalletButton = lazy(() => import("../../components/wallet-button"));
 
 export default function Header() {
@@ -19,7 +18,7 @@ export default function Header() {
       }}
     >
       <Grid container alignItems={"center"} justifyContent={"space-between"}>
-        <Grid item xs={6} sm={"auto"}>
+        <Grid item xs={3} sm={"auto"}>
           <Box
             sx={{
               textAlign: "left",
@@ -35,14 +34,19 @@ export default function Header() {
             </IconButton>
           </Box>
         </Grid>
-        <Grid item xs={6} sm={"auto"} sx={{ textAlign: "right" }}>
-          <Box sx={{ display: "flex", gap: 2, width: "100%" }}>
-            <Suspense fallback={<Loading />}>
-              <ChainSelect />
-            </Suspense>
-            {/* <Suspense fallback={<Loading />}>
-              <KeplrButton />
-            </Suspense> */}
+        <Grid item xs={9} sm={"auto"} sx={{ textAlign: "right" }}>
+          <Box
+            sx={{
+              display: "flex",
+              gap: 2,
+              justifyContent: "flex-end",
+            }}
+          >
+            <Box sx={{ display: { xs: "none", sm: "block" } }}>
+              <Suspense fallback={<Loading />}>
+                <ChainSelect />
+              </Suspense>
+            </Box>
             <Suspense fallback={<Loading />}>
               <WalletButton />
             </Suspense>

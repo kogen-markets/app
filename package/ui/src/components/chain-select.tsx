@@ -1,16 +1,20 @@
-import { FormControl, MenuItem, Select } from "@mui/material";
+import { FormControl, FormControlProps, MenuItem, Select } from "@mui/material";
 import { Fragment } from "react";
 import { useRecoilState } from "recoil";
 import { chains } from "chain-registry";
 import { chainState } from "../state/cosmos";
 import { TESTNET } from "../lib/config";
 
-export default function ChainSelect() {
+export default function ChainSelect({
+  FormControlProps,
+}: {
+  FormControlProps?: FormControlProps;
+}) {
   const [chain, setChain] = useRecoilState(chainState);
 
   return (
     <Fragment>
-      <FormControl>
+      <FormControl {...FormControlProps}>
         <Select
           MenuProps={{
             disableScrollLock: true,

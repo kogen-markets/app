@@ -8,7 +8,6 @@ import {
 } from "react-router-dom";
 import { Provider as RollbarProvider, ErrorBoundary } from "@rollbar/react";
 import { RecoilRoot } from "recoil";
-import KeplrWatcher from "./components/keplr-watcher";
 import AppLayout from "./layout/app";
 import rollbar from "./lib/rollbar";
 import Error from "./pages/error";
@@ -61,7 +60,6 @@ function App() {
       <RecoilRoot>
         <QueryClientProvider client={queryClient}>
           <ErrorBoundary>
-            <KeplrWatcher />
             <ChainProvider
               chains={chains.filter((c) =>
                 ENABLED_TESTNETS.includes(c.chain_id as TESTNET)
