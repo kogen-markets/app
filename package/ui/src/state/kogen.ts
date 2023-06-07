@@ -28,7 +28,7 @@ export const contractsState = selector<string>({
       return "inj1yax3plfpfzlzems9u6rqswse9cn5gt8whh0fxq";
     }
     if (chain.chain_id === TESTNET.NEUTRON) {
-      return "neutron1e2aydznpnat7clj9wxpxga888ppmkekz4t284xvyskylk75u228q7dpgwh";
+      return "neutron18anv85nnzrmjvgflkael4cyz3m3f52cwdc3jca96yauz3yn5h0wqmw6t64";
     }
 
     throw new Error("unknown chain_id " + chain.chain_id);

@@ -1,16 +1,20 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRecoilValue } from "recoil";
-import { chainState, keplrState } from "../../../state/cosmos";
+import { useChain } from "@cosmos-kit/react";
+import { MsgExecuteContract } from "cosmjs-types/cosmwasm/wasm/v1/tx.js";
+
+import { chainState } from "../../../state/cosmos";
 import { ORDER_TYPE } from "../../../types/types";
 import { contractsState } from "../../../state/kogen";
-import { useChain } from "@cosmos-kit/react";
+import { toUtf8 } from "@cosmjs/encoding";
 
 export function useNeutronCallOptionMutation() {
   const chain = useRecoilValue(chainState);
   const queryClient = useQueryClient();
+  const { address, getSigningCosmWasmClient } = useChain(chain.chain_name);
 
   const contracts = useRecoilValue(contractsState);
-  const keplr = useRecoilValue(keplrState);
+
   return useMutation(
     ["callOption"],
     async ({
@@ -27,24 +31,36 @@ export function useNeutronCallOptionMutation() {
         amount: string;
       }[];
     }) => {
-      if (!keplr.account) {
+      if (!address) {
         return null;
       }
 
-      // const orderMsg = MsgExecuteContract.fromJSON({
-      //   contractAddress: contracts,
-      //   sender: keplr.account,
-      //   msg: {
-      //     [`${type}_order`]: {
-      //       price,
-      //       quantity,
-      //     },
-      //   },
-      //   funds: funds,
-      // });
+      const orderMsg = {
+        typeUrl: "/cosmwasm.wasm.v1.MsgExecuteContract",
+        value: MsgExecuteContract.fromPartial({
+          contract: contracts,
+          sender: address,
+          msg: toUtf8(
+            JSON.stringify({
+              [`${type}_order`]: {
+                price,
+                quantity,
+              },
+            })
+          ),
+          funds: funds,
+        }),
+      };
 
-      await new Promise((resolve) => setTimeout(resolve, 10));
-      throw new Error("not implemented yet for neutron");
+      const signClient = await getSigningCosmWasmClient();
+
+      const result = await signClient.signAndBroadcast(
+        address,
+        [orderMsg],
+        "auto"
+      );
+
+      console.log(result);
     },
     {
       onSuccess: () => {
@@ -61,34 +77,40 @@ export function useNeutronExerciseCallOptionMutation() {
   const chain = useRecoilValue(chainState);
   const queryClient = useQueryClient();
 
+  const { address, getSigningCosmWasmClient } = useChain(chain.chain_name);
   const contracts = useRecoilValue(contractsState);
-  const keplr = useRecoilValue(keplrState);
-  const { getSigningCosmWasmClient } = useChain(chain.chain_name);
   return useMutation(
     ["exercise"],
     async ({ expiry_price }: { expiry_price: string }) => {
-      if (!keplr.account) {
+      if (!address) {
         return null;
       }
 
-      const s = await getSigningCosmWasmClient();
+      const exerciseMsg = {
+        typeUrl: "/cosmwasm.wasm.v1.MsgExecuteContract",
+        value: MsgExecuteContract.fromPartial({
+          contract: contracts,
+          sender: address,
+          msg: toUtf8(
+            JSON.stringify({
+              exercise: {
+                expiry_price,
+              },
+            })
+          ),
+          funds: [],
+        }),
+      };
 
-      console.log(s);
+      const signClient = await getSigningCosmWasmClient();
 
-      // const orderMsg = MsgExecuteContract.fromJSON({
-      //   contractAddress: contracts,
-      //   sender: keplr.account,
-      //   msg: {
-      //     exercise: {
-      //       expiry_price,
-      //     },
-      //   },
-      //   funds: [],
-      // });
+      const result = await signClient.signAndBroadcast(
+        address,
+        [exerciseMsg],
+        "auto"
+      );
 
-      await new Promise((resolve) => setTimeout(resolve, 10));
-
-      throw new Error("not implemented yet for neutron");
+      console.log(result);
     },
     {
       onSuccess: () => {

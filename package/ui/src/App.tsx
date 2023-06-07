@@ -20,12 +20,10 @@ import { wallets as leapWallets } from "@cosmos-kit/leap-extension";
 import { wallets as cosmostationWallets } from "@cosmos-kit/cosmostation-extension";
 import WalletDialog from "./components/wallet-dialog";
 import { ENABLED_TESTNETS, TESTNET } from "./lib/config";
-import { Network } from "@injectivelabs/networks";
+import { GasPrice } from "@cosmjs/stargate";
 
 const OptionsPage = lazy(() => import("./pages/options/index"));
-console.log(
-  chains.filter((c) => ENABLED_TESTNETS.includes(c.chain_id as TESTNET))
-);
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -89,6 +87,17 @@ function App() {
                   },
                 },
                 isLazy: true,
+              }}
+              signerOptions={{
+                signingCosmwasm: (chain) => {
+                  if (chain.chain_id === TESTNET.NEUTRON) {
+                    return {
+                      gasPrice: GasPrice.fromString("0.01untrn"),
+                    };
+                  }
+
+                  return {};
+                },
               }}
               walletModal={WalletDialog}
             >
