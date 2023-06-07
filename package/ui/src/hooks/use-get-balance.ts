@@ -13,7 +13,7 @@ export default function useGetBalance(addr?: string, denom?: string) {
   const checkAddr = walletAddr || addr;
 
   return useQuery(
-    ["get_notifications", checkAddr, denom],
+    ["get_balance", checkAddr, denom],
     async () => {
       if (!checkAddr || !denom) {
         return null;
