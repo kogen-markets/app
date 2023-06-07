@@ -14,7 +14,8 @@ import {
 } from "../../../codegen/KogenMarkets.types";
 import Decimal from "decimal.js";
 import AdjustIcon from "@mui/icons-material/Adjust";
-import { keplrState } from "../../../state/cosmos";
+import { chainState } from "../../../state/cosmos";
+import { useChain } from "@cosmos-kit/react";
 
 function sumOrders(orders?: OrderBookItem[]) {
   if (!orders) {
@@ -27,7 +28,7 @@ function sumOrders(orders?: OrderBookItem[]) {
   );
 }
 
-function includesSender(orders: OrderBookItem[], sender: string | null) {
+function includesSender(orders: OrderBookItem[], sender?: string) {
   if (!orders || !sender) {
     return false;
   }
@@ -47,7 +48,8 @@ function OrdersItem({
   color: "primary" | "secondary";
 }) {
   const tryNextClient = useTryNextClient();
-  const keplr = useRecoilValue(keplrState);
+  const chain = useRecoilValue(chainState);
+  const { address } = useChain(chain.chain_name);
   const kogenClient = useRecoilValue(kogenMarketsQueryClientState);
   const config = useKogenMarketsConfigQuery({
     client: kogenClient,
@@ -73,7 +75,7 @@ function OrdersItem({
         }}
         color={color}
       >
-        {includesSender(order.orders, keplr.account) && (
+        {includesSender(order.orders, address) && (
           <AdjustIcon
             fontSize="inherit"
             color={color}

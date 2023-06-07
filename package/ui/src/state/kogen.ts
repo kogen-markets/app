@@ -1,11 +1,8 @@
-import { atom, atomFamily, selector } from "recoil";
-import {
-  localStorageEffect,
-  LOCAL_STORAGE_SELECTED_DENS,
-  LOCAL_STORAGE_DARK_MODE,
-} from "./effects";
+import { atom, selector } from "recoil";
+import { localStorageEffect, LOCAL_STORAGE_DARK_MODE } from "./effects";
 import { KogenMarketsQueryClient } from "../codegen/KogenMarkets.client";
 import { chainState, clientState } from "./cosmos";
+import { TESTNET } from "../lib/config";
 
 export const densInitializedState = atom({
   key: "densInitializedState",
@@ -27,14 +24,14 @@ export const contractsState = selector<string>({
   key: "contractsState",
   get: async ({ get }) => {
     const chain = get(chainState);
-    if (chain.chainId === "injective-888") {
+    if (chain.chain_id === TESTNET.INJECTIVE) {
       return "inj1yax3plfpfzlzems9u6rqswse9cn5gt8whh0fxq";
     }
-    if (chain.chainId === "pion-1") {
+    if (chain.chain_id === TESTNET.NEUTRON) {
       return "neutron1e2aydznpnat7clj9wxpxga888ppmkekz4t284xvyskylk75u228q7dpgwh";
     }
 
-    throw new Error("unknown chainId " + chain.chainId);
+    throw new Error("unknown chain_id " + chain.chain_id);
   },
 });
 
@@ -45,18 +42,5 @@ export const kogenMarketsQueryClientState = selector<KogenMarketsQueryClient>({
     const client = get(clientState);
 
     return new KogenMarketsQueryClient(client, contracts);
-  },
-});
-
-export const selectedDensState = atomFamily<string | null, string | null>({
-  key: "selectedDensState",
-  default: () => null,
-  effects: (account) => {
-    if (!account) {
-      return [];
-    }
-
-    const key = `${account}`;
-    return [localStorageEffect(key, LOCAL_STORAGE_SELECTED_DENS)];
   },
 });

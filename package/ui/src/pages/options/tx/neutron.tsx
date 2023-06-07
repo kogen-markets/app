@@ -1,18 +1,14 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRecoilValue } from "recoil";
-import {
-  chainState,
-  injectiveKeplrState,
-  keplrState,
-} from "../../../state/cosmos";
+import { chainState, keplrState } from "../../../state/cosmos";
 import { ORDER_TYPE } from "../../../types/types";
 import { contractsState } from "../../../state/kogen";
+import { useChain } from "@cosmos-kit/react";
 
 export function useNeutronCallOptionMutation() {
   const chain = useRecoilValue(chainState);
   const queryClient = useQueryClient();
 
-  const injectiveKeplr = useRecoilValue(injectiveKeplrState);
   const contracts = useRecoilValue(contractsState);
   const keplr = useRecoilValue(keplrState);
   return useMutation(
@@ -31,10 +27,6 @@ export function useNeutronCallOptionMutation() {
         amount: string;
       }[];
     }) => {
-      if (!injectiveKeplr) {
-        return null;
-      }
-
       if (!keplr.account) {
         return null;
       }
@@ -69,19 +61,19 @@ export function useNeutronExerciseCallOptionMutation() {
   const chain = useRecoilValue(chainState);
   const queryClient = useQueryClient();
 
-  const injectiveKeplr = useRecoilValue(injectiveKeplrState);
   const contracts = useRecoilValue(contractsState);
   const keplr = useRecoilValue(keplrState);
+  const { getSigningCosmWasmClient } = useChain(chain.chain_name);
   return useMutation(
     ["exercise"],
     async ({ expiry_price }: { expiry_price: string }) => {
-      if (!injectiveKeplr) {
-        return null;
-      }
-
       if (!keplr.account) {
         return null;
       }
+
+      const s = await getSigningCosmWasmClient();
+
+      console.log(s);
 
       // const orderMsg = MsgExecuteContract.fromJSON({
       //   contractAddress: contracts,

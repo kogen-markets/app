@@ -7,6 +7,7 @@ import { useRecoilState } from "recoil";
 
 const ChainSelect = lazy(() => import("../../components/chain-select"));
 const KeplrButton = lazy(() => import("../../components/keplr-button"));
+const WalletButton = lazy(() => import("../../components/wallet-button"));
 
 export default function Header() {
   const [, setDrawerOpened] = useRecoilState(drawerOpenedState);
@@ -39,8 +40,11 @@ export default function Header() {
             <Suspense fallback={<Loading />}>
               <ChainSelect />
             </Suspense>
-            <Suspense fallback={<Loading />}>
+            {/* <Suspense fallback={<Loading />}>
               <KeplrButton />
+            </Suspense> */}
+            <Suspense fallback={<Loading />}>
+              <WalletButton />
             </Suspense>
           </Box>
         </Grid>

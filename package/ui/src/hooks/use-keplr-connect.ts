@@ -12,15 +12,15 @@ export default function useKeplrConnect() {
       return;
     }
 
-    await window.keplr.enable(chain.chainId);
+    await window.keplr.enable(chain.chain_id);
 
     if (!window.getOfflineSigner) {
       return;
     }
 
-    const offlineSigner = window.getOfflineSigner(chain.chainId);
+    const offlineSigner = window.getOfflineSigner(chain.chain_id);
     const accounts = await offlineSigner.getAccounts();
-    const key = await window.keplr.getKey(chain.chainId);
+    const key = await window.keplr.getKey(chain.chain_id);
 
     setKeplrInteracted(true);
 
@@ -29,5 +29,5 @@ export default function useKeplrConnect() {
       account: accounts[0].address,
       name: key.name,
     }));
-  }, [chain.chainId, setKeplrInteracted, setKeplr]);
+  }, [chain.chain_id, setKeplrInteracted, setKeplr]);
 }

@@ -13,9 +13,19 @@ import AppLayout from "./layout/app";
 import rollbar from "./lib/rollbar";
 import Error from "./pages/error";
 import Loading from "./components/loading";
+import { ChainProvider } from "@cosmos-kit/react";
+import { chains, assets } from "chain-registry";
+import { wallets as keplrWallets } from "@cosmos-kit/keplr-extension";
+import { wallets as leapWallets } from "@cosmos-kit/leap-extension";
+import { wallets as cosmostationWallets } from "@cosmos-kit/cosmostation-extension";
+import WalletDialog from "./components/wallet-dialog";
+import { ENABLED_TESTNETS, TESTNET } from "./lib/config";
+import { Network } from "@injectivelabs/networks";
 
 const OptionsPage = lazy(() => import("./pages/options/index"));
-
+console.log(
+  chains.filter((c) => ENABLED_TESTNETS.includes(c.chain_id as TESTNET))
+);
 const router = createBrowserRouter([
   {
     path: "/",
@@ -54,7 +64,36 @@ function App() {
         <QueryClientProvider client={queryClient}>
           <ErrorBoundary>
             <KeplrWatcher />
-            <RouterProvider router={router} />
+            <ChainProvider
+              chains={chains.filter((c) =>
+                ENABLED_TESTNETS.includes(c.chain_id as TESTNET)
+              )}
+              assetLists={assets}
+              wallets={[
+                ...keplrWallets,
+                ...leapWallets,
+                ...cosmostationWallets,
+              ]} // supported wallets
+              wrappedWithChakra={false}
+              endpointOptions={{
+                endpoints: {
+                  injectivetestnet: {
+                    rpc: JSON.parse(
+                      import.meta.env.VITE_INJECTIVE_RPCS
+                    ) as string[],
+                  },
+                  neutrontestnet: {
+                    rpc: JSON.parse(
+                      import.meta.env.VITE_NEUTRON_RPCS
+                    ) as string[],
+                  },
+                },
+                isLazy: true,
+              }}
+              walletModal={WalletDialog}
+            >
+              <RouterProvider router={router} />
+            </ChainProvider>
           </ErrorBoundary>
         </QueryClientProvider>
       </RecoilRoot>

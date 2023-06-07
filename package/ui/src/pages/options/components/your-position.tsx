@@ -11,29 +11,31 @@ import {
   Typography,
 } from "@mui/material";
 import { Fragment, useMemo } from "react";
+import { useRecoilValue } from "recoil";
+import Decimal from "decimal.js";
+import { useChain } from "@cosmos-kit/react";
 import {
   useKogenMarketsLockedAmountQuery,
   useKogenMarketsPositionQuery,
+  useKogenMarketsConfigQuery,
 } from "../../../codegen/KogenMarkets.react-query";
-import { useRecoilValue } from "recoil";
 import { kogenMarketsQueryClientState } from "../../../state/kogen";
 import { toUserToken } from "../../../lib/token";
 import useTryNextClient from "../../../hooks/use-try-next-client";
-import { keplrState } from "../../../state/cosmos";
-import { useKogenMarketsConfigQuery } from "../../../codegen/KogenMarkets.react-query";
-import Decimal from "decimal.js";
+import { chainState } from "../../../state/cosmos";
 
 export default function YourPosition() {
   const kogenClient = useRecoilValue(kogenMarketsQueryClientState);
-  const keplr = useRecoilValue(keplrState);
+  const chain = useRecoilValue(chainState);
+  const { address } = useChain(chain.chain_name);
   const tryNextClient = useTryNextClient();
   const lockedAmount = useKogenMarketsLockedAmountQuery({
     client: kogenClient,
     args: {
-      owner: keplr.account || "",
+      owner: address || "",
     },
     options: {
-      enabled: Boolean(keplr.account),
+      enabled: Boolean(address),
       onError: tryNextClient,
       suspense: true,
     },
@@ -42,10 +44,10 @@ export default function YourPosition() {
   const position = useKogenMarketsPositionQuery({
     client: kogenClient,
     args: {
-      owner: keplr.account || "",
+      owner: address || "",
     },
     options: {
-      enabled: Boolean(keplr.account),
+      enabled: Boolean(address),
       onError: tryNextClient,
       suspense: true,
     },

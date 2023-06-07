@@ -14,10 +14,10 @@ export function useCallOptionMutation() {
   const inj = useInjectiveCallOptionMutation();
   const neutron = useNeutronCallOptionMutation();
 
-  if (chain.chainId === "injective-888") {
+  if (chain.chain_id === "injective-888") {
     return inj;
   }
-  if (chain.chainId === "pion-1") {
+  if (chain.chain_id === "pion-1") {
     return neutron;
   }
 
@@ -29,10 +29,10 @@ export function useExerciseCallOptionMutation() {
   const inj = useInjectiveExerciseCallOptionMutation();
   const neutron = useNeutronExerciseCallOptionMutation();
 
-  if (chain.chainId === "injective-888") {
+  if (chain.chain_id === "injective-888") {
     return inj;
   }
-  if (chain.chainId === "pion-1") {
+  if (chain.chain_id === "pion-1") {
     return neutron;
   }
 

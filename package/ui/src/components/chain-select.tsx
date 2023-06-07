@@ -1,25 +1,32 @@
 import { FormControl, MenuItem, Select } from "@mui/material";
 import { Fragment } from "react";
 import { useRecoilState } from "recoil";
+import { chains } from "chain-registry";
 import { chainState } from "../state/cosmos";
+import { TESTNET } from "../lib/config";
 
 export default function ChainSelect() {
   const [chain, setChain] = useRecoilState(chainState);
+
   return (
     <Fragment>
       <FormControl>
         <Select
           MenuProps={{ disableScrollLock: true }}
           size="small"
-          value={chain.chainId}
-          onChange={(event) =>
-            setChain((chain) => {
-              return { ...chain, chainId: event.target.value };
-            })
-          }
+          value={chain.chain_id}
+          onChange={(event) => {
+            const chain = chains.find((c) => c.chain_id === event.target.value);
+
+            if (!chain) {
+              throw new Error("chain not found");
+            }
+
+            setChain(chain);
+          }}
         >
-          <MenuItem value={"injective-888"}>Injective (Testnet)</MenuItem>
-          <MenuItem value={"pion-1"}>Neutron (Testnet)</MenuItem>
+          <MenuItem value={TESTNET.INJECTIVE}>Injective (Testnet)</MenuItem>
+          <MenuItem value={TESTNET.NEUTRON}>Neutron (Testnet)</MenuItem>
         </Select>
       </FormControl>
     </Fragment>

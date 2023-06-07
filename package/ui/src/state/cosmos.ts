@@ -1,15 +1,19 @@
-import {
-  CosmWasmClient,
-  SigningCosmWasmClient,
-} from "@cosmjs/cosmwasm-stargate";
+import { CosmWasmClient } from "@cosmjs/cosmwasm-stargate";
 import { atom, selector } from "recoil";
 import { localStorageEffect, LOCAL_STORAGE_KEPLR_INTERACTED } from "./effects";
+import { chains } from "chain-registry";
+import {
+  ENABLED_MAINNETS,
+  ENABLED_TESTNETS,
+  MAINNET,
+  TESTNET,
+} from "../lib/config";
 
-export const chainState = atom({
+type Chain = (typeof chains)[0];
+
+export const chainState = atom<Chain>({
   key: "chainState",
-  default: {
-    chainId: "injective-888",
-  },
+  default: chains.find((c) => c.chain_id === TESTNET.INJECTIVE),
 });
 
 export const keplrInteractedState = atom({
@@ -33,48 +37,23 @@ export const keplrState = atom<{
   },
 });
 
-export const injectiveKeplrState = selector({
-  key: "injectiveKeplrState",
-  get: async ({ get }) => {
-    const keplr = get(keplrState);
-    const chain = get(chainState);
-    if (!keplr.account) {
-      return null;
-    }
-
-    if (!window.getOfflineSigner || !window.keplr) {
-      return null;
-    }
-
-    const offlineSigner = await window.getOfflineSigner(chain.chainId);
-    const accounts = await offlineSigner.getAccounts();
-    const key = await window.keplr.getKey(chain.chainId);
-
-    return {
-      offlineSigner,
-      accounts,
-      key,
-    };
-  },
-});
-
 export const rpcsState = selector<string[]>({
   key: "rpcsState",
   get: async ({ get }) => {
     const chain = get(chainState);
-    if (chain.chainId === "injective-1") {
+    if (chain.chain_id === "injective-1") {
       return JSON.parse(import.meta.env.VITE_INJECTIVE_RPCS) as string[];
     }
 
-    if (chain.chainId === "injective-888") {
+    if (chain.chain_id === "injective-888") {
       return JSON.parse(import.meta.env.VITE_INJECTIVE_RPCS) as string[];
     }
 
-    if (chain.chainId === "pion-1") {
+    if (chain.chain_id === "pion-1") {
       return JSON.parse(import.meta.env.VITE_NEUTRON_RPCS) as string[];
     }
 
-    throw new Error("unknown chainId " + chain.chainId);
+    throw new Error("unknown chain_id " + chain.chain_id);
   },
 });
 
@@ -82,57 +61,21 @@ export const pythServiceState = selector<URL>({
   key: "pythServiceState",
   get: async ({ get }) => {
     const chain = get(chainState);
-    if (chain.chainId === "injective-1") {
+    if (ENABLED_MAINNETS.includes(chain.chain_id as MAINNET)) {
       return new URL(
         "/api/latest_price_feeds",
         "https://xc-mainnet.pyth.network"
       );
     }
 
-    if (["injective-888", "pion-1"].includes(chain.chainId)) {
+    if (ENABLED_TESTNETS.includes(chain.chain_id as TESTNET)) {
       return new URL(
         "/api/latest_price_feeds",
         "https://xc-testnet.pyth.network"
       );
     }
 
-    throw new Error("unknown chainId " + chain.chainId);
-  },
-});
-
-export const signClientState = selector<SigningCosmWasmClient | null>({
-  key: "signClientState",
-  dangerouslyAllowMutability: true,
-  get: async ({ get }) => {
-    const { SigningCosmWasmClient } = await import("@cosmjs/cosmwasm-stargate");
-    const keplr = get(keplrState);
-
-    if (!keplr.account) {
-      return null;
-    }
-
-    if (!window.getOfflineSignerAuto) {
-      return null;
-    }
-
-    const clientIx = get(clientIxState);
-    const chain = get(chainState);
-    const rpcs = get(rpcsState);
-    const offlineSigner = await window.getOfflineSignerAuto(chain.chainId);
-    for (let i = 0; i < rpcs.length; i++) {
-      try {
-        const client = await SigningCosmWasmClient.connectWithSigner(
-          rpcs[(clientIx + i) % rpcs.length],
-          offlineSigner
-        );
-
-        return client;
-      } catch (e) {
-        // connect error, try next client
-      }
-    }
-
-    return null;
+    throw new Error("unknown chain_id " + chain.chain_id);
   },
 });
 

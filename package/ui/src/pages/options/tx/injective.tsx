@@ -1,24 +1,23 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRecoilValue } from "recoil";
-import {
-  chainState,
-  injectiveKeplrState,
-  keplrState,
-} from "../../../state/cosmos";
+import { useChain } from "@cosmos-kit/react";
 import { MsgExecuteContract } from "@injectivelabs/sdk-ts";
 import { WalletStrategy, MsgBroadcaster } from "@injectivelabs/wallet-ts";
 import { ChainId } from "@injectivelabs/ts-types";
 import { Network } from "@injectivelabs/networks";
+import { chainState } from "../../../state/cosmos";
 import { ORDER_TYPE } from "../../../types/types";
 import { contractsState } from "../../../state/kogen";
+import { TESTNET } from "../../../lib/config";
+import { cosmosKitWalletToInjective } from "../../../lib/wallet";
 
 export function useInjectiveCallOptionMutation() {
   const chain = useRecoilValue(chainState);
   const queryClient = useQueryClient();
+  const { address, wallet } = useChain(chain.chain_name);
 
-  const injectiveKeplr = useRecoilValue(injectiveKeplrState);
   const contracts = useRecoilValue(contractsState);
-  const keplr = useRecoilValue(keplrState);
+
   return useMutation(
     ["callOption"],
     async ({
@@ -35,17 +34,17 @@ export function useInjectiveCallOptionMutation() {
         amount: string;
       }[];
     }) => {
-      if (!injectiveKeplr) {
+      if (!wallet) {
         return null;
       }
 
-      if (!keplr.account) {
+      if (!address) {
         return null;
       }
 
       const orderMsg = MsgExecuteContract.fromJSON({
         contractAddress: contracts,
-        sender: keplr.account,
+        sender: address,
         msg: {
           [`${type}_order`]: {
             price,
@@ -56,18 +55,22 @@ export function useInjectiveCallOptionMutation() {
       });
 
       const walletStrategy = new WalletStrategy({
-        chainId: chain.chainId as ChainId,
+        chainId: chain.chain_id as ChainId,
+        wallet: cosmosKitWalletToInjective(wallet.name),
       });
 
       const msgBroadcaster = new MsgBroadcaster({
         walletStrategy,
-        network: Network.TestnetK8s,
+        network:
+          chain.chain_id === TESTNET.INJECTIVE
+            ? Network.TestnetK8s
+            : Network.MainnetK8s,
         simulateTx: true,
       });
 
       const result = await msgBroadcaster.broadcast({
         msgs: [orderMsg],
-        address: keplr.account,
+        address: address,
       });
 
       console.log(result);
@@ -86,24 +89,23 @@ export function useInjectiveCallOptionMutation() {
 export function useInjectiveExerciseCallOptionMutation() {
   const chain = useRecoilValue(chainState);
   const queryClient = useQueryClient();
+  const { address, wallet } = useChain(chain.chain_name);
 
-  const injectiveKeplr = useRecoilValue(injectiveKeplrState);
   const contracts = useRecoilValue(contractsState);
-  const keplr = useRecoilValue(keplrState);
   return useMutation(
     ["exercise"],
     async ({ expiry_price }: { expiry_price: string }) => {
-      if (!injectiveKeplr) {
+      if (!wallet) {
         return null;
       }
 
-      if (!keplr.account) {
+      if (!address) {
         return null;
       }
 
-      const orderMsg = MsgExecuteContract.fromJSON({
+      const exerciseMsg = MsgExecuteContract.fromJSON({
         contractAddress: contracts,
-        sender: keplr.account,
+        sender: address,
         msg: {
           exercise: {
             expiry_price,
@@ -113,18 +115,22 @@ export function useInjectiveExerciseCallOptionMutation() {
       });
 
       const walletStrategy = new WalletStrategy({
-        chainId: chain.chainId as ChainId,
+        chainId: chain.chain_id as ChainId,
+        wallet: cosmosKitWalletToInjective(wallet.name),
       });
 
       const msgBroadcaster = new MsgBroadcaster({
         walletStrategy,
-        network: Network.TestnetK8s,
+        network:
+          chain.chain_id === TESTNET.INJECTIVE
+            ? Network.TestnetK8s
+            : Network.MainnetK8s,
         simulateTx: true,
       });
 
       const result = await msgBroadcaster.broadcast({
-        msgs: [orderMsg],
-        address: keplr.account,
+        msgs: [exerciseMsg],
+        address: address,
       });
 
       console.log(result);
