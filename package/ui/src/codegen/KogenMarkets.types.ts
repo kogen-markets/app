@@ -12,6 +12,7 @@ export type Identifier = string;
 export interface InstantiateMsg {
   base_decimals?: number | null;
   base_denom: string;
+  base_symbol: string;
   expiry: Timestamp;
   min_order_quantity: Uint128;
   owner: Addr;
@@ -19,6 +20,7 @@ export interface InstantiateMsg {
   pyth_contract_addr: Addr;
   quote_decimals?: number | null;
   quote_denom: string;
+  quote_symbol: string;
   strike_price: Uint128;
 }
 export type ExecuteMsg =
@@ -78,6 +80,7 @@ export interface OrderBookItem {
 export interface Config {
   base_decimals: number;
   base_denom: string;
+  base_symbol: string;
   expiry: Timestamp;
   instantiated: Timestamp;
   min_order_quantity_in_base: Uint128;
@@ -86,6 +89,7 @@ export interface Config {
   pyth_contract_addr: Addr;
   quote_decimals: number;
   quote_denom: string;
+  quote_symbol: string;
   strike_price_in_quote: Uint128;
 }
 export interface LockedAmountResponse {

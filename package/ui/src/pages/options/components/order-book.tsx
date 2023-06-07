@@ -123,6 +123,15 @@ export default function Orderbook() {
     },
   });
 
+  const config = useKogenMarketsConfigQuery({
+    client: kogenClient,
+    options: {
+      staleTime: 300000,
+      onError: tryNextClient,
+      suspense: true,
+    },
+  });
+
   return (
     <Fragment>
       <Box sx={{ height: "400px", overflowY: "auto" }}>
@@ -138,10 +147,10 @@ export default function Orderbook() {
               variant="caption"
               sx={{ display: "inline-block", width: "40%", textAlign: "right" }}
             >
-              Price <strong>USDT</strong>
+              Price <strong>{config.data?.quote_symbol}</strong>
             </Typography>
             <Typography variant="caption">
-              Size <strong>ATOM</strong>
+              Size <strong>{config.data?.base_symbol}</strong>
             </Typography>
           </Box>
           <Divider />

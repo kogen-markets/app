@@ -8,7 +8,7 @@ import {
   InputAdornment,
   Typography,
 } from "@mui/material";
-import { Fragment, useMemo } from "react";
+import { Fragment, Suspense, useMemo } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import Joi from "joi";
 import useFormData from "../../../hooks/use-form-data";
@@ -21,6 +21,9 @@ import { toBaseToken, toUserToken } from "../../../lib/token";
 import useTryNextClient from "../../../hooks/use-try-next-client";
 import { useKogenMarketsConfigQuery } from "../../../codegen/KogenMarkets.react-query";
 import { useCallOptionMutation } from "../tx";
+import WithWallet from "../../../components/with-wallet";
+import useGetBalance from "../../../hooks/use-get-balance";
+import Loading from "../../../components/loading";
 
 export const optionSizeValidator = Joi.number();
 export const optionPriceValidator = Joi.number().greater(0);
@@ -101,7 +104,7 @@ export default function CallForm() {
         amountBase: amount_in_base.toFixed(0),
         amount: toUserToken(amount_in_base, config.data.quote_decimals),
         denom: config.data.quote_denom,
-        symbol: "USDT",
+        symbol: config.data.quote_symbol,
       };
     }
 
@@ -119,7 +122,7 @@ export default function CallForm() {
         amountBase: amount_in_base.toFixed(0),
         amount: toUserToken(amount_in_base, config.data.base_decimals),
         denom: config.data.base_denom,
-        symbol: "ATOM",
+        symbol: config.data.base_symbol,
       };
     }
   }, [formState, config.data]);
@@ -130,6 +133,11 @@ export default function CallForm() {
 
   const { mutateAsync: createOrder, isLoading: isCreateOrderLoading } =
     useCallOptionMutation();
+
+  const balance = useGetBalance(
+    undefined,
+    isBid ? config.data?.quote_denom : config.data?.base_denom
+  );
 
   return (
     <Fragment>
@@ -226,7 +234,7 @@ export default function CallForm() {
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start" sx={{ mr: 3 }}>
-                  USDT
+                  {config.data?.quote_symbol}
                 </InputAdornment>
               ),
             }}
@@ -256,7 +264,7 @@ export default function CallForm() {
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start" sx={{ mr: 3 }}>
-                  ATOM
+                  {config.data?.base_symbol}
                 </InputAdornment>
               ),
             }}
@@ -274,62 +282,93 @@ export default function CallForm() {
         )}
       </Box>
 
-      <Divider sx={{ mt: 2 }} />
-      <Box sx={{ textAlign: "right" }}>
-        <Button
-          variant="outlined"
-          size="large"
-          sx={{ mt: 2, width: { xs: "100%", lg: "50%" } }}
-          onClick={async () => {
-            setSnackbar({ message: "Please confirm the transaction" });
-            if (!collateral) {
-              return null;
-            }
-
-            try {
-              await createOrder({
-                type: formState.get("type"),
-                price: toBaseToken(
-                  formState.get("optionPrice"),
+      <Box>
+        <Typography variant="caption">Available</Typography>
+        <Suspense fallback={<Loading />}>
+          {balance.data?.amount &&
+            (isBid ? (
+              <Typography variant="body1" sx={{ mb: 2 }}>
+                {toUserToken(
+                  balance.data.amount,
                   config.data?.quote_decimals
-                ).toFixed(0),
-                quantity: toBaseToken(
-                  formState.get("optionSize"),
+                ).toFixed(2)}
+                {config.data?.quote_symbol}
+              </Typography>
+            ) : (
+              <Typography variant="body1" sx={{ mb: 2 }}>
+                {toUserToken(
+                  balance.data.amount,
                   config.data?.base_decimals
-                ).toFixed(0),
-                funds: [
-                  {
-                    amount: collateral.amountBase,
-                    denom: collateral.denom,
-                  },
-                ],
-              });
+                ).toFixed(2)}
+                {config.data?.base_symbol}
+              </Typography>
+            ))}
+        </Suspense>
+      </Box>
 
-              setSnackbar({
-                message: `Order successfully created`,
-              });
-            } catch (e: any) {
-              setSnackbar({
-                message: "Error creating order: " + e.message,
-              });
-            }
+      <Divider sx={{ mt: 2 }} />
+      <Box sx={{ textAlign: "right", pt: 2 }}>
+        <WithWallet
+          WalletButtonProps={{
+            color: isBid ? "secondary" : "primary",
+            size: "large",
           }}
-          color={isBid ? "secondary" : "primary"}
-          disabled={isCreateOrderLoading || !orderCreateEnabled}
         >
-          {isCreateOrderLoading ? (
-            <Fragment>
-              <CircularProgress
-                size={15}
-                sx={{ mr: 1 }}
-                color={isBid ? "secondary" : "primary"}
-              />{" "}
-              Loading
-            </Fragment>
-          ) : (
-            `Create ${isBid ? "bid" : "ask"} order`
-          )}
-        </Button>
+          <Button
+            variant="outlined"
+            size="large"
+            sx={{ width: { xs: "100%", lg: "50%" } }}
+            onClick={async () => {
+              setSnackbar({ message: "Please confirm the transaction" });
+              if (!collateral) {
+                return null;
+              }
+
+              try {
+                await createOrder({
+                  type: formState.get("type"),
+                  price: toBaseToken(
+                    formState.get("optionPrice"),
+                    config.data?.quote_decimals
+                  ).toFixed(0),
+                  quantity: toBaseToken(
+                    formState.get("optionSize"),
+                    config.data?.base_decimals
+                  ).toFixed(0),
+                  funds: [
+                    {
+                      amount: collateral.amountBase,
+                      denom: collateral.denom,
+                    },
+                  ],
+                });
+
+                setSnackbar({
+                  message: `Order successfully created`,
+                });
+              } catch (e: any) {
+                setSnackbar({
+                  message: "Error creating order: " + e.message,
+                });
+              }
+            }}
+            color={isBid ? "secondary" : "primary"}
+            disabled={isCreateOrderLoading || !orderCreateEnabled}
+          >
+            {isCreateOrderLoading ? (
+              <Fragment>
+                <CircularProgress
+                  size={15}
+                  sx={{ mr: 1 }}
+                  color={isBid ? "secondary" : "primary"}
+                />{" "}
+                Loading
+              </Fragment>
+            ) : (
+              `Create ${isBid ? "bid" : "ask"} order`
+            )}
+          </Button>
+        </WithWallet>
       </Box>
     </Fragment>
   );

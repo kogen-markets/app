@@ -95,14 +95,14 @@ export default function YourPosition() {
                   lockedAmount.data?.locked_base_denom || "0",
                   config.data?.base_decimals
                 ).toFixed(3)}{" "}
-                ATOM
+                {config.data?.base_symbol}
               </TableCell>
               <TableCell align="center">
                 {toUserToken(
                   lockedAmount.data?.locked_quote_denom || "0",
                   config.data?.quote_decimals
                 ).toFixed(3)}{" "}
-                USDT
+                {config.data?.quote_symbol}
               </TableCell>
               <TableCell align="center">
                 <Chip

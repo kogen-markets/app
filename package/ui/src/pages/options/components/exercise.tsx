@@ -13,6 +13,7 @@ import useTryNextClient from "../../../hooks/use-try-next-client";
 import { kogenMarketsQueryClientState } from "../../../state/kogen";
 import Decimal from "decimal.js";
 import { useExerciseCallOptionMutation } from "../tx";
+import WithWallet from "../../../components/with-wallet";
 
 export const expiryPriceValidator = Joi.number();
 
@@ -82,7 +83,7 @@ export default function Exercise() {
         InputProps={{
           startAdornment: (
             <InputAdornment position="start" sx={{ mr: 3 }}>
-              USDT
+              {config.data?.quote_symbol}
             </InputAdornment>
           ),
           endAdornment: (
@@ -100,43 +101,43 @@ export default function Exercise() {
           ),
         }}
       />
-      <Button
-        variant="text"
-        size="large"
-        fullWidth
-        sx={{}}
-        onClick={async () => {
-          setSnackbar({ message: "Please confirm the transaction" });
-
-          try {
-            await exercise({
-              expiry_price: toBaseToken(
-                expiryPrice,
-                config.data?.quote_decimals
-              ).toFixed(0),
-            });
-
-            setSnackbar({
-              message: `Option successfully exercised`,
-            });
-          } catch (e: any) {
-            console.log(e);
-            setSnackbar({
-              message: "Error exercising the contract: " + e.message,
-            });
-          }
-        }}
-        color={"secondary"}
-        disabled={isExerciseLoading || !expiryPrice}
-      >
-        {isExerciseLoading ? (
-          <Fragment>
-            <CircularProgress size={15} sx={{ mr: 1 }} /> Loading
-          </Fragment>
-        ) : (
-          "Exercise option"
-        )}
-      </Button>
+      <WithWallet WalletButtonProps={{ fullWidth: true, variant: "text" }}>
+        <Button
+          variant="text"
+          size="large"
+          fullWidth
+          sx={{}}
+          onClick={async () => {
+            setSnackbar({ message: "Please confirm the transaction" });
+            try {
+              await exercise({
+                expiry_price: toBaseToken(
+                  expiryPrice,
+                  config.data?.quote_decimals
+                ).toFixed(0),
+              });
+              setSnackbar({
+                message: `Option successfully exercised`,
+              });
+            } catch (e: any) {
+              console.log(e);
+              setSnackbar({
+                message: "Error exercising the contract: " + e.message,
+              });
+            }
+          }}
+          color={"secondary"}
+          disabled={isExerciseLoading || !expiryPrice}
+        >
+          {isExerciseLoading ? (
+            <Fragment>
+              <CircularProgress size={15} sx={{ mr: 1 }} /> Loading
+            </Fragment>
+          ) : (
+            "Exercise option"
+          )}
+        </Button>
+      </WithWallet>
     </Fragment>
   );
 }
