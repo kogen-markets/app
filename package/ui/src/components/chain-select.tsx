@@ -17,7 +17,7 @@ export default function ChainSelect() {
             color: "secondary",
             sx: {
               "&& .Mui-selected": (theme) => ({
-                backgroundColor: theme.palette.secondary.main,
+                backgroundColor: theme.palette.secondary.main + " !important",
               }),
             },
           }}
