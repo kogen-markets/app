@@ -26,16 +26,16 @@ export const rpcsState = selector<string[]>({
   key: "rpcsState",
   get: async ({ get }) => {
     const chain = get(chainState);
-    if (chain.chain_id === "injective-1") {
+    if ([TESTNET.INJECTIVE, MAINNET.INJECTIVE].includes(chain.chain_id)) {
       return JSON.parse(import.meta.env.VITE_INJECTIVE_RPCS) as string[];
     }
 
-    if (chain.chain_id === "injective-888") {
-      return JSON.parse(import.meta.env.VITE_INJECTIVE_RPCS) as string[];
-    }
-
-    if (chain.chain_id === "pion-1") {
+    if (chain.chain_id === TESTNET.NEUTRON) {
       return JSON.parse(import.meta.env.VITE_NEUTRON_RPCS) as string[];
+    }
+
+    if (chain.chain_id === TESTNET.ARCHWAY) {
+      return JSON.parse(import.meta.env.VITE_ARCHWAY_RPCS) as string[];
     }
 
     throw new Error("unknown chain_id " + chain.chain_id);

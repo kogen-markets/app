@@ -3,7 +3,9 @@ import { Fragment } from "react";
 import { useRecoilState } from "recoil";
 import { chains } from "chain-registry";
 import { chainState } from "../state/cosmos";
-import { TESTNET } from "../lib/config";
+import { CONSTANTINE3, TESTNET } from "../lib/config";
+
+chains.push(CONSTANTINE3);
 
 export default function ChainSelect({
   FormControlProps,
@@ -40,6 +42,7 @@ export default function ChainSelect({
         >
           <MenuItem value={TESTNET.INJECTIVE}>Injective (Testnet)</MenuItem>
           <MenuItem value={TESTNET.NEUTRON}>Neutron (Testnet)</MenuItem>
+          <MenuItem value={TESTNET.ARCHWAY}>Archway (Testnet)</MenuItem>
         </Select>
       </FormControl>
     </Fragment>

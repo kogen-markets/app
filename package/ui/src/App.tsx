@@ -8,18 +8,19 @@ import {
 } from "react-router-dom";
 import { Provider as RollbarProvider, ErrorBoundary } from "@rollbar/react";
 import { RecoilRoot } from "recoil";
-import AppLayout from "./layout/app";
-import rollbar from "./lib/rollbar";
-import Error from "./pages/error";
-import Loading from "./components/loading";
 import { ChainProvider } from "@cosmos-kit/react";
+import { GasPrice } from "@cosmjs/stargate";
 import { chains, assets } from "chain-registry";
 import { wallets as keplrWallets } from "@cosmos-kit/keplr-extension";
 import { wallets as leapWallets } from "@cosmos-kit/leap-extension";
 import { wallets as cosmostationWallets } from "@cosmos-kit/cosmostation-extension";
+import AppLayout from "./layout/app";
+import rollbar from "./lib/rollbar";
+import Error from "./pages/error";
+import Loading from "./components/loading";
 import WalletDialog from "./components/wallet-dialog";
-import { ENABLED_TESTNETS, TESTNET } from "./lib/config";
-import { GasPrice } from "@cosmjs/stargate";
+import { CONSTANTINE3, ENABLED_TESTNETS, TESTNET } from "./lib/config";
+chains.push(CONSTANTINE3);
 
 const OptionsPage = lazy(() => import("./pages/options/index"));
 
@@ -91,6 +92,12 @@ function App() {
                   if (chain.chain_id === TESTNET.NEUTRON) {
                     return {
                       gasPrice: GasPrice.fromString("0.01untrn"),
+                    };
+                  }
+
+                  if (chain.chain_id === TESTNET.ARCHWAY) {
+                    return {
+                      gasPrice: GasPrice.fromString("900000000000.0aconst"),
                     };
                   }
 

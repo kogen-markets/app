@@ -14,6 +14,7 @@ config:
   injective:rpcs: ["https://k8s.testnet.tm.injective.network:443"]
   injective:lcd: https://k8s.testnet.lcd.injective.network
   neutron:rpcs: ["https://rpc-palvus.pion-1.ntrn.tech:443"]
+  archway:rpcs: ["https://rpc.constantine.archway.tech:443"]
   pulumi:env_files: []
   webapp:API_DOMAIN: app.kogen.markets
   webapp:ROUTE53_ZONE_NAME: kogen.markets
