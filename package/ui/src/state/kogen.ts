@@ -31,7 +31,7 @@ export const contractsState = selector<string>({
       return "neutron1erpdvnmkfpcansg28r5cwhaezs0an2f9ec8h2894dhe2wzddm6vskx9f8k";
     }
     if (chain.chain_id === TESTNET.ARCHWAY) {
-      return "archway1lt5ufw8fdhp4kaguxrmrwukk2xv4kyvh3c53wmua675ptn87848q24clum";
+      return "archway1fwkvhp69mesfrrxzzq7ws8smsntvcmx5sa3rcxqhgyv8csfeahhqhx662v";
     }
 
     throw new Error("unknown chain_id " + chain.chain_id);

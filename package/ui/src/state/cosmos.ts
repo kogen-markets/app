@@ -26,7 +26,9 @@ export const rpcsState = selector<string[]>({
   key: "rpcsState",
   get: async ({ get }) => {
     const chain = get(chainState);
-    if ([TESTNET.INJECTIVE, MAINNET.INJECTIVE].includes(chain.chain_id)) {
+    if (
+      [TESTNET.INJECTIVE, MAINNET.INJECTIVE].includes(chain.chain_id as any)
+    ) {
       return JSON.parse(import.meta.env.VITE_INJECTIVE_RPCS) as string[];
     }
 
