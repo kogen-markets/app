@@ -6,11 +6,13 @@ import {
   Divider,
   Grid,
   InputAdornment,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import { Fragment, Suspense, useMemo } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import Joi from "joi";
+import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import useFormData from "../../../hooks/use-form-data";
 import { snackbarState } from "../../../state/snackbar";
 import { MemoTextField } from "../../../components/memo-textfield";
@@ -24,6 +26,7 @@ import { useCallOptionMutation } from "../tx";
 import WithWallet from "../../../components/with-wallet";
 import useGetBalance from "../../../hooks/use-get-balance";
 import Loading from "../../../components/loading";
+import Decimal from "decimal.js";
 
 export const optionSizeValidator = Joi.number();
 export const optionPriceValidator = Joi.number().greater(0);
@@ -100,11 +103,22 @@ export default function CallForm() {
         return null;
       }
 
+      const optionAmountBase = toBaseToken(
+        formState.get("optionPrice"),
+        config.data.quote_decimals
+      ).mul(formState.get("optionSize"));
+
+      const strikeAmountBase = new Decimal(
+        config.data.strike_price_in_quote
+      ).mul(formState.get("optionSize"));
+
       return {
         amountBase: amount_in_base.toFixed(0),
         amount: toUserToken(amount_in_base, config.data.quote_decimals),
         denom: config.data.quote_denom,
         symbol: config.data.quote_symbol,
+        optionAmount: toUserToken(optionAmountBase, config.data.quote_decimals),
+        strikeAmount: toUserToken(strikeAmountBase, config.data.quote_decimals),
       };
     }
 
@@ -123,6 +137,8 @@ export default function CallForm() {
         amount: toUserToken(amount_in_base, config.data.base_decimals),
         denom: config.data.base_denom,
         symbol: config.data.base_symbol,
+        optionAmount: null,
+        strikeAmount: toUserToken(amount_in_base, config.data.base_decimals),
       };
     }
   }, [formState, config.data]);
@@ -275,10 +291,56 @@ export default function CallForm() {
       <Box>
         <Typography variant="caption">Collateral</Typography>
         {Boolean(collateral?.amount) && orderCreateEnabled && (
-          <Typography variant="body1" sx={{ mb: 2 }}>
-            You need to deposit {collateral?.amount?.toPrecision(4)}{" "}
-            {collateral?.symbol}
-          </Typography>
+          <Fragment>
+            <Typography
+              variant="body1"
+              sx={{ mb: 2, display: "flex", alignItems: "center", gap: 1 }}
+            >
+              You need to deposit {collateral?.amount?.toPrecision(4)}{" "}
+              {collateral?.symbol}
+              {isBid && (
+                <Tooltip
+                  enterTouchDelay={0}
+                  title={
+                    <Fragment>
+                      {collateral?.optionAmount && (
+                        <Typography
+                          variant="caption"
+                          sx={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            gap: 2,
+                          }}
+                        >
+                          <span>Option price:</span>
+                          <span>
+                            {collateral.optionAmount.toFixed(2)}{" "}
+                            {collateral?.symbol}
+                          </span>
+                        </Typography>
+                      )}{" "}
+                      <Typography
+                        variant="caption"
+                        sx={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          gap: 2,
+                        }}
+                      >
+                        <span>Strike price collateral: </span>
+                        <span>
+                          {collateral?.strikeAmount.toFixed(2)}{" "}
+                          {collateral?.symbol}
+                        </span>
+                      </Typography>
+                    </Fragment>
+                  }
+                >
+                  <HelpOutlineIcon fontSize="small" />
+                </Tooltip>
+              )}
+            </Typography>
+          </Fragment>
         )}
       </Box>
 
