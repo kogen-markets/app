@@ -119,6 +119,7 @@ export function useNeutronExerciseCallOptionMutation() {
         queryClient.invalidateQueries([{ method: "bids" }]);
         queryClient.invalidateQueries([{ method: "locked_amount" }]);
         queryClient.invalidateQueries([{ method: "position" }]);
+        queryClient.invalidateQueries(["get_balance", address]);
       },
     }
   );
