@@ -346,26 +346,24 @@ export default function CallForm() {
 
       <Box>
         <Typography variant="caption">Available</Typography>
-        <Suspense fallback={<Loading />}>
-          {balance.data?.amount &&
-            (isBid ? (
-              <Typography variant="body1" sx={{ mb: 2 }}>
-                {toUserToken(
-                  balance.data.amount,
-                  config.data?.quote_decimals
-                ).toFixed(2)}
-                {config.data?.quote_symbol}
-              </Typography>
-            ) : (
-              <Typography variant="body1" sx={{ mb: 2 }}>
-                {toUserToken(
-                  balance.data.amount,
-                  config.data?.base_decimals
-                ).toFixed(2)}
-                {config.data?.base_symbol}
-              </Typography>
-            ))}
-        </Suspense>
+        {balance.data?.amount &&
+          (isBid ? (
+            <Typography variant="body1" sx={{ mb: 2 }}>
+              {toUserToken(
+                balance.data.amount,
+                config.data?.quote_decimals
+              ).toFixed(2)}
+              {config.data?.quote_symbol}
+            </Typography>
+          ) : (
+            <Typography variant="body1" sx={{ mb: 2 }}>
+              {toUserToken(
+                balance.data.amount,
+                config.data?.base_decimals
+              ).toFixed(2)}
+              {config.data?.base_symbol}
+            </Typography>
+          ))}
       </Box>
 
       <Divider sx={{ mt: 2 }} />

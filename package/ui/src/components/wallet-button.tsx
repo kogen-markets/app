@@ -1,10 +1,14 @@
 import { useChain } from "@cosmos-kit/react";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { Button, ButtonProps } from "@mui/material";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { chainState } from "../state/cosmos";
 import { Fragment } from "react";
 import { addressShort } from "../lib/token";
+import {
+  metamaskAddressState,
+  metamaskWalletStrategyState,
+} from "../state/injective";
 
 export default function WalletButton({
   ButtonProps,
@@ -16,7 +20,12 @@ export default function WalletButton({
     chain.chain_name
   );
 
-  if (!isWalletConnected) {
+  const [metamaskWalletStrategy, setMetamaskWalletStrategy] = useRecoilState(
+    metamaskWalletStrategyState
+  );
+  const metamaskAddress = useRecoilValue(metamaskAddressState);
+
+  if (!isWalletConnected && !metamaskAddress) {
     return (
       <Fragment>
         <Button
@@ -41,9 +50,19 @@ export default function WalletButton({
         disabled
         {...ButtonProps}
       >
-        {wallet?.prettyName} - {addressShort(address || "")}
+        {wallet?.prettyName || "Metamask"} -{" "}
+        {addressShort(address || metamaskAddress?.injective || "")}
       </Button>
-      <Button color="secondary" variant="outlined" href="" onClick={disconnect}>
+      <Button
+        color="secondary"
+        variant="outlined"
+        href=""
+        onClick={
+          metamaskWalletStrategy
+            ? () => setMetamaskWalletStrategy(null)
+            : disconnect
+        }
+      >
         <LogoutIcon />
       </Button>
     </Fragment>

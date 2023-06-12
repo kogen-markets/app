@@ -16,6 +16,7 @@ import Decimal from "decimal.js";
 import AdjustIcon from "@mui/icons-material/Adjust";
 import { chainState } from "../../../state/cosmos";
 import { useChain } from "@cosmos-kit/react";
+import { metamaskAddressState } from "../../../state/injective";
 
 function sumOrders(orders?: OrderBookItem[]) {
   if (!orders) {
@@ -49,7 +50,10 @@ function OrdersItem({
 }) {
   const tryNextClient = useTryNextClient();
   const chain = useRecoilValue(chainState);
-  const { address } = useChain(chain.chain_name);
+  const { address: cosmosAddress } = useChain(chain.chain_name);
+  const metamaskAddress = useRecoilValue(metamaskAddressState);
+  const address = cosmosAddress || metamaskAddress?.injective;
+
   const kogenClient = useRecoilValue(kogenMarketsQueryClientState);
   const config = useKogenMarketsConfigQuery({
     client: kogenClient,

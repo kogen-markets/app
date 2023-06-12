@@ -23,11 +23,15 @@ import { kogenMarketsQueryClientState } from "../../../state/kogen";
 import { toUserToken } from "../../../lib/token";
 import useTryNextClient from "../../../hooks/use-try-next-client";
 import { chainState } from "../../../state/cosmos";
+import { metamaskAddressState } from "../../../state/injective";
 
 export default function YourPosition() {
   const kogenClient = useRecoilValue(kogenMarketsQueryClientState);
   const chain = useRecoilValue(chainState);
-  const { address } = useChain(chain.chain_name);
+  const { address: cosmosAddress } = useChain(chain.chain_name);
+  const metamaskAddress = useRecoilValue(metamaskAddressState);
+  const address = cosmosAddress || metamaskAddress?.injective;
+
   const tryNextClient = useTryNextClient();
   const lockedAmount = useKogenMarketsLockedAmountQuery({
     client: kogenClient,

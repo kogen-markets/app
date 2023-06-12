@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRecoilValue } from "recoil";
 import { useChain } from "@cosmos-kit/react";
-import { MsgExecuteContract } from "@injectivelabs/sdk-ts";
+import { MsgExecuteContractCompat } from "@injectivelabs/sdk-ts";
 import { WalletStrategy, MsgBroadcaster } from "@injectivelabs/wallet-ts";
 import { ChainId } from "@injectivelabs/ts-types";
 import { Network } from "@injectivelabs/networks";
@@ -10,11 +10,20 @@ import { ORDER_TYPE } from "../../../types/types";
 import { contractsState } from "../../../state/kogen";
 import { TESTNET } from "../../../lib/config";
 import { cosmosKitWalletToInjective } from "../../../lib/wallet";
+import {
+  metamaskAddressState,
+  metamaskWalletStrategyState,
+} from "../../../state/injective";
 
 export function useInjectiveCallOptionMutation() {
   const chain = useRecoilValue(chainState);
   const queryClient = useQueryClient();
-  const { address, wallet } = useChain(chain.chain_name);
+  const { address: cosmosAddress, wallet: cosmosWallet } = useChain(
+    chain.chain_name
+  );
+  const metamaskWalletStrategy = useRecoilValue(metamaskWalletStrategyState);
+  const metamaskAddress = useRecoilValue(metamaskAddressState);
+  const address = cosmosAddress || metamaskAddress?.injective;
 
   const contracts = useRecoilValue(contractsState);
 
@@ -34,15 +43,24 @@ export function useInjectiveCallOptionMutation() {
         amount: string;
       }[];
     }) => {
-      if (!wallet) {
-        return null;
+      let walletStrategy: WalletStrategy;
+      if (metamaskWalletStrategy) {
+        walletStrategy = metamaskWalletStrategy;
+      } else {
+        if (!cosmosWallet) {
+          return null;
+        }
+        walletStrategy = new WalletStrategy({
+          chainId: chain.chain_id as ChainId,
+          wallet: cosmosKitWalletToInjective(cosmosWallet.name),
+        });
       }
 
       if (!address) {
         return null;
       }
 
-      const orderMsg = MsgExecuteContract.fromJSON({
+      const orderMsg = MsgExecuteContractCompat.fromJSON({
         contractAddress: contracts,
         sender: address,
         msg: {
@@ -52,11 +70,6 @@ export function useInjectiveCallOptionMutation() {
           },
         },
         funds: funds,
-      });
-
-      const walletStrategy = new WalletStrategy({
-        chainId: chain.chain_id as ChainId,
-        wallet: cosmosKitWalletToInjective(wallet.name),
       });
 
       const msgBroadcaster = new MsgBroadcaster({
@@ -90,21 +103,35 @@ export function useInjectiveCallOptionMutation() {
 export function useInjectiveExerciseCallOptionMutation() {
   const chain = useRecoilValue(chainState);
   const queryClient = useQueryClient();
-  const { address, wallet } = useChain(chain.chain_name);
+  const { address: cosmosAddress, wallet: cosmosWallet } = useChain(
+    chain.chain_name
+  );
+  const metamaskWalletStrategy = useRecoilValue(metamaskWalletStrategyState);
+  const metamaskAddress = useRecoilValue(metamaskAddressState);
+  const address = cosmosAddress || metamaskAddress?.injective;
 
   const contracts = useRecoilValue(contractsState);
   return useMutation(
     ["exercise"],
     async ({ expiry_price }: { expiry_price: string }) => {
-      if (!wallet) {
-        return null;
+      let walletStrategy: WalletStrategy;
+      if (metamaskWalletStrategy) {
+        walletStrategy = metamaskWalletStrategy;
+      } else {
+        if (!cosmosWallet) {
+          return null;
+        }
+        walletStrategy = new WalletStrategy({
+          chainId: chain.chain_id as ChainId,
+          wallet: cosmosKitWalletToInjective(cosmosWallet.name),
+        });
       }
 
       if (!address) {
         return null;
       }
 
-      const exerciseMsg = MsgExecuteContract.fromJSON({
+      const exerciseMsg = MsgExecuteContractCompat.fromJSON({
         contractAddress: contracts,
         sender: address,
         msg: {
@@ -112,12 +139,6 @@ export function useInjectiveExerciseCallOptionMutation() {
             expiry_price,
           },
         },
-        funds: [],
-      });
-
-      const walletStrategy = new WalletStrategy({
-        chainId: chain.chain_id as ChainId,
-        wallet: cosmosKitWalletToInjective(wallet.name),
       });
 
       const msgBroadcaster = new MsgBroadcaster({
@@ -142,6 +163,7 @@ export function useInjectiveExerciseCallOptionMutation() {
         queryClient.invalidateQueries([{ method: "bids" }]);
         queryClient.invalidateQueries([{ method: "locked_amount" }]);
         queryClient.invalidateQueries([{ method: "position" }]);
+        queryClient.invalidateQueries(["get_balance", address]);
       },
     }
   );

@@ -54,6 +54,7 @@ jobs:
           echo "backend_url=$(pulumi stack output backend | jq -r '.url')" >> $GITHUB_ENV
           echo "injective_rpcs=$(pulumi config get --path injective:rpcs)" >> $GITHUB_ENV
           echo "injective_lcd=$(pulumi config get --path injective:lcd)" >> $GITHUB_ENV
+          echo "alchemy_pubkey=$(pulumi config get --path alchemy:pubkey)" >> $GITHUB_ENV
           echo "neutron_rpcs=$(pulumi config get --path neutron:rpcs)" >> $GITHUB_ENV
           echo "archway_rpcs=$(pulumi config get --path archway:rpcs)" >> $GITHUB_ENV
         working-directory: package/cloud
@@ -71,6 +72,7 @@ jobs:
           VITE_INJECTIVE_RPCS: ${{ env.injective_rpcs }}
           VITE_NEUTRON_RPCS: ${{ env.neutron_rpcs }}
           VITE_ARCHWAY_RPCS: ${{ env.archway_rpcs }}
+          VITE_ALCHEMY_PUBKEY: ${{ env.alchemy_pubkey }}
           VITE_INJECTIVE_REST_ENDPOINT: ${{ env.injective_lcd }}
           VITE_CLIENT_ROLLBAR_ACCESS_TOKEN: ${{ secrets.CLIENT_ROLLBAR_ACCESS_TOKEN }}
       - uses: actions/upload-artifact@v3

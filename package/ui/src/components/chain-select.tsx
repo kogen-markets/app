@@ -4,6 +4,7 @@ import { useRecoilState } from "recoil";
 import { chains } from "chain-registry";
 import { chainState } from "../state/cosmos";
 import { CONSTANTINE3, TESTNET } from "../lib/config";
+import { metamaskWalletStrategyState } from "../state/injective";
 
 chains.push(CONSTANTINE3);
 
@@ -13,6 +14,9 @@ export default function ChainSelect({
   FormControlProps?: FormControlProps;
 }) {
   const [chain, setChain] = useRecoilState(chainState);
+  const [, setMetamaskWalletStrategy] = useRecoilState(
+    metamaskWalletStrategyState
+  );
 
   return (
     <Fragment>
@@ -38,6 +42,7 @@ export default function ChainSelect({
             }
 
             setChain(chain);
+            setMetamaskWalletStrategy(null);
           }}
         >
           <MenuItem value={TESTNET.INJECTIVE}>Injective (Testnet)</MenuItem>

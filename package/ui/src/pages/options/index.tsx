@@ -23,7 +23,9 @@ export default function Options() {
       >
         <Grid item xs={12} lg={6}>
           <Card sx={{ p: 3, minHeight: "450px" }} variant="outlined">
-            <CallForm />
+            <Suspense fallback={<Loading />}>
+              <CallForm />
+            </Suspense>
           </Card>
           <Card sx={{ mt: 4, px: 3, py: 2 }} variant="outlined">
             <Suspense fallback={<Loading />}>
