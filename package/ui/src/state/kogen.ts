@@ -25,13 +25,13 @@ export const contractsState = selector<string>({
   get: async ({ get }) => {
     const chain = get(chainState);
     if (chain.chain_id === TESTNET.INJECTIVE) {
-      return "inj14ur9w8ltfex99mu5mu7rx34w7ntskzjt9h78pw";
+      return "inj1uzueryw54zc3p0vxr93hzgkfcpxkx2m0wp4jhl";
     }
     if (chain.chain_id === TESTNET.NEUTRON) {
-      return "neutron1erpdvnmkfpcansg28r5cwhaezs0an2f9ec8h2894dhe2wzddm6vskx9f8k";
+      return "neutron17s0aysev3m9gd8t3dy27gs87chmlt2fc3j8dt7txw6s2jml5mwhstdgpc0";
     }
     if (chain.chain_id === TESTNET.ARCHWAY) {
-      return "archway1fwkvhp69mesfrrxzzq7ws8smsntvcmx5sa3rcxqhgyv8csfeahhqhx662v";
+      return "archway1ql8wsxkjr6zaxhdqr2qh47um4cjtk9s8fzt2p4vu0c226hz0qmpq6df78c";
     }
 
     throw new Error("unknown chain_id " + chain.chain_id);
