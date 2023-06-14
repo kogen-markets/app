@@ -380,6 +380,7 @@ export default function CallForm() {
             sx={{ width: { xs: "100%", lg: "50%" } }}
             onClick={async () => {
               setSnackbar({ message: "Please confirm the transaction" });
+
               if (!collateral) {
                 return null;
               }
@@ -407,6 +408,13 @@ export default function CallForm() {
                   message: `Order successfully created`,
                 });
               } catch (e: any) {
+                if (e?.errorMessage?.includes("Matched own position")) {
+                  setSnackbar({
+                    message: "Matched your own position, the order is rejected",
+                  });
+
+                  return;
+                }
                 setSnackbar({
                   message: "Error creating order: " + e.message,
                 });
