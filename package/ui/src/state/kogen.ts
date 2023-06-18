@@ -25,7 +25,7 @@ export const contractsState = selector<string>({
   get: async ({ get }) => {
     const chain = get(chainState);
     if (chain.chain_id === TESTNET.INJECTIVE) {
-      return "inj1uzueryw54zc3p0vxr93hzgkfcpxkx2m0wp4jhl";
+      return "inj1n4f5a880zcwjst77wzpg630wt6dvgsy7h4p7un";
     }
     if (chain.chain_id === TESTNET.NEUTRON) {
       return "neutron17s0aysev3m9gd8t3dy27gs87chmlt2fc3j8dt7txw6s2jml5mwhstdgpc0";
