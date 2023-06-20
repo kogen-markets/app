@@ -9,22 +9,19 @@ import { toBaseToken } from "../../../lib/token";
 import { useTheme } from "@emotion/react";
 import { pythServiceState } from "../../../state/cosmos";
 import { useKogenMarketsConfigQuery } from "../../../codegen/KogenMarkets.react-query";
-import useTryNextClient from "../../../hooks/use-try-next-client";
-import { kogenMarketsQueryClientState } from "../../../state/kogen";
 import Decimal from "decimal.js";
 import { useExerciseCallOptionMutation } from "../tx";
 import WithWallet from "../../../components/with-wallet";
+import useKogenQueryClient from "../../../hooks/use-kogen-query-client";
 
 export const expiryPriceValidator = Joi.number();
 
 export default function Exercise() {
-  const tryNextClient = useTryNextClient();
-  const kogenClient = useRecoilValue(kogenMarketsQueryClientState);
+  const kogenClient = useKogenQueryClient();
   const config = useKogenMarketsConfigQuery({
     client: kogenClient,
     options: {
       staleTime: 300000,
-      onError: tryNextClient,
       suspense: true,
     },
   });

@@ -13,32 +13,29 @@ import { Fragment, Suspense, useMemo } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import Joi from "joi";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
+import Decimal from "decimal.js";
 import useFormData from "../../../hooks/use-form-data";
 import { snackbarState } from "../../../state/snackbar";
 import { MemoTextField } from "../../../components/memo-textfield";
 import useFormValidation from "../../../hooks/use-form-validation";
 import { ORDER_TYPES } from "../../../types/types";
-import { kogenMarketsQueryClientState } from "../../../state/kogen";
 import { toBaseToken, toUserToken } from "../../../lib/token";
-import useTryNextClient from "../../../hooks/use-try-next-client";
 import { useKogenMarketsConfigQuery } from "../../../codegen/KogenMarkets.react-query";
 import { useCallOptionMutation } from "../tx";
 import WithWallet from "../../../components/with-wallet";
 import useGetBalance from "../../../hooks/use-get-balance";
 import Loading from "../../../components/loading";
-import Decimal from "decimal.js";
+import useKogenQueryClient from "../../../hooks/use-kogen-query-client";
 
 export const optionSizeValidator = Joi.number();
 export const optionPriceValidator = Joi.number().greater(0);
 
 export default function CallForm() {
-  const tryNextClient = useTryNextClient();
-  const kogenClient = useRecoilValue(kogenMarketsQueryClientState);
+  const kogenClient = useKogenQueryClient();
   const config = useKogenMarketsConfigQuery({
     client: kogenClient,
     options: {
       staleTime: 300000,
-      onError: tryNextClient,
       suspense: true,
     },
   });

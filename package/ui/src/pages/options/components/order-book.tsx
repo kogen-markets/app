@@ -1,22 +1,21 @@
 import { Box, Divider, Typography, alpha } from "@mui/material";
 import { Fragment } from "react";
-import useTryNextClient from "../../../hooks/use-try-next-client";
 import { useRecoilValue } from "recoil";
+import { useChain } from "@cosmos-kit/react";
+import Decimal from "decimal.js";
+import AdjustIcon from "@mui/icons-material/Adjust";
 import {
   useKogenMarketsAsksQuery,
   useKogenMarketsBidsQuery,
   useKogenMarketsConfigQuery,
 } from "../../../codegen/KogenMarkets.react-query";
-import { kogenMarketsQueryClientState } from "../../../state/kogen";
 import {
   OrderBookItem,
   OrdersResponse,
 } from "../../../codegen/KogenMarkets.types";
-import Decimal from "decimal.js";
-import AdjustIcon from "@mui/icons-material/Adjust";
 import { chainState } from "../../../state/cosmos";
-import { useChain } from "@cosmos-kit/react";
 import { metamaskAddressState } from "../../../state/injective";
+import useKogenQueryClient from "../../../hooks/use-kogen-query-client";
 
 function sumOrders(orders?: OrderBookItem[]) {
   if (!orders) {
@@ -48,18 +47,16 @@ function OrdersItem({
   order: OrdersResponse;
   color: "primary" | "secondary";
 }) {
-  const tryNextClient = useTryNextClient();
   const chain = useRecoilValue(chainState);
   const { address: cosmosAddress } = useChain(chain.chain_name);
   const metamaskAddress = useRecoilValue(metamaskAddressState);
   const address = cosmosAddress || metamaskAddress?.injective;
 
-  const kogenClient = useRecoilValue(kogenMarketsQueryClientState);
+  const kogenClient = useKogenQueryClient();
   const config = useKogenMarketsConfigQuery({
     client: kogenClient,
     options: {
       staleTime: 300000,
-      onError: tryNextClient,
       suspense: true,
     },
   });
@@ -102,15 +99,13 @@ function OrdersItem({
 }
 
 export default function Orderbook() {
-  const tryNextClient = useTryNextClient();
-  const kogenClient = useRecoilValue(kogenMarketsQueryClientState);
+  const kogenClient = useKogenQueryClient();
 
   const bids = useKogenMarketsBidsQuery({
     client: kogenClient,
     args: {},
     options: {
       staleTime: 10000,
-      onError: tryNextClient,
       refetchInterval: 10000,
       suspense: true,
     },
@@ -121,7 +116,6 @@ export default function Orderbook() {
     args: {},
     options: {
       staleTime: 10000,
-      onError: tryNextClient,
       refetchInterval: 10000,
       suspense: true,
     },
@@ -131,7 +125,6 @@ export default function Orderbook() {
     client: kogenClient,
     options: {
       staleTime: 300000,
-      onError: tryNextClient,
       suspense: true,
     },
   });

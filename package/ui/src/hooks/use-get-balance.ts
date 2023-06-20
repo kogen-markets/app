@@ -1,13 +1,12 @@
 import { useRecoilValue } from "recoil";
-import { chainState, clientState } from "../state/cosmos";
+import { chainState } from "../state/cosmos";
 import { useQuery } from "@tanstack/react-query";
-import useTryNextClient from "./use-try-next-client";
 import { useChain } from "@cosmos-kit/react";
 import { metamaskAddressState } from "../state/injective";
+import useQueryClient from "./use-query-client";
 
 export default function useGetBalance(addr?: string, denom?: string) {
-  const tryNextClient = useTryNextClient();
-  const client = useRecoilValue(clientState);
+  const client = useQueryClient();
   const chain = useRecoilValue(chainState);
   const { address: cosmosAddress } = useChain(chain.chain_name);
   const metamaskAddress = useRecoilValue(metamaskAddressState);
@@ -29,7 +28,6 @@ export default function useGetBalance(addr?: string, denom?: string) {
     {
       enabled: Boolean(client),
       staleTime: 3000000,
-      onError: tryNextClient,
       suspense: true,
     }
   );

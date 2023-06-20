@@ -1,7 +1,6 @@
 import { atom, selector } from "recoil";
 import { localStorageEffect, LOCAL_STORAGE_DARK_MODE } from "./effects";
-import { KogenMarketsQueryClient } from "../codegen/KogenMarkets.client";
-import { chainState, clientState } from "./cosmos";
+import { chainState } from "./cosmos";
 import { TESTNET } from "../lib/config";
 
 export const densInitializedState = atom({
@@ -35,15 +34,5 @@ export const contractsState = selector<string>({
     }
 
     throw new Error("unknown chain_id " + chain.chain_id);
-  },
-});
-
-export const kogenMarketsQueryClientState = selector<KogenMarketsQueryClient>({
-  key: "kogenMarketsQueryClientState",
-  get: async ({ get }) => {
-    const contracts = get(contractsState);
-    const client = get(clientState);
-
-    return new KogenMarketsQueryClient(client, contracts);
   },
 });

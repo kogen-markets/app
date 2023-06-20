@@ -1,4 +1,3 @@
-import { CosmWasmClient } from "@cosmjs/cosmwasm-stargate";
 import { atom, selector } from "recoil";
 import { localStorageEffect, LOCAL_STORAGE_KEPLR_INTERACTED } from "./effects";
 import { chains } from "chain-registry";
@@ -64,33 +63,4 @@ export const pythServiceState = selector<URL>({
 
     throw new Error("unknown chain_id " + chain.chain_id);
   },
-});
-
-export const clientState = selector<CosmWasmClient>({
-  key: "clientState",
-  dangerouslyAllowMutability: true,
-  get: async ({ get }) => {
-    const { CosmWasmClient } = await import("@cosmjs/cosmwasm-stargate");
-
-    const clientIx = get(clientIxState);
-    const rpcs = get(rpcsState);
-    for (let i = 0; i < rpcs.length; i++) {
-      try {
-        const client = await CosmWasmClient.connect(
-          rpcs[(clientIx + i) % rpcs.length]
-        );
-
-        return client;
-      } catch (e) {
-        // connect error, try next client
-      }
-    }
-
-    throw new Error("no rpc client");
-  },
-});
-
-export const clientIxState = atom<number>({
-  key: "clientIxState",
-  default: 0,
 });

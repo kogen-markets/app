@@ -19,20 +19,18 @@ import {
   useKogenMarketsPositionQuery,
   useKogenMarketsConfigQuery,
 } from "../../../codegen/KogenMarkets.react-query";
-import { kogenMarketsQueryClientState } from "../../../state/kogen";
 import { toUserToken } from "../../../lib/token";
-import useTryNextClient from "../../../hooks/use-try-next-client";
 import { chainState } from "../../../state/cosmos";
 import { metamaskAddressState } from "../../../state/injective";
+import useKogenQueryClient from "../../../hooks/use-kogen-query-client";
 
 export default function YourPosition() {
-  const kogenClient = useRecoilValue(kogenMarketsQueryClientState);
+  const kogenClient = useKogenQueryClient();
   const chain = useRecoilValue(chainState);
   const { address: cosmosAddress } = useChain(chain.chain_name);
   const metamaskAddress = useRecoilValue(metamaskAddressState);
   const address = cosmosAddress || metamaskAddress?.injective;
 
-  const tryNextClient = useTryNextClient();
   const lockedAmount = useKogenMarketsLockedAmountQuery({
     client: kogenClient,
     args: {
@@ -40,7 +38,6 @@ export default function YourPosition() {
     },
     options: {
       enabled: Boolean(address),
-      onError: tryNextClient,
       suspense: true,
     },
   });
@@ -52,7 +49,6 @@ export default function YourPosition() {
     },
     options: {
       enabled: Boolean(address),
-      onError: tryNextClient,
       suspense: true,
     },
   });
@@ -61,7 +57,6 @@ export default function YourPosition() {
     client: kogenClient,
     options: {
       staleTime: 300000,
-      onError: tryNextClient,
       suspense: true,
     },
   });
