@@ -29,7 +29,7 @@
     "@keplr-wallet/types": "0.11.64",
     "@mui/icons-material": "5.11.16",
     "@mui/material": "5.13.6",
-    "@rollbar/react": "0.11.1",
+    "@rollbar/react": "0.11.2",
     "@tanstack/react-query": "4.29.11",
     "chain-registry": "1.14.0",
     "cosmjs-types": "0.8.0",
