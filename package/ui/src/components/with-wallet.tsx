@@ -1,6 +1,6 @@
 import { useRecoilValue } from "recoil";
 import { chainState } from "../state/cosmos";
-import { useChain } from "@cosmos-kit/react";
+import { useChain } from "@cosmos-kit/react-lite";
 import { Fragment } from "react";
 import WalletButton from "./wallet-button";
 import { ButtonProps } from "@mui/material";

@@ -1,7 +1,7 @@
 import { Box, Divider, Typography, alpha } from "@mui/material";
 import { Fragment } from "react";
 import { useRecoilValue } from "recoil";
-import { useChain } from "@cosmos-kit/react";
+import { useChain } from "@cosmos-kit/react-lite";
 import Decimal from "decimal.js";
 import AdjustIcon from "@mui/icons-material/Adjust";
 import {

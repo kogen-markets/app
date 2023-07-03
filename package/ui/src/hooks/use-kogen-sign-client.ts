@@ -2,7 +2,7 @@ import { useRecoilValue } from "recoil";
 import { KogenMarketsClient } from "../codegen/KogenMarkets.client";
 import { contractsState } from "../state/kogen";
 import useJunoSignClient from "./use-sign-client";
-import { useChain } from "@cosmos-kit/react";
+import { useChain } from "@cosmos-kit/react-lite";
 import { chainState } from "../state/cosmos";
 
 export default function useKogenSignClient() {
