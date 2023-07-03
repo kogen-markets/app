@@ -1,4 +1,4 @@
-import { useChain } from "@cosmos-kit/react";
+import { useChain } from "@cosmos-kit/react-lite";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { Button, ButtonProps } from "@mui/material";
 import LogoutIcon from "@mui/icons-material/Logout";

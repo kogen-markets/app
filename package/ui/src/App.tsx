@@ -8,7 +8,7 @@ import {
 } from "react-router-dom";
 import { Provider as RollbarProvider, ErrorBoundary } from "@rollbar/react";
 import { RecoilRoot } from "recoil";
-import { ChainProvider } from "@cosmos-kit/react";
+import { ChainProvider } from "@cosmos-kit/react-lite";
 import { GasPrice } from "@cosmjs/stargate";
 import { chains, assets } from "chain-registry";
 import { wallets as keplrWallets } from "@cosmos-kit/keplr-extension";
@@ -71,7 +71,6 @@ function App() {
                 ...leapWallets,
                 ...cosmostationWallets,
               ]} // supported wallets
-              wrappedWithChakra={false}
               endpointOptions={{
                 endpoints: {
                   injectivetestnet: {

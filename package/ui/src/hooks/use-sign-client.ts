@@ -1,4 +1,4 @@
-import { useChain } from "@cosmos-kit/react";
+import { useChain } from "@cosmos-kit/react-lite";
 import { useRecoilValue } from "recoil";
 import { suspend } from "suspend-react";
 

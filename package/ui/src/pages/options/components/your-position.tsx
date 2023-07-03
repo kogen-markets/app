@@ -13,7 +13,7 @@ import {
 import { Fragment, useMemo } from "react";
 import { useRecoilValue } from "recoil";
 import Decimal from "decimal.js";
-import { useChain } from "@cosmos-kit/react";
+import { useChain } from "@cosmos-kit/react-lite";
 import {
   useKogenMarketsLockedAmountQuery,
   useKogenMarketsPositionQuery,

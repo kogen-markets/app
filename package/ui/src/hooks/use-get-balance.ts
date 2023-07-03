@@ -1,7 +1,7 @@
 import { useRecoilValue } from "recoil";
 import { chainState } from "../state/cosmos";
 import { useQuery } from "@tanstack/react-query";
-import { useChain } from "@cosmos-kit/react";
+import { useChain } from "@cosmos-kit/react-lite";
 import { metamaskAddressState } from "../state/injective";
 import useQueryClient from "./use-query-client";
 
