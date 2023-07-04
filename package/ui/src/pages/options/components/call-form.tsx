@@ -9,8 +9,8 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import { Fragment, Suspense, useMemo } from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { Fragment, useMemo } from "react";
+import { useRecoilState } from "recoil";
 import Joi from "joi";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import Decimal from "decimal.js";
@@ -24,11 +24,10 @@ import { useKogenMarketsConfigQuery } from "../../../codegen/KogenMarkets.react-
 import { useCallOptionMutation } from "../tx";
 import WithWallet from "../../../components/with-wallet";
 import useGetBalance from "../../../hooks/use-get-balance";
-import Loading from "../../../components/loading";
 import useKogenQueryClient from "../../../hooks/use-kogen-query-client";
 
-export const optionSizeValidator = Joi.number();
-export const optionPriceValidator = Joi.number().greater(0);
+export const optionSizeValidator = Joi.number().label("Option size");
+export const optionPriceValidator = Joi.number().label("Price").greater(0);
 
 export default function CallForm() {
   const kogenClient = useKogenQueryClient();
@@ -51,8 +50,27 @@ export default function CallForm() {
       return optionSizeValidator;
     }
 
-    return optionSizeValidator.min(
-      toUserToken(config.data.min_order_quantity_in_base).toNumber()
+    return optionSizeValidator
+      .min(
+        toUserToken(
+          config.data.min_order_quantity_in_base,
+          config.data.base_decimals
+        ).toNumber()
+      )
+      .precision(
+        config.data.base_decimals -
+          new Decimal(config.data.min_tick_base).log(10).toNumber()
+      );
+  }, [config]);
+
+  const optionPriceValidatorConfig = useMemo(() => {
+    if (!config.data) {
+      return optionSizeValidator;
+    }
+
+    return optionPriceValidator.precision(
+      config.data.quote_decimals -
+        new Decimal(config.data.min_tick_quote).log(10).toNumber()
     );
   }, [config]);
 
@@ -61,19 +79,21 @@ export default function CallForm() {
       Joi.object({
         type: Joi.string().allow(...Object.values(ORDER_TYPES)),
         optionSize: optionSizeValidatorConfig,
-        optionPrice: optionPriceValidator,
+        optionPrice: optionPriceValidatorConfig,
       }).unknown(true),
-    [optionSizeValidatorConfig]
+    [optionSizeValidatorConfig, optionPriceValidatorConfig]
   );
 
   const [invalidOptionSize, setOptionSizeBlurred] = useFormValidation(
     formState.get("optionSize"),
-    optionSizeValidatorConfig.messages({})
+    optionSizeValidatorConfig.messages({}),
+    { validateAfterBlur: false, validateAfterChange: true }
   );
 
   const [invalidOptionPrice, setOptionPriceBlurred] = useFormValidation(
     formState.get("optionPrice"),
-    optionPriceValidator.messages({})
+    optionPriceValidatorConfig.messages({}),
+    { validateAfterBlur: false, validateAfterChange: true }
   );
 
   const [, setSnackbar] = useRecoilState(snackbarState);
@@ -141,7 +161,10 @@ export default function CallForm() {
   }, [formState, config.data]);
 
   const orderCreateEnabled = useMemo(() => {
-    return callFormValidatorConfig.validate(formState.toJSON()).error == null;
+    return (
+      callFormValidatorConfig.validate(formState.toJSON(), { convert: false })
+        .error == null
+    );
   }, [callFormValidatorConfig, formState]);
 
   const { mutateAsync: createOrder, isLoading: isCreateOrderLoading } =

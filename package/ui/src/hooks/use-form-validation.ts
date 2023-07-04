@@ -38,7 +38,7 @@ export default function useFormValidation(
     shouldValidate = shouldValidate && blurred;
   }
 
-  const validationResult = validator.validate(value);
+  const validationResult = validator.validate(value, { convert: false });
   const result = shouldValidate ? validationResult : { error: null };
 
   return [
