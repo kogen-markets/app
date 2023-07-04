@@ -11,6 +11,7 @@
     "@cosmjs/cosmwasm-stargate": "0.31.0",
     "@cosmjs/crypto": "0.31.0",
     "@cosmjs/proto-signing": "0.31.0",
+    "chain-registry": "1.15.0",
     "ramda": "0.29.0"
   }
 }

@@ -1,0 +1,17 @@
+{
+  "name": "@kogen/kogen-exercise-bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 0",
+    "env": "dotenv -e ./.env -- node"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@injectivelabs/sdk-ts": "1.11.0",
+    "chain-registry": "1.15.0"
+  }
+}
