@@ -1,21 +1,19 @@
 encryptionsalt: v1:CW9kczZXTBU=:v1:1gB+5xxtCs6svOli:L0f4+8wtXGUyIJD18VsJTiVl8QfRJw==
 config:
+  alchemy:pubkey: pFexqCrRWIP1HiAgL7EzG306mpJBmNuZ
   aws:region: eu-central-1
   backend:API_DOMAIN: api.kogen.markets
   backend:ROUTE53_ZONE_NAME: kogen.markets
+  exercise:chain_id:
+    secure: v1:05q5mtXdFUGIwTTM:UfWqAjt56nc3N28tpV9m2gkzQ7bqFfMZeXfMB2Q=
+  exercise:mnemonic:
+    secure: v1:ZR1swEqwdP0bP2u/:5l6KZl1vDBcxWc+g/njfzf7fRJvyS0yTNumCHDdKlFJj6ixxQUkOTVPRZV7KspnhNGsqrEmr4dltRQR9lv7kfNs5qxxaGq9UbFTcf4wOjP/1Km8/Afy3oJNEM6Ok3J7E1A==
+  exercise:option_contract_addr:
+    secure: v1:jLjPCxSrZE8pW3JE:fpFizhVL4Sfb4zGQXaU0lSBjqy2D9OhPGL/SlrNLlJm+PREqjrtQsIg2TXczACwjzlVFV4j8NO0r2g==
+  exercise:pyth_price_feed_url:
+    secure: v1:+aqKtexwLTmtaZ7k:qmDm5Mb43tx91qH4E6IP4QbPbD+uuQJYAy2fR4T0f2JZMQ2ZTFaCbNOUcO1WLDebAsNebdMrrPXAxKkevu93
   landing:API_DOMAIN: kogen.markets
   landing:ROUTE53_ZONE_NAME: kogen.markets
-  # injective:rpcs:
-  #   [
-  #     "https://k8s.global.mainnet.tm.injective.network/",
-  #     "https://rpc.injective.posthuman.digital/",
-  #     "https://injective-rpc.bharvest.io/",
-  #   ]
-  injective:rpcs: ["https://k8s.testnet.tm.injective.network:443"]
-  injective:lcd: https://k8s.testnet.lcd.injective.network
-  alchemy:pubkey: pFexqCrRWIP1HiAgL7EzG306mpJBmNuZ
-  neutron:rpcs: ["https://rpc-palvus.pion-1.ntrn.tech:443"]
-  archway:rpcs: ["https://rpc.constantine.archway.tech:443"]
   pulumi:env_files: []
   webapp:API_DOMAIN: app.kogen.markets
   webapp:ROUTE53_ZONE_NAME: kogen.markets

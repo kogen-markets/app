@@ -1,8 +1,11 @@
 encryptionsalt: v1:gjpNoGNup/4=:v1:4mGZd8Jezul/Qebk:95ggjQTRg9a7D6cKEjSVw/A3dqAsdA==
 config:
+  alchemy:pubkey: pFexqCrRWIP1HiAgL7EzG306mpJBmNuZ
   aws:region: eu-central-1
   backend:API_DOMAIN: api.dev.kogen.markets
   backend:ROUTE53_ZONE_NAME: kogen.markets
+  exercise:mnemonic:
+    secure: v1:ewOXPmj/pqgE0VPi:6VCdXtO5mlhAkFtBuCf3koxpD7G3SOaNVPZXEadHxiGFQEAaw30oBuHKowBUX0JC8AcaktIV5aq8Bxbesta3UoDFU81G4IyOZiG8ADL3BleAbazEAJ0PeZcsPXpxIUBxng==
   landing:API_DOMAIN: dev.kogen.markets
   landing:ROUTE53_ZONE_NAME: kogen.markets
   pulumi:env_files: []

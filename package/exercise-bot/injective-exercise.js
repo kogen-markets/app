@@ -1,4 +1,4 @@
-import pkg from "@injectivelabs/sdk-ts";
+import * as pkg from "@injectivelabs/sdk-ts";
 const {
   ChainRestAuthApi,
   MsgExecuteContractCompat,

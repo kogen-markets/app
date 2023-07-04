@@ -21,28 +21,6 @@ export const keplrInteractedState = atom({
   effects: [localStorageEffect(LOCAL_STORAGE_KEPLR_INTERACTED)],
 });
 
-export const rpcsState = selector<string[]>({
-  key: "rpcsState",
-  get: async ({ get }) => {
-    const chain = get(chainState);
-    if (
-      [TESTNET.INJECTIVE, MAINNET.INJECTIVE].includes(chain.chain_id as any)
-    ) {
-      return JSON.parse(import.meta.env.VITE_INJECTIVE_RPCS) as string[];
-    }
-
-    if (chain.chain_id === TESTNET.NEUTRON) {
-      return JSON.parse(import.meta.env.VITE_NEUTRON_RPCS) as string[];
-    }
-
-    if (chain.chain_id === TESTNET.ARCHWAY) {
-      return JSON.parse(import.meta.env.VITE_ARCHWAY_RPCS) as string[];
-    }
-
-    throw new Error("unknown chain_id " + chain.chain_id);
-  },
-});
-
 export const pythServiceState = selector<URL>({
   key: "pythServiceState",
   get: async ({ get }) => {
