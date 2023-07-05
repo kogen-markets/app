@@ -34,9 +34,5 @@ export default async function exerciseCosmwasm() {
     process.env.MNEMONIC
   );
 
-  if (r?.code !== 0) {
-    console.error("%j", r);
-  } else {
-    console.log("%j", r);
-  }
+  console.log("%j", r);
 }
