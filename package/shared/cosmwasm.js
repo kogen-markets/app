@@ -2,6 +2,7 @@ import { SigningCosmWasmClient } from "@cosmjs/cosmwasm-stargate";
 import { DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
 import { stringToPath } from "@cosmjs/crypto/build/slip10.js";
 import { chains } from "chain-registry";
+import { GasPrice } from "@cosmjs/stargate";
 
 let currentCachedClient = {};
 let currentRpcIx = 0;
@@ -64,11 +65,17 @@ export async function withSigningClient(
         prefix: chain.bech32_prefix,
         hdPaths: [stringToPath(`m/44'/${chain.slip44}'/0'/0/0`)],
       });
+      const feeToken = chain.fees.fee_tokens[0];
       const client =
         currentCachedSigningClient[chainId] ||
         (await SigningCosmWasmClient.connectWithSigner(
           rpcEndpoints[currentRpcIx],
-          signer
+          signer,
+          {
+            gasPrice: GasPrice.fromString(
+              feeToken.high_gas_price + feeToken.denom
+            ),
+          }
         ));
 
       currentCachedSigningClient[chainId] = client;
@@ -83,8 +90,4 @@ export async function withSigningClient(
       }
     }
   }
-}
-
-export function toBaseToken(n, decimals = 6) {
-  return BigInt(n) / BigInt(Math.pow(10, decimals));
 }

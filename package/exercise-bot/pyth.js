@@ -15,5 +15,13 @@ export async function getPythData() {
 
   const data = await resp.json();
 
-  return { pyth_contract_addr, data };
+  const update_fee = await withClient(async (client) => {
+    return client.queryContractSmart(pyth_contract_addr, {
+      get_update_fee: {
+        vaas: data,
+      },
+    });
+  });
+
+  return { pyth_contract_addr, data, update_fee };
 }

@@ -1,8 +1,8 @@
 import * as pkg from "@injectivelabs/sdk-ts";
 const {
   ChainRestAuthApi,
-  MsgExecuteContractCompat,
   createTransaction,
+  MsgExecuteContractCompat,
   TxGrpcClient,
 } = pkg;
 import { chains } from "chain-registry";
@@ -29,7 +29,7 @@ export default async function exerciseInjective() {
     10
   );
 
-  const { data, pyth_contract_addr } = await getPythData();
+  const { data, pyth_contract_addr, update_fee } = await getPythData();
 
   const { signBytes, txRaw } = createTransaction({
     message: [
@@ -41,12 +41,7 @@ export default async function exerciseInjective() {
             data: data,
           },
         },
-        funds: [
-          {
-            amount: "1000000000000000000",
-            denom: "inj",
-          },
-        ],
+        funds: [update_fee],
       }),
       MsgExecuteContractCompat.fromJSON({
         contractAddress: process.env.OPTION_CONTRACT_ADDR,
@@ -79,5 +74,5 @@ export default async function exerciseInjective() {
 
   const txResponse = await txService.broadcast(txRaw);
 
-  console.log(txResponse);
+  console.log("%j", txResponse);
 }
