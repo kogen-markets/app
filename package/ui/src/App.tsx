@@ -71,21 +71,6 @@ function App() {
                 ...leapWallets,
                 ...cosmostationWallets,
               ]} // supported wallets
-              endpointOptions={{
-                endpoints: {
-                  injectivetestnet: {
-                    rpc: JSON.parse(
-                      import.meta.env.VITE_INJECTIVE_RPCS
-                    ) as string[],
-                  },
-                  neutrontestnet: {
-                    rpc: JSON.parse(
-                      import.meta.env.VITE_NEUTRON_RPCS
-                    ) as string[],
-                  },
-                },
-                isLazy: true,
-              }}
               signerOptions={{
                 signingCosmwasm: (chain) => {
                   if (chain.chain_id === TESTNET.NEUTRON) {
