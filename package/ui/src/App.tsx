@@ -18,9 +18,9 @@ import AppLayout from "./layout/app";
 import rollbar from "./lib/rollbar";
 import Error from "./pages/error";
 import Loading from "./components/loading";
-import WalletDialog from "./components/wallet-dialog";
 import { ENABLED_TESTNETS, TESTNET } from "./lib/config";
 
+const WalletDialog = lazy(() => import("./components/wallet-dialog"));
 const OptionsPage = lazy(() => import("./pages/options/index"));
 
 const router = createBrowserRouter([
@@ -87,6 +87,7 @@ function App() {
                   return {};
                 },
               }}
+              //@ts-ignore
               walletModal={WalletDialog}
             >
               <RouterProvider router={router} />
