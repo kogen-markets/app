@@ -19,8 +19,7 @@ import rollbar from "./lib/rollbar";
 import Error from "./pages/error";
 import Loading from "./components/loading";
 import WalletDialog from "./components/wallet-dialog";
-import { CONSTANTINE3, ENABLED_TESTNETS, TESTNET } from "./lib/config";
-chains.push(CONSTANTINE3);
+import { ENABLED_TESTNETS, TESTNET } from "./lib/config";
 
 const OptionsPage = lazy(() => import("./pages/options/index"));
 
@@ -63,7 +62,7 @@ function App() {
           <ErrorBoundary>
             <ChainProvider
               chains={chains.filter((c) =>
-                ENABLED_TESTNETS.includes(c.chain_id as TESTNET)
+                ENABLED_TESTNETS.includes(c.chain_id as TESTNET),
               )}
               assetLists={assets}
               wallets={[

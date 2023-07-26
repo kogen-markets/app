@@ -3,10 +3,8 @@ import { Fragment } from "react";
 import { useRecoilState } from "recoil";
 import { chains } from "chain-registry";
 import { chainState } from "../state/cosmos";
-import { CONSTANTINE3, TESTNET } from "../lib/config";
+import { TESTNET } from "../lib/config";
 import { metamaskWalletStrategyState } from "../state/injective";
-
-chains.push(CONSTANTINE3);
 
 export default function ChainSelect({
   FormControlProps,
@@ -15,7 +13,7 @@ export default function ChainSelect({
 }) {
   const [chain, setChain] = useRecoilState(chainState);
   const [, setMetamaskWalletStrategy] = useRecoilState(
-    metamaskWalletStrategyState
+    metamaskWalletStrategyState,
   );
 
   return (
