@@ -4,7 +4,7 @@ import { AnySchema } from "joi";
 export default function useFormValidation(
   value: any,
   validator: AnySchema,
-  opts = { validateAfterBlur: true, validateAfterChange: true }
+  opts = { validateAfterBlur: true, validateAfterChange: true },
 ) {
   const [blurred, setBlurred] = useState(false);
   const initialValue = useRef(value);

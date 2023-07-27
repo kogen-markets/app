@@ -6,7 +6,7 @@ export const MemoTextField = memo<typeof TextField>(
     const onWheel = useCallback((e: any) => e.target.blur(), []);
 
     return <TextField {...opts} onWheel={onWheel} />;
-  }
+  },
 );
 
 MemoTextField.displayName = "MemoTextField";

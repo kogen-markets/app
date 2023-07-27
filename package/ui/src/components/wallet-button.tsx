@@ -17,11 +17,11 @@ export default function WalletButton({
 }) {
   const chain = useRecoilValue(chainState);
   const { address, connect, disconnect, wallet, isWalletConnected } = useChain(
-    chain.chain_name
+    chain.chain_name,
   );
 
   const [metamaskWalletStrategy, setMetamaskWalletStrategy] = useRecoilState(
-    metamaskWalletStrategyState
+    metamaskWalletStrategyState,
   );
   const metamaskAddress = useRecoilValue(metamaskAddressState);
 

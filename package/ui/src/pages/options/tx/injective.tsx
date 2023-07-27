@@ -19,7 +19,7 @@ export function useInjectiveCallOptionMutation() {
   const chain = useRecoilValue(chainState);
   const queryClient = useQueryClient();
   const { address: cosmosAddress, wallet: cosmosWallet } = useChain(
-    chain.chain_name
+    chain.chain_name,
   );
   const metamaskWalletStrategy = useRecoilValue(metamaskWalletStrategyState);
   const metamaskAddress = useRecoilValue(metamaskAddressState);
@@ -96,7 +96,7 @@ export function useInjectiveCallOptionMutation() {
         queryClient.invalidateQueries([{ method: "position" }]);
         queryClient.invalidateQueries(["get_balance", address]);
       },
-    }
+    },
   );
 }
 
@@ -104,7 +104,7 @@ export function useInjectiveExerciseCallOptionMutation() {
   const chain = useRecoilValue(chainState);
   const queryClient = useQueryClient();
   const { address: cosmosAddress, wallet: cosmosWallet } = useChain(
-    chain.chain_name
+    chain.chain_name,
   );
   const metamaskWalletStrategy = useRecoilValue(metamaskWalletStrategyState);
   const metamaskAddress = useRecoilValue(metamaskAddressState);
@@ -165,6 +165,6 @@ export function useInjectiveExerciseCallOptionMutation() {
         queryClient.invalidateQueries([{ method: "position" }]);
         queryClient.invalidateQueries(["get_balance", address]);
       },
-    }
+    },
   );
 }

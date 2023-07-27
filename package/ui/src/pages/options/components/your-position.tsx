@@ -67,7 +67,7 @@ export default function YourPosition() {
     }
 
     return new Decimal(position.data?.bid_position_in_base || 0).sub(
-      position.data?.ask_position_in_base || 0
+      position.data?.ask_position_in_base || 0,
     );
   }, [position]);
 
@@ -92,14 +92,14 @@ export default function YourPosition() {
               <TableCell align="center">
                 {toUserToken(
                   lockedAmount.data?.locked_base_denom || "0",
-                  config.data?.base_decimals
+                  config.data?.base_decimals,
                 ).toFixed(3)}{" "}
                 {config.data?.base_symbol}
               </TableCell>
               <TableCell align="center">
                 {toUserToken(
                   lockedAmount.data?.locked_quote_denom || "0",
-                  config.data?.quote_decimals
+                  config.data?.quote_decimals,
                 ).toFixed(3)}{" "}
                 {config.data?.quote_symbol}
               </TableCell>
@@ -107,7 +107,7 @@ export default function YourPosition() {
                 <Chip
                   label={toUserToken(
                     position_in_base,
-                    config.data?.base_decimals
+                    config.data?.base_decimals,
                   ).toFixed(3)}
                   variant="outlined"
                   color={

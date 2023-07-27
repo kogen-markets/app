@@ -103,7 +103,7 @@ export interface KogenMarketsInterface extends KogenMarketsReadOnlyInterface {
   updateConfig: (
     fee?: number | StdFee | "auto",
     memo?: string,
-    _funds?: Coin[]
+    _funds?: Coin[],
   ) => Promise<ExecuteResult>;
   askOrder: (
     {
@@ -115,7 +115,7 @@ export interface KogenMarketsInterface extends KogenMarketsReadOnlyInterface {
     },
     fee?: number | StdFee | "auto",
     memo?: string,
-    _funds?: Coin[]
+    _funds?: Coin[],
   ) => Promise<ExecuteResult>;
   bidOrder: (
     {
@@ -127,7 +127,7 @@ export interface KogenMarketsInterface extends KogenMarketsReadOnlyInterface {
     },
     fee?: number | StdFee | "auto",
     memo?: string,
-    _funds?: Coin[]
+    _funds?: Coin[],
   ) => Promise<ExecuteResult>;
   exercise: (
     {
@@ -137,7 +137,7 @@ export interface KogenMarketsInterface extends KogenMarketsReadOnlyInterface {
     },
     fee?: number | StdFee | "auto",
     memo?: string,
-    _funds?: Coin[]
+    _funds?: Coin[],
   ) => Promise<ExecuteResult>;
 }
 export class KogenMarketsClient
@@ -151,7 +151,7 @@ export class KogenMarketsClient
   constructor(
     client: SigningCosmWasmClient,
     sender: string,
-    contractAddress: string
+    contractAddress: string,
   ) {
     super(client, contractAddress);
     this.client = client;
@@ -166,7 +166,7 @@ export class KogenMarketsClient
   updateConfig = async (
     fee: number | StdFee | "auto" = "auto",
     memo?: string,
-    _funds?: Coin[]
+    _funds?: Coin[],
   ): Promise<ExecuteResult> => {
     return await this.client.execute(
       this.sender,
@@ -176,7 +176,7 @@ export class KogenMarketsClient
       },
       fee,
       memo,
-      _funds
+      _funds,
     );
   };
   askOrder = async (
@@ -189,7 +189,7 @@ export class KogenMarketsClient
     },
     fee: number | StdFee | "auto" = "auto",
     memo?: string,
-    _funds?: Coin[]
+    _funds?: Coin[],
   ): Promise<ExecuteResult> => {
     return await this.client.execute(
       this.sender,
@@ -202,7 +202,7 @@ export class KogenMarketsClient
       },
       fee,
       memo,
-      _funds
+      _funds,
     );
   };
   bidOrder = async (
@@ -215,7 +215,7 @@ export class KogenMarketsClient
     },
     fee: number | StdFee | "auto" = "auto",
     memo?: string,
-    _funds?: Coin[]
+    _funds?: Coin[],
   ): Promise<ExecuteResult> => {
     return await this.client.execute(
       this.sender,
@@ -228,7 +228,7 @@ export class KogenMarketsClient
       },
       fee,
       memo,
-      _funds
+      _funds,
     );
   };
   exercise = async (
@@ -239,7 +239,7 @@ export class KogenMarketsClient
     },
     fee: number | StdFee | "auto" = "auto",
     memo?: string,
-    _funds?: Coin[]
+    _funds?: Coin[],
   ): Promise<ExecuteResult> => {
     return await this.client.execute(
       this.sender,
@@ -251,7 +251,7 @@ export class KogenMarketsClient
       },
       fee,
       memo,
-      _funds
+      _funds,
     );
   };
 }

@@ -47,7 +47,7 @@ export const kogenMarketsQueryKeys = {
     ] as const,
   config: (
     contractAddress: string | undefined,
-    args?: Record<string, unknown>
+    args?: Record<string, unknown>,
   ) =>
     [
       {
@@ -74,7 +74,7 @@ export const kogenMarketsQueryKeys = {
     ] as const,
   lockedAmount: (
     contractAddress: string | undefined,
-    args?: Record<string, unknown>
+    args?: Record<string, unknown>,
   ) =>
     [
       {
@@ -85,7 +85,7 @@ export const kogenMarketsQueryKeys = {
     ] as const,
   position: (
     contractAddress: string | undefined,
-    args?: Record<string, unknown>
+    args?: Record<string, unknown>,
   ) =>
     [
       {
@@ -224,7 +224,7 @@ export function useKogenMarketsPositionQuery<TData = PositionResponse>({
       ...options,
       enabled:
         !!client && (options?.enabled != undefined ? options.enabled : true),
-    }
+    },
   );
 }
 export interface KogenMarketsLockedAmountQuery<TData>
@@ -250,7 +250,7 @@ export function useKogenMarketsLockedAmountQuery<TData = LockedAmountResponse>({
       ...options,
       enabled:
         !!client && (options?.enabled != undefined ? options.enabled : true),
-    }
+    },
   );
 }
 export interface KogenMarketsAsksQuery<TData>
@@ -276,7 +276,7 @@ export function useKogenMarketsAsksQuery<TData = ArrayOfOrdersResponse>({
       ...options,
       enabled:
         !!client && (options?.enabled != undefined ? options.enabled : true),
-    }
+    },
   );
 }
 export interface KogenMarketsBidsQuery<TData>
@@ -302,7 +302,7 @@ export function useKogenMarketsBidsQuery<TData = ArrayOfOrdersResponse>({
       ...options,
       enabled:
         !!client && (options?.enabled != undefined ? options.enabled : true),
-    }
+    },
   );
 }
 export type KogenMarketsConfigQuery<TData> = KogenMarketsReactQuery<
@@ -321,7 +321,7 @@ export function useKogenMarketsConfigQuery<TData = Config>({
       ...options,
       enabled:
         !!client && (options?.enabled != undefined ? options.enabled : true),
-    }
+    },
   );
 }
 export interface KogenMarketsExerciseMutation {
@@ -339,12 +339,12 @@ export function useKogenMarketsExerciseMutation(
   options?: Omit<
     UseMutationOptions<ExecuteResult, Error, KogenMarketsExerciseMutation>,
     "mutationFn"
-  >
+  >,
 ) {
   return useMutation<ExecuteResult, Error, KogenMarketsExerciseMutation>(
     ({ client, msg, args: { fee, memo, funds } = {} }) =>
       client.exercise(msg, fee, memo, funds),
-    options
+    options,
   );
 }
 export interface KogenMarketsBidOrderMutation {
@@ -363,12 +363,12 @@ export function useKogenMarketsBidOrderMutation(
   options?: Omit<
     UseMutationOptions<ExecuteResult, Error, KogenMarketsBidOrderMutation>,
     "mutationFn"
-  >
+  >,
 ) {
   return useMutation<ExecuteResult, Error, KogenMarketsBidOrderMutation>(
     ({ client, msg, args: { fee, memo, funds } = {} }) =>
       client.bidOrder(msg, fee, memo, funds),
-    options
+    options,
   );
 }
 export interface KogenMarketsAskOrderMutation {
@@ -387,12 +387,12 @@ export function useKogenMarketsAskOrderMutation(
   options?: Omit<
     UseMutationOptions<ExecuteResult, Error, KogenMarketsAskOrderMutation>,
     "mutationFn"
-  >
+  >,
 ) {
   return useMutation<ExecuteResult, Error, KogenMarketsAskOrderMutation>(
     ({ client, msg, args: { fee, memo, funds } = {} }) =>
       client.askOrder(msg, fee, memo, funds),
-    options
+    options,
   );
 }
 export interface KogenMarketsUpdateConfigMutation {
@@ -407,11 +407,11 @@ export function useKogenMarketsUpdateConfigMutation(
   options?: Omit<
     UseMutationOptions<ExecuteResult, Error, KogenMarketsUpdateConfigMutation>,
     "mutationFn"
-  >
+  >,
 ) {
   return useMutation<ExecuteResult, Error, KogenMarketsUpdateConfigMutation>(
     ({ client, args: { fee, memo, funds } = {} }) =>
       client.updateConfig(fee, memo, funds),
-    options
+    options,
   );
 }

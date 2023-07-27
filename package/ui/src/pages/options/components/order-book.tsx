@@ -24,7 +24,7 @@ function sumOrders(orders?: OrderBookItem[]) {
 
   return orders.reduce(
     (acc, o) => acc.plus(o.quantity_in_base),
-    new Decimal(0)
+    new Decimal(0),
   );
 }
 

@@ -34,7 +34,7 @@ export default function Exercise() {
   const [expiryPrice, setExpiryPrice] = useState("");
   const [invalidExpiryPrice, setExpiryPriceBlurred] = useFormValidation(
     expiryPrice,
-    expiryPriceValidator.messages({})
+    expiryPriceValidator.messages({}),
   );
 
   //@ts-ignore
@@ -44,7 +44,7 @@ export default function Exercise() {
   const pythPriceServicePriceFeed = useMemo(() => {
     pythPriceService.searchParams.set(
       "ids[]",
-      config.data?.pyth_base_price_feed || ""
+      config.data?.pyth_base_price_feed || "",
     );
 
     return pythPriceService;
@@ -110,7 +110,7 @@ export default function Exercise() {
               await exercise({
                 expiry_price: toBaseToken(
                   expiryPrice,
-                  config.data?.quote_decimals
+                  config.data?.quote_decimals,
                 ).toFixed(0),
               });
               setSnackbar({

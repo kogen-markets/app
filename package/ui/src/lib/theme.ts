@@ -87,9 +87,9 @@ export const darkTheme = responsiveFontSizes(
         },
       },
     },
-    abstractTheme
+    abstractTheme,
   ),
-  { factor: 10 }
+  { factor: 10 },
 );
 
 export const lightTheme = responsiveFontSizes(
@@ -125,9 +125,9 @@ export const lightTheme = responsiveFontSizes(
         },
       },
     },
-    abstractTheme
+    abstractTheme,
   ),
-  { factor: 10 }
+  { factor: 10 },
 );
 
 export default darkTheme;

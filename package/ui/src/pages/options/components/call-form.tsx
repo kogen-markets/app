@@ -54,12 +54,12 @@ export default function CallForm() {
       .min(
         toUserToken(
           config.data.min_order_quantity_in_base,
-          config.data.base_decimals
-        ).toNumber()
+          config.data.base_decimals,
+        ).toNumber(),
       )
       .precision(
         config.data.base_decimals -
-          new Decimal(config.data.min_tick_base).log(10).toNumber()
+          new Decimal(config.data.min_tick_base).log(10).toNumber(),
       );
   }, [config]);
 
@@ -70,7 +70,7 @@ export default function CallForm() {
 
     return optionPriceValidator.precision(
       config.data.quote_decimals -
-        new Decimal(config.data.min_tick_quote).log(10).toNumber()
+        new Decimal(config.data.min_tick_quote).log(10).toNumber(),
     );
   }, [config]);
 
@@ -81,26 +81,26 @@ export default function CallForm() {
         optionSize: optionSizeValidatorConfig,
         optionPrice: optionPriceValidatorConfig,
       }).unknown(true),
-    [optionSizeValidatorConfig, optionPriceValidatorConfig]
+    [optionSizeValidatorConfig, optionPriceValidatorConfig],
   );
 
   const [invalidOptionSize, setOptionSizeBlurred] = useFormValidation(
     formState.get("optionSize"),
     optionSizeValidatorConfig.messages({}),
-    { validateAfterBlur: false, validateAfterChange: true }
+    { validateAfterBlur: false, validateAfterChange: true },
   );
 
   const [invalidOptionPrice, setOptionPriceBlurred] = useFormValidation(
     formState.get("optionPrice"),
     optionPriceValidatorConfig.messages({}),
-    { validateAfterBlur: false, validateAfterChange: true }
+    { validateAfterBlur: false, validateAfterChange: true },
   );
 
   const [, setSnackbar] = useRecoilState(snackbarState);
 
   const isBid = useMemo(
     () => formState.get("type") === ORDER_TYPES.BID,
-    [formState]
+    [formState],
   );
 
   const collateral = useMemo(() => {
@@ -111,7 +111,7 @@ export default function CallForm() {
     if (formState.get("type") === ORDER_TYPES.BID) {
       const amount_in_base = toBaseToken(
         formState.get("optionPrice"),
-        config.data.quote_decimals
+        config.data.quote_decimals,
       )
         .add(config.data.strike_price_in_quote)
         .mul(formState.get("optionSize"));
@@ -122,11 +122,11 @@ export default function CallForm() {
 
       const optionAmountBase = toBaseToken(
         formState.get("optionPrice"),
-        config.data.quote_decimals
+        config.data.quote_decimals,
       ).mul(formState.get("optionSize"));
 
       const strikeAmountBase = new Decimal(
-        config.data.strike_price_in_quote
+        config.data.strike_price_in_quote,
       ).mul(formState.get("optionSize"));
 
       return {
@@ -142,7 +142,7 @@ export default function CallForm() {
     if (formState.get("type") === ORDER_TYPES.ASK) {
       const amount_in_base = toBaseToken(
         formState.get("optionSize"),
-        config.data.base_decimals
+        config.data.base_decimals,
       );
 
       if (amount_in_base.isNaN()) {
@@ -172,7 +172,7 @@ export default function CallForm() {
 
   const balance = useGetBalance(
     undefined,
-    isBid ? config.data?.quote_denom : config.data?.base_denom
+    isBid ? config.data?.quote_denom : config.data?.base_denom,
   );
 
   return (
@@ -216,7 +216,7 @@ export default function CallForm() {
                 $
                 {toUserToken(
                   config.data?.strike_price_in_quote,
-                  config.data?.quote_decimals
+                  config.data?.quote_decimals,
                 ).toFixed(2)}
               </Typography>
             </Fragment>
@@ -228,7 +228,7 @@ export default function CallForm() {
               <Typography variant="caption">Expiry</Typography>
               <Typography variant="body1">
                 {new Date(
-                  parseInt(config.data.expiry) / 1000000
+                  parseInt(config.data.expiry) / 1000000,
                 ).toLocaleDateString(undefined, {
                   month: "long",
                   day: "2-digit",
@@ -371,7 +371,7 @@ export default function CallForm() {
             <Typography variant="body1" sx={{ mb: 2 }}>
               {toUserToken(
                 balance.data.amount,
-                config.data?.quote_decimals
+                config.data?.quote_decimals,
               ).toFixed(2)}
               {config.data?.quote_symbol}
             </Typography>
@@ -379,7 +379,7 @@ export default function CallForm() {
             <Typography variant="body1" sx={{ mb: 2 }}>
               {toUserToken(
                 balance.data.amount,
-                config.data?.base_decimals
+                config.data?.base_decimals,
               ).toFixed(2)}
               {config.data?.base_symbol}
             </Typography>
@@ -410,11 +410,11 @@ export default function CallForm() {
                   type: formState.get("type"),
                   price: toBaseToken(
                     formState.get("optionPrice"),
-                    config.data?.quote_decimals
+                    config.data?.quote_decimals,
                   ).toFixed(0),
                   quantity: toBaseToken(
                     formState.get("optionSize"),
-                    config.data?.base_decimals
+                    config.data?.base_decimals,
                   ).toFixed(0),
                   funds: [
                     {

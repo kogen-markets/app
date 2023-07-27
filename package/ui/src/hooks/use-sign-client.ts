@@ -7,7 +7,7 @@ import { chainState } from "../state/cosmos";
 export default function useSignClient() {
   const chain = useRecoilValue(chainState);
   const { address, getSigningCosmWasmClient, wallet } = useChain(
-    chain.chain_name
+    chain.chain_name,
   );
 
   return suspend(async () => {

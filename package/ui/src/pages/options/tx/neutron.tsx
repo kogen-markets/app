@@ -46,7 +46,7 @@ export function useNeutronCallOptionMutation() {
                 price,
                 quantity,
               },
-            })
+            }),
           ),
           funds: funds,
         }),
@@ -57,7 +57,7 @@ export function useNeutronCallOptionMutation() {
       const result = await signClient.signAndBroadcast(
         address,
         [orderMsg],
-        "auto"
+        "auto",
       );
 
       console.log(result);
@@ -70,7 +70,7 @@ export function useNeutronCallOptionMutation() {
         queryClient.invalidateQueries([{ method: "position" }]);
         queryClient.invalidateQueries(["get_balance", address]);
       },
-    }
+    },
   );
 }
 
@@ -97,7 +97,7 @@ export function useNeutronExerciseCallOptionMutation() {
               exercise: {
                 expiry_price,
               },
-            })
+            }),
           ),
           funds: [],
         }),
@@ -108,7 +108,7 @@ export function useNeutronExerciseCallOptionMutation() {
       const result = await signClient.signAndBroadcast(
         address,
         [exerciseMsg],
-        "auto"
+        "auto",
       );
 
       console.log(result);
@@ -121,6 +121,6 @@ export function useNeutronExerciseCallOptionMutation() {
         queryClient.invalidateQueries([{ method: "position" }]);
         queryClient.invalidateQueries(["get_balance", address]);
       },
-    }
+    },
   );
 }

@@ -23,7 +23,7 @@ export default function WalletDialog({
 
   const chain = useRecoilValue(chainState);
   const [, setMetamaskWalletStrategy] = useRecoilState(
-    metamaskWalletStrategyState
+    metamaskWalletStrategyState,
   );
 
   return (
@@ -55,7 +55,7 @@ export default function WalletDialog({
                     import.meta.env.VITE_ALCHEMY_PUBKEY
                   }`,
                 },
-              })
+              }),
             );
           }}
         >

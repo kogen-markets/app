@@ -10,17 +10,17 @@ export default function useFormData(initial: object, parsers: any = {}) {
     (
       e: { target: HTMLInputElement },
       getValue = (target: HTMLInputElement) =>
-        target.valueAsNumber ?? target.value
+        target.valueAsNumber ?? target.value,
     ) => {
       const target = e.target;
       setFormState((x) => x.setIn(target.name.split("."), getValue(target)));
     },
-    [setFormState]
+    [setFormState],
   );
 
   const parsedFormState = useMemo(() => {
     return formState.map((value, key: string) =>
-      (parsers[key] || identity)(value)
+      (parsers[key] || identity)(value),
     );
   }, [formState, parsers]);
 
@@ -28,7 +28,7 @@ export default function useFormData(initial: object, parsers: any = {}) {
     (providedInitial: object) => {
       setFormState(Map(providedInitial || initial));
     },
-    [setFormState, initial]
+    [setFormState, initial],
   );
 
   return { formState, setFormState, onChange, parsedFormState, reset };

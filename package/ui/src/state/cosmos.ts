@@ -28,14 +28,14 @@ export const pythServiceState = selector<URL>({
     if (ENABLED_MAINNETS.includes(chain.chain_id as MAINNET)) {
       return new URL(
         "/api/latest_price_feeds",
-        "https://xc-mainnet.pyth.network"
+        "https://xc-mainnet.pyth.network",
       );
     }
 
     if (ENABLED_TESTNETS.includes(chain.chain_id as TESTNET)) {
       return new URL(
         "/api/latest_price_feeds",
-        "https://xc-testnet.pyth.network"
+        "https://xc-testnet.pyth.network",
       );
     }
 

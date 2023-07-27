@@ -29,6 +29,6 @@ export default function useGetBalance(addr?: string, denom?: string) {
       enabled: Boolean(client),
       staleTime: 3000000,
       suspense: true,
-    }
+    },
   );
 }
