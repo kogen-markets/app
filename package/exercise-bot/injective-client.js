@@ -2,7 +2,7 @@ import { getNetworkInfo, Network } from "@injectivelabs/networks";
 import { PrivateKey } from "@injectivelabs/sdk-ts";
 
 export const injectivePrivateKey = PrivateKey.fromMnemonic(
-  process.env.MNEMONIC
+  process.env.MNEMONIC,
 );
 
 export const injectivePublicAddress = injectivePrivateKey.toBech32();

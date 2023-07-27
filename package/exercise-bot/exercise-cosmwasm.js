@@ -27,11 +27,11 @@ export default async function exerciseCosmwasm() {
             funds: [],
           },
         ],
-        "auto"
+        "auto",
       );
     },
     process.env.CHAIN_ID,
-    process.env.MNEMONIC
+    process.env.MNEMONIC,
   );
 
   console.log("%j", r);

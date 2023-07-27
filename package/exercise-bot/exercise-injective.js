@@ -2,10 +2,12 @@ import * as pkg from "@injectivelabs/sdk-ts";
 const {
   ChainRestAuthApi,
   createTransaction,
-  MsgExecuteContractCompat,
   TxGrpcClient,
+  MsgExecuteContractCompat,
 } = pkg;
+
 import { chains } from "chain-registry";
+
 import {
   injectiveNetwork,
   injectivePrivateKey,
@@ -20,13 +22,13 @@ const gasAmount = 10000000;
 
 export default async function exerciseInjective() {
   const accountDetails = await new ChainRestAuthApi(
-    injectiveNetwork.rest
+    injectiveNetwork.rest,
   ).fetchAccount(injectivePublicAddress);
 
   let sequence = parseInt(accountDetails.account.base_account.sequence, 10);
   let accountNumber = parseInt(
     accountDetails.account.base_account.account_number,
-    10
+    10,
   );
 
   const { data, pyth_contract_addr, update_fee } = await getPythData();

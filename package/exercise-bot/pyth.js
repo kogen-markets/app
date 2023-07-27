@@ -10,7 +10,7 @@ export async function getPythData() {
   const { pyth_contract_addr, pyth_base_price_feed } = config;
 
   const resp = await fetch(
-    process.env.PYTH_PRICE_FEED_URL + "?ids[]=" + pyth_base_price_feed
+    process.env.PYTH_PRICE_FEED_URL + "?ids[]=" + pyth_base_price_feed,
   );
 
   const data = await resp.json();
