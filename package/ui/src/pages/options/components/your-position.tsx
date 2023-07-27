@@ -38,6 +38,7 @@ export default function YourPosition() {
     },
     options: {
       enabled: Boolean(address),
+      staleTime: 10000,
       suspense: true,
     },
   });
@@ -49,6 +50,7 @@ export default function YourPosition() {
     },
     options: {
       enabled: Boolean(address),
+      staleTime: 10000,
       suspense: true,
     },
   });
