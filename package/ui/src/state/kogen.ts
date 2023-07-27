@@ -24,13 +24,13 @@ export const contractsState = selector<string>({
   get: async ({ get }) => {
     const chain = get(chainState);
     if (chain.chain_id === TESTNET.INJECTIVE) {
-      return "inj13huyugghzkcjk48ugy48rkvmxav9326sv723nu";
+      return import.meta.env.VITE_CONTRACT_INJECTIVE_TESTNET;
     }
     if (chain.chain_id === TESTNET.NEUTRON) {
-      return "neutron1w7jvt6nt0d79nwpzt32w32qss0cnlt20naevljmx70nhathe5sfqh23tmq";
+      return import.meta.env.VITE_CONTRACT_NEUTRON_TESTNET;
     }
     if (chain.chain_id === TESTNET.ARCHWAY) {
-      return "archway1s6u9dtt06s780sy7s2d5c7ry9x76rkf7ztew9d24u9wdg49c4fwqvdtyv3";
+      return import.meta.env.VITE_CONTRACT_ARCHWAY_TESTNET;
     }
 
     throw new Error("unknown chain_id " + chain.chain_id);

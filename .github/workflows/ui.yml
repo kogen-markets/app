@@ -53,6 +53,9 @@ jobs:
           echo "webapp_url=$(pulumi stack output webapp | jq -r '.url')" >> $GITHUB_ENV
           echo "backend_url=$(pulumi stack output backend | jq -r '.url')" >> $GITHUB_ENV
           echo "alchemy_pubkey=$(pulumi config get --path alchemy:pubkey)" >> $GITHUB_ENV
+          echo "VITE_CONTRACT_INJECTIVE_TESTNET=$(pulumi config get --path kogen:VITE_CONTRACT_INJECTIVE_TESTNET)" >> $GITHUB_ENV
+          echo "VITE_CONTRACT_NEUTRON_TESTNET=$(pulumi config get --path kogen:VITE_CONTRACT_NEUTRON_TESTNET)" >> $GITHUB_ENV
+          echo "VITE_CONTRACT_ARCHWAY_TESTNET=$(pulumi config get --path kogen:VITE_CONTRACT_ARCHWAY_TESTNET)" >> $GITHUB_ENV
         working-directory: package/cloud
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -66,6 +69,9 @@ jobs:
           VITE_FRONTEND_URL: ${{ env.webapp_url }}
           VITE_BACKEND_URL: ${{ env.backend_url }}
           VITE_ALCHEMY_PUBKEY: ${{ env.alchemy_pubkey }}
+          VITE_CONTRACT_INJECTIVE_TESTNET: ${{ env.VITE_CONTRACT_INJECTIVE_TESTNET }}
+          VITE_CONTRACT_NEUTRON_TESTNET: ${{ env.VITE_CONTRACT_NEUTRON_TESTNET }}
+          VITE_CONTRACT_ARCHWAY_TESTNET: ${{ env.VITE_CONTRACT_ARCHWAY_TESTNET }}
           VITE_CLIENT_ROLLBAR_ACCESS_TOKEN: ${{ secrets.CLIENT_ROLLBAR_ACCESS_TOKEN }}
       - uses: actions/upload-artifact@v3
         if: github.ref == 'refs/heads/main'
