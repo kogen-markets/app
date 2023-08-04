@@ -1,4 +1,3 @@
-import { ChainProvider } from "@cosmos-kit/react-lite/types/index";
 import { Button, Dialog, DialogTitle } from "@mui/material";
 import { Wallet, WalletStrategy } from "@injectivelabs/wallet-ts";
 import { ChainId, EthereumChainId } from "@injectivelabs/ts-types";
@@ -7,10 +6,7 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import { chainState } from "../state/cosmos";
 import { TESTNET } from "../lib/config";
 import { metamaskWalletStrategyState } from "../state/injective";
-
-type WalletModalProps = Parameters<
-  NonNullable<Parameters<typeof ChainProvider>[0]["walletModal"]>
->[0];
+import { WalletModalProps } from "@cosmos-kit/core";
 
 export default function WalletDialog({
   isOpen,
