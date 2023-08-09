@@ -18,7 +18,7 @@
     "@cosmos-kit/cosmostation-extension": "2.1.7",
     "@cosmos-kit/keplr-extension": "2.1.7",
     "@cosmos-kit/leap-extension": "2.2.2",
-    "@cosmos-kit/react-lite": "2.1.7",
+    "@cosmos-kit/react-lite": "2.1.8",
     "@emotion/react": "11.11.1",
     "@emotion/styled": "11.11.0",
     "@injectivelabs/networks": "1.11.0",
