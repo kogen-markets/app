@@ -12,7 +12,7 @@
     "test": "exit 0"
   },
   "dependencies": {
-    "@cosmjs/cosmwasm-stargate": "0.31.0",
+    "@cosmjs/cosmwasm-stargate": "0.31.1",
     "@cosmjs/encoding": "0.31.0",
     "@cosmos-kit/core": "2.5.0",
     "@cosmos-kit/cosmostation-extension": "2.3.0",
