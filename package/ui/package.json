@@ -46,7 +46,7 @@
   },
   "devDependencies": {
     "@bangjelkoski/vite-plugin-node-polyfills": "0.0.2",
-    "@types/react": "18.2.20",
+    "@types/react": "18.2.21",
     "@types/react-dom": "18.2.7",
     "@types/react-helmet": "6.1.6",
     "@typescript-eslint/eslint-plugin": "6.4.1",
