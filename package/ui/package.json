@@ -34,7 +34,7 @@
     "chain-registry": "1.19.0",
     "cosmjs-types": "0.8.0",
     "decimal.js": "10.4.3",
-    "immutable": "4.3.2",
+    "immutable": "4.3.3",
     "joi": "17.9.2",
     "react": "18.2.0",
     "react-dom": "18.2.0",
