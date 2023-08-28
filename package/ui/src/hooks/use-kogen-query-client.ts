@@ -1,12 +1,12 @@
 import { useRecoilValue } from "recoil";
 import { KogenMarketsQueryClient } from "../codegen/KogenMarkets.client";
 import { contractsState } from "../state/kogen";
-import useJunoQueryClient from "./use-query-client";
+import useCosmWasmQueryClient from "./use-query-client";
 
 export default function useKogenQueryClient() {
   const contract = useRecoilValue(contractsState);
 
-  const junoClient = useJunoQueryClient();
+  const cosmWasmQueryClient = useCosmWasmQueryClient();
 
-  return new KogenMarketsQueryClient(junoClient, contract);
+  return new KogenMarketsQueryClient(cosmWasmQueryClient, contract);
 }

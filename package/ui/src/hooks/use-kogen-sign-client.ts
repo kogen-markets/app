@@ -1,7 +1,7 @@
 import { useRecoilValue } from "recoil";
 import { KogenMarketsClient } from "../codegen/KogenMarkets.client";
 import { contractsState } from "../state/kogen";
-import useJunoSignClient from "./use-sign-client";
+import useCosmWasmSignClient from "./use-sign-client";
 import { useChain } from "@cosmos-kit/react-lite";
 import { chainState } from "../state/cosmos";
 
@@ -10,11 +10,11 @@ export default function useKogenSignClient() {
   const chain = useRecoilValue(chainState);
   const { address } = useChain(chain.chain_name);
 
-  const junoSignClient = useJunoSignClient();
+  const cosmWasmSignClient = useCosmWasmSignClient();
 
-  if (!junoSignClient || !address) {
+  if (!cosmWasmSignClient || !address) {
     return null;
   }
 
-  return new KogenMarketsClient(junoSignClient, address, contract);
+  return new KogenMarketsClient(cosmWasmSignClient, address, contract);
 }
