@@ -21,7 +21,7 @@
     "@cosmos-kit/react-lite": "2.4.4",
     "@emotion/react": "11.11.1",
     "@emotion/styled": "11.11.0",
-    "@injectivelabs/networks": "1.11.0",
+    "@injectivelabs/networks": "1.12.1",
     "@injectivelabs/sdk-ts": "1.11.0",
     "@injectivelabs/ts-types": "1.11.0",
     "@injectivelabs/utils": "1.11.0",
