@@ -6,6 +6,7 @@ import Orderbook from "./components/order-book";
 import Loading from "../../components/loading";
 import YourPosition from "./components/your-position";
 import Exercise from "./components/exercise";
+import OpenOrders from "./components/open-orders";
 
 export default function Options() {
   return (
@@ -30,6 +31,11 @@ export default function Options() {
           <Card sx={{ mt: 4, px: 3, py: 2 }} variant="outlined">
             <Suspense fallback={<Loading />}>
               <YourPosition />
+            </Suspense>
+          </Card>
+          <Card sx={{ mt: 4, px: 3, py: 2 }} variant="outlined">
+            <Suspense fallback={<Loading />}>
+              <OpenOrders />
             </Suspense>
           </Card>
         </Grid>

@@ -125,6 +125,7 @@ export const kogenMarketsQueries = {
       client
         ? client.bids({
             price: args.price,
+            sender: args.sender,
           })
         : Promise.reject(new Error("Invalid client")),
     ...options,
@@ -145,6 +146,7 @@ export const kogenMarketsQueries = {
       client
         ? client.asks({
             price: args.price,
+            sender: args.sender,
           })
         : Promise.reject(new Error("Invalid client")),
     ...options,
@@ -257,6 +259,7 @@ export interface KogenMarketsAsksQuery<TData>
   extends KogenMarketsReactQuery<ArrayOfOrdersResponse, TData> {
   args: {
     price?: Uint128;
+    sender?: Addr;
   };
 }
 export function useKogenMarketsAsksQuery<TData = ArrayOfOrdersResponse>({
@@ -270,6 +273,7 @@ export function useKogenMarketsAsksQuery<TData = ArrayOfOrdersResponse>({
       client
         ? client.asks({
             price: args.price,
+            sender: args.sender,
           })
         : Promise.reject(new Error("Invalid client")),
     {
@@ -283,6 +287,7 @@ export interface KogenMarketsBidsQuery<TData>
   extends KogenMarketsReactQuery<ArrayOfOrdersResponse, TData> {
   args: {
     price?: Uint128;
+    sender?: Addr;
   };
 }
 export function useKogenMarketsBidsQuery<TData = ArrayOfOrdersResponse>({
@@ -296,6 +301,7 @@ export function useKogenMarketsBidsQuery<TData = ArrayOfOrdersResponse>({
       client
         ? client.bids({
             price: args.price,
+            sender: args.sender,
           })
         : Promise.reject(new Error("Invalid client")),
     {

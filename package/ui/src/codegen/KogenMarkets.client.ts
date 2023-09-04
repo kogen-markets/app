@@ -32,8 +32,20 @@ import {
 export interface KogenMarketsReadOnlyInterface {
   contractAddress: string;
   config: () => Promise<Config>;
-  bids: ({ price }: { price?: Uint128 }) => Promise<ArrayOfOrdersResponse>;
-  asks: ({ price }: { price?: Uint128 }) => Promise<ArrayOfOrdersResponse>;
+  bids: ({
+    price,
+    sender,
+  }: {
+    price?: Uint128;
+    sender?: Addr;
+  }) => Promise<ArrayOfOrdersResponse>;
+  asks: ({
+    price,
+    sender,
+  }: {
+    price?: Uint128;
+    sender?: Addr;
+  }) => Promise<ArrayOfOrdersResponse>;
   lockedAmount: ({ owner }: { owner: Addr }) => Promise<LockedAmountResponse>;
   position: ({ owner }: { owner: Addr }) => Promise<PositionResponse>;
 }
@@ -58,23 +70,29 @@ export class KogenMarketsQueryClient implements KogenMarketsReadOnlyInterface {
   };
   bids = async ({
     price,
+    sender,
   }: {
     price?: Uint128;
+    sender?: Addr;
   }): Promise<ArrayOfOrdersResponse> => {
     return this.client.queryContractSmart(this.contractAddress, {
       bids: {
         price,
+        sender,
       },
     });
   };
   asks = async ({
     price,
+    sender,
   }: {
     price?: Uint128;
+    sender?: Addr;
   }): Promise<ArrayOfOrdersResponse> => {
     return this.client.queryContractSmart(this.contractAddress, {
       asks: {
         price,
+        sender,
       },
     });
   };

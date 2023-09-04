@@ -53,11 +53,13 @@ export type QueryMsg =
   | {
       bids: {
         price?: Uint128 | null;
+        sender?: Addr | null;
       };
     }
   | {
       asks: {
         price?: Uint128 | null;
+        sender?: Addr | null;
       };
     }
   | {

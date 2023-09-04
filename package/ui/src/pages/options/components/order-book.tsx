@@ -16,6 +16,7 @@ import {
 import { chainState } from "../../../state/cosmos";
 import { metamaskAddressState } from "../../../state/injective";
 import useKogenQueryClient from "../../../hooks/use-kogen-query-client";
+import { toUserToken } from "../../../lib/token";
 
 function sumOrders(orders?: OrderBookItem[]) {
   if (!orders) {
@@ -34,10 +35,6 @@ function includesSender(orders: OrderBookItem[], sender?: string) {
   }
 
   return orders.find((o) => o.owner === sender);
-}
-
-function formatDecimals(n: Decimal.Value, decimals = 0) {
-  return new Decimal(n).mul(new Decimal(10).pow(new Decimal(-decimals)));
 }
 
 function OrdersItem({
@@ -84,13 +81,13 @@ function OrdersItem({
           />
         )}
         <span style={{ flexGrow: 1, textAlign: "right" }}>
-          {formatDecimals(order.price, config.data?.quote_decimals)
+          {toUserToken(order.price, config.data?.quote_decimals)
             .toFixed(3)
             .toString()}
         </span>
       </Typography>
       <Typography variant="body1" sx={{ fontFamily: "monospace" }}>
-        {formatDecimals(sumOrders(order.orders), config.data?.base_decimals)
+        {toUserToken(sumOrders(order.orders), config.data?.base_decimals)
           .toFixed(3)
           .toString()}
       </Typography>
