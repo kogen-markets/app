@@ -30,7 +30,7 @@
     "@mui/icons-material": "5.14.8",
     "@mui/material": "5.14.8",
     "@rollbar/react": "0.11.2",
-    "@tanstack/react-query": "4.33.0",
+    "@tanstack/react-query": "4.35.0",
     "chain-registry": "1.19.0",
     "cosmjs-types": "0.8.0",
     "decimal.js": "10.4.3",
