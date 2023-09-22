@@ -16,7 +16,7 @@
     "@cosmjs/encoding": "0.31.1",
     "@cosmos-kit/core": "2.6.5",
     "@cosmos-kit/cosmostation-extension": "2.4.6",
-    "@cosmos-kit/keplr-extension": "2.4.7",
+    "@cosmos-kit/keplr-extension": "2.4.8",
     "@cosmos-kit/leap-extension": "2.4.8",
     "@cosmos-kit/react-lite": "2.4.10",
     "@emotion/react": "11.11.1",
