@@ -14,7 +14,7 @@
   "dependencies": {
     "@cosmjs/cosmwasm-stargate": "0.31.1",
     "@cosmjs/encoding": "0.31.1",
-    "@cosmos-kit/core": "2.6.6",
+    "@cosmos-kit/core": "2.6.7",
     "@cosmos-kit/cosmostation-extension": "2.4.7",
     "@cosmos-kit/keplr-extension": "2.4.9",
     "@cosmos-kit/leap-extension": "2.4.10",
