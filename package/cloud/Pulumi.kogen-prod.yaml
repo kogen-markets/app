@@ -12,5 +12,5 @@ config:
   webapp:API_DOMAIN: app.kogen.markets
   webapp:ROUTE53_ZONE_NAME: kogen.markets
   kogen:VITE_CONTRACT_INJECTIVE_TESTNET: inj1pnx9jt7z0wmtddenn39rtkl7ryyafyqq5qvyc7
-  kogen:VITE_CONTRACT_NEUTRON_TESTNET: neutron1afffnu88qketc7aqwugllrges9vjuvvkpnmnugwl82ll2kcp790q556lgs
+  kogen:VITE_CONTRACT_NEUTRON_TESTNET: neutron18dygs9wdldwf4r9v0ksftum8t08junlzf26dccvmx8n5k77rej8q9852yq
   kogen:VITE_CONTRACT_ARCHWAY_TESTNET: archway1953qkcysvw2fz537dqc36r2a66ekxhndgmemjmjxnfzjdmsgznmsl7fuz0
