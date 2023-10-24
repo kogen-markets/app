@@ -124,3 +124,64 @@ export function useNeutronExerciseCallOptionMutation() {
     },
   );
 }
+
+export function useNeutronCloseOrderMutation() {
+  const chain = useRecoilValue(chainState);
+  const queryClient = useQueryClient();
+  const { address, getSigningCosmWasmClient } = useChain(chain.chain_name);
+
+  const contracts = useRecoilValue(contractsState);
+
+  return useMutation(
+    ["closeOrder"],
+    async ({
+      type,
+      price,
+      quantity,
+    }: {
+      type: ORDER_TYPE;
+      price: string;
+      quantity: string;
+    }) => {
+      if (!address) {
+        return null;
+      }
+
+      const closeOrderMsg = {
+        typeUrl: "/cosmwasm.wasm.v1.MsgExecuteContract",
+        value: MsgExecuteContract.fromPartial({
+          contract: contracts,
+          sender: address,
+          msg: toUtf8(
+            JSON.stringify({
+              [`close_${type}_order`]: {
+                price,
+                quantity,
+              },
+            }),
+          ),
+          funds: [],
+        }),
+      };
+
+      const signClient = await getSigningCosmWasmClient();
+
+      const result = await signClient.signAndBroadcast(
+        address,
+        [closeOrderMsg],
+        "auto",
+      );
+
+      console.log(result);
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries([{ method: "asks" }]);
+        queryClient.invalidateQueries([{ method: "bids" }]);
+        queryClient.invalidateQueries([{ method: "locked_amount" }]);
+        queryClient.invalidateQueries([{ method: "position" }]);
+        queryClient.invalidateQueries(["get_balance", address]);
+      },
+    },
+  );
+}
