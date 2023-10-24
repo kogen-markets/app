@@ -147,6 +147,30 @@ export interface KogenMarketsInterface extends KogenMarketsReadOnlyInterface {
     memo?: string,
     _funds?: Coin[],
   ) => Promise<ExecuteResult>;
+  closeBidOrder: (
+    {
+      price,
+      quantity,
+    }: {
+      price: Uint128;
+      quantity: Uint128;
+    },
+    fee?: number | StdFee | "auto",
+    memo?: string,
+    _funds?: Coin[],
+  ) => Promise<ExecuteResult>;
+  closeAskOrder: (
+    {
+      price,
+      quantity,
+    }: {
+      price: Uint128;
+      quantity: Uint128;
+    },
+    fee?: number | StdFee | "auto",
+    memo?: string,
+    _funds?: Coin[],
+  ) => Promise<ExecuteResult>;
   exercise: (
     {
       expiryPrice,
@@ -178,6 +202,8 @@ export class KogenMarketsClient
     this.updateConfig = this.updateConfig.bind(this);
     this.askOrder = this.askOrder.bind(this);
     this.bidOrder = this.bidOrder.bind(this);
+    this.closeBidOrder = this.closeBidOrder.bind(this);
+    this.closeAskOrder = this.closeAskOrder.bind(this);
     this.exercise = this.exercise.bind(this);
   }
 
@@ -240,6 +266,58 @@ export class KogenMarketsClient
       this.contractAddress,
       {
         bid_order: {
+          price,
+          quantity,
+        },
+      },
+      fee,
+      memo,
+      _funds,
+    );
+  };
+  closeBidOrder = async (
+    {
+      price,
+      quantity,
+    }: {
+      price: Uint128;
+      quantity: Uint128;
+    },
+    fee: number | StdFee | "auto" = "auto",
+    memo?: string,
+    _funds?: Coin[],
+  ): Promise<ExecuteResult> => {
+    return await this.client.execute(
+      this.sender,
+      this.contractAddress,
+      {
+        close_bid_order: {
+          price,
+          quantity,
+        },
+      },
+      fee,
+      memo,
+      _funds,
+    );
+  };
+  closeAskOrder = async (
+    {
+      price,
+      quantity,
+    }: {
+      price: Uint128;
+      quantity: Uint128;
+    },
+    fee: number | StdFee | "auto" = "auto",
+    memo?: string,
+    _funds?: Coin[],
+  ): Promise<ExecuteResult> => {
+    return await this.client.execute(
+      this.sender,
+      this.contractAddress,
+      {
+        close_ask_order: {
           price,
           quantity,
         },

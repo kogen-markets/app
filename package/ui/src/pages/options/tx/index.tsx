@@ -2,6 +2,7 @@ import { useRecoilValue } from "recoil";
 import { chainState } from "../../../state/cosmos";
 import {
   useInjectiveCallOptionMutation,
+  useInjectiveCloseOrderMutation,
   useInjectiveExerciseCallOptionMutation,
 } from "./injective";
 import {
@@ -41,6 +42,24 @@ export function useExerciseCallOptionMutation() {
   }
   if (chain.chain_id === TESTNET.ARCHWAY) {
     return neutron;
+  }
+
+  throw new Error("unimplemented");
+}
+
+export function useCloseOrderMutation() {
+  const chain = useRecoilValue(chainState);
+  const inj = useInjectiveCloseOrderMutation();
+  // const neutron = useNeutronExerciseCallOptionMutation();
+
+  if (chain.chain_id === TESTNET.INJECTIVE) {
+    return inj;
+  }
+  if (chain.chain_id === TESTNET.NEUTRON) {
+    // return neutron;
+  }
+  if (chain.chain_id === TESTNET.ARCHWAY) {
+    // return neutron;
   }
 
   throw new Error("unimplemented");

@@ -12,7 +12,7 @@ import {
   Typography,
 } from "@mui/material";
 import { Fragment } from "react";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { useChain } from "@cosmos-kit/react-lite";
 import {
   useKogenMarketsConfigQuery,
@@ -24,6 +24,9 @@ import { chainState } from "../../../state/cosmos";
 import { metamaskAddressState } from "../../../state/injective";
 import useKogenQueryClient from "../../../hooks/use-kogen-query-client";
 import { ArrayOfOrdersResponse } from "../../../codegen/KogenMarkets.types";
+import { useCloseOrderMutation } from "../tx";
+import { snackbarState } from "../../../state/snackbar";
+import { ORDER_TYPE, ORDER_TYPES } from "../../../types/types";
 
 export default function OpenOrders() {
   const kogenClient = useKogenQueryClient();
@@ -60,12 +63,19 @@ export default function OpenOrders() {
     },
   });
 
+  const { mutateAsync: closeOrderMutation, isLoading: isCloseOrderLoading } =
+    useCloseOrderMutation();
+
+  const [, setSnackbar] = useRecoilState(snackbarState);
+
   function OrdersTableBody({
     orders,
+    type,
     text = "close ask",
     color = "primary",
   }: {
     orders: ArrayOfOrdersResponse | undefined;
+    type: ORDER_TYPE;
     text?: string;
     color?: ButtonTypeMap["props"]["color"];
   }) {
@@ -111,7 +121,33 @@ export default function OpenOrders() {
                   </Typography>
                 </TableCell>
                 <TableCell align="center" width={140}>
-                  <Button variant="text" size="small" color={color}>
+                  <Button
+                    variant="text"
+                    size="small"
+                    color={color}
+                    disabled={isCloseOrderLoading}
+                    onClick={async () => {
+                      setSnackbar({
+                        message: "Please confirm the transaction",
+                      });
+
+                      try {
+                        await closeOrderMutation({
+                          type: type,
+                          price: orderItem.price,
+                          quantity: o.quantity_in_base,
+                        });
+
+                        setSnackbar({
+                          message: `Order successfully closed`,
+                        });
+                      } catch (e: any) {
+                        setSnackbar({
+                          message: "Error creating order: " + e.message,
+                        });
+                      }
+                    }}
+                  >
                     {text}
                   </Button>
                 </TableCell>
@@ -139,11 +175,13 @@ export default function OpenOrders() {
           <TableBody>
             <OrdersTableBody
               orders={asks.data}
+              type={ORDER_TYPES.ASK}
               text="close ask"
               color="primary"
             />
             <OrdersTableBody
               orders={bids.data}
+              type={ORDER_TYPES.BID}
               text="close bid"
               color="secondary"
             />

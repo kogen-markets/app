@@ -42,6 +42,18 @@ export type ExecuteMsg =
       };
     }
   | {
+      close_bid_order: {
+        price: Uint128;
+        quantity: Uint128;
+      };
+    }
+  | {
+      close_ask_order: {
+        price: Uint128;
+        quantity: Uint128;
+      };
+    }
+  | {
       exercise: {
         expiry_price?: Uint128 | null;
       };

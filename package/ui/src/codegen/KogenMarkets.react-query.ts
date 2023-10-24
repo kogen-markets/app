@@ -351,6 +351,54 @@ export function useKogenMarketsExerciseMutation(
     options,
   );
 }
+export interface KogenMarketsCloseAskOrderMutation {
+  client: KogenMarketsClient;
+  msg: {
+    price: Uint128;
+    quantity: Uint128;
+  };
+  args?: {
+    fee?: number | StdFee | "auto";
+    memo?: string;
+    funds?: Coin[];
+  };
+}
+export function useKogenMarketsCloseAskOrderMutation(
+  options?: Omit<
+    UseMutationOptions<ExecuteResult, Error, KogenMarketsCloseAskOrderMutation>,
+    "mutationFn"
+  >,
+) {
+  return useMutation<ExecuteResult, Error, KogenMarketsCloseAskOrderMutation>(
+    ({ client, msg, args: { fee, memo, funds } = {} }) =>
+      client.closeAskOrder(msg, fee, memo, funds),
+    options,
+  );
+}
+export interface KogenMarketsCloseBidOrderMutation {
+  client: KogenMarketsClient;
+  msg: {
+    price: Uint128;
+    quantity: Uint128;
+  };
+  args?: {
+    fee?: number | StdFee | "auto";
+    memo?: string;
+    funds?: Coin[];
+  };
+}
+export function useKogenMarketsCloseBidOrderMutation(
+  options?: Omit<
+    UseMutationOptions<ExecuteResult, Error, KogenMarketsCloseBidOrderMutation>,
+    "mutationFn"
+  >,
+) {
+  return useMutation<ExecuteResult, Error, KogenMarketsCloseBidOrderMutation>(
+    ({ client, msg, args: { fee, memo, funds } = {} }) =>
+      client.closeBidOrder(msg, fee, memo, funds),
+    options,
+  );
+}
 export interface KogenMarketsBidOrderMutation {
   client: KogenMarketsClient;
   msg: {
