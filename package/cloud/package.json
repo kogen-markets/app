@@ -2,7 +2,7 @@
     "name": "@kogen/kogen-cloud",
     "main": "index.ts",
     "devDependencies": {
-        "@types/node": "18",
+        "@types/node": "20",
         "typescript": "5.2.2"
     },
     "dependencies": {
