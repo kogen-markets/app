@@ -169,7 +169,7 @@ export function useInjectiveExerciseCallOptionMutation() {
   );
 }
 
-export function useInjectiveCloseOrderMutation() {
+export function useInjectiveCancelOrderMutation() {
   const chain = useRecoilValue(chainState);
   const queryClient = useQueryClient();
   const { address: cosmosAddress, wallet: cosmosWallet } = useChain(
@@ -182,7 +182,7 @@ export function useInjectiveCloseOrderMutation() {
   const contracts = useRecoilValue(contractsState);
 
   return useMutation(
-    ["closeOrder"],
+    ["cancelOrder"],
     async ({
       type,
       price,
@@ -209,11 +209,11 @@ export function useInjectiveCloseOrderMutation() {
         return null;
       }
 
-      const closeOrderMsg = MsgExecuteContractCompat.fromJSON({
+      const cancelOrderMsg = MsgExecuteContractCompat.fromJSON({
         contractAddress: contracts,
         sender: address,
         msg: {
-          [`close_${type}_order`]: {
+          [`cancel_${type}_order`]: {
             price,
             quantity,
           },
@@ -231,7 +231,7 @@ export function useInjectiveCloseOrderMutation() {
       });
 
       const result = await msgBroadcaster.broadcast({
-        msgs: [closeOrderMsg],
+        msgs: [cancelOrderMsg],
         address: address,
       });
 

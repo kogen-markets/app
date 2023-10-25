@@ -24,7 +24,7 @@ import { chainState } from "../../../state/cosmos";
 import { metamaskAddressState } from "../../../state/injective";
 import useKogenQueryClient from "../../../hooks/use-kogen-query-client";
 import { ArrayOfOrdersResponse } from "../../../codegen/KogenMarkets.types";
-import { useCloseOrderMutation } from "../tx";
+import { useCancelOrderMutation } from "../tx";
 import { snackbarState } from "../../../state/snackbar";
 import { ORDER_TYPE, ORDER_TYPES } from "../../../types/types";
 
@@ -64,7 +64,7 @@ export default function OpenOrders() {
   });
 
   const { mutateAsync: closeOrderMutation, isLoading: isCloseOrderLoading } =
-    useCloseOrderMutation();
+    useCancelOrderMutation();
 
   const [, setSnackbar] = useRecoilState(snackbarState);
 
@@ -139,11 +139,11 @@ export default function OpenOrders() {
                         });
 
                         setSnackbar({
-                          message: `Order successfully closed`,
+                          message: `Order successfully cancelled`,
                         });
                       } catch (e: any) {
                         setSnackbar({
-                          message: "Error creating order: " + e.message,
+                          message: "Error cancelling order: " + e.message,
                         });
                       }
                     }}
@@ -176,13 +176,13 @@ export default function OpenOrders() {
             <OrdersTableBody
               orders={asks.data}
               type={ORDER_TYPES.ASK}
-              text="close ask"
+              text="cancel ask"
               color="primary"
             />
             <OrdersTableBody
               orders={bids.data}
               type={ORDER_TYPES.BID}
-              text="close bid"
+              text="cancel bid"
               color="secondary"
             />
           </TableBody>

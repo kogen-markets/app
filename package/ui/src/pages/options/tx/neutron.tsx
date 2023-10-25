@@ -125,7 +125,7 @@ export function useNeutronExerciseCallOptionMutation() {
   );
 }
 
-export function useNeutronCloseOrderMutation() {
+export function useNeutronCancelOrderMutation() {
   const chain = useRecoilValue(chainState);
   const queryClient = useQueryClient();
   const { address, getSigningCosmWasmClient } = useChain(chain.chain_name);
@@ -133,7 +133,7 @@ export function useNeutronCloseOrderMutation() {
   const contracts = useRecoilValue(contractsState);
 
   return useMutation(
-    ["closeOrder"],
+    ["cancelOrder"],
     async ({
       type,
       price,
@@ -147,14 +147,14 @@ export function useNeutronCloseOrderMutation() {
         return null;
       }
 
-      const closeOrderMsg = {
+      const cancelOrderMsg = {
         typeUrl: "/cosmwasm.wasm.v1.MsgExecuteContract",
         value: MsgExecuteContract.fromPartial({
           contract: contracts,
           sender: address,
           msg: toUtf8(
             JSON.stringify({
-              [`close_${type}_order`]: {
+              [`cancel_${type}_order`]: {
                 price,
                 quantity,
               },
@@ -168,7 +168,7 @@ export function useNeutronCloseOrderMutation() {
 
       const result = await signClient.signAndBroadcast(
         address,
-        [closeOrderMsg],
+        [cancelOrderMsg],
         "auto",
       );
 
