@@ -19,7 +19,11 @@ import { snackbarState } from "../../../state/snackbar";
 import { MemoTextField } from "../../../components/memo-textfield";
 import useFormValidation from "../../../hooks/use-form-validation";
 import { ORDER_TYPES } from "../../../types/types";
-import { toBaseToken, toUserToken } from "../../../lib/token";
+import {
+  getCollateralSize,
+  toBaseToken,
+  toUserToken,
+} from "../../../lib/token";
 import { useKogenMarketsConfigQuery } from "../../../codegen/KogenMarkets.react-query";
 import { useCallOptionMutation } from "../tx";
 import WithWallet from "../../../components/with-wallet";
@@ -108,56 +112,12 @@ export default function CallForm() {
       return null;
     }
 
-    if (formState.get("type") === ORDER_TYPES.BID) {
-      const amount_in_base = toBaseToken(
-        formState.get("optionPrice"),
-        config.data.quote_decimals,
-      )
-        .add(config.data.strike_price_in_quote)
-        .mul(formState.get("optionSize"));
-
-      if (amount_in_base.isNaN()) {
-        return null;
-      }
-
-      const optionAmountBase = toBaseToken(
-        formState.get("optionPrice"),
-        config.data.quote_decimals,
-      ).mul(formState.get("optionSize"));
-
-      const strikeAmountBase = new Decimal(
-        config.data.strike_price_in_quote,
-      ).mul(formState.get("optionSize"));
-
-      return {
-        amountBase: amount_in_base.toFixed(0),
-        amount: toUserToken(amount_in_base, config.data.quote_decimals),
-        denom: config.data.quote_denom,
-        symbol: config.data.quote_symbol,
-        optionAmount: toUserToken(optionAmountBase, config.data.quote_decimals),
-        strikeAmount: toUserToken(strikeAmountBase, config.data.quote_decimals),
-      };
-    }
-
-    if (formState.get("type") === ORDER_TYPES.ASK) {
-      const amount_in_base = toBaseToken(
-        formState.get("optionSize"),
-        config.data.base_decimals,
-      );
-
-      if (amount_in_base.isNaN()) {
-        return null;
-      }
-
-      return {
-        amountBase: amount_in_base.toFixed(0),
-        amount: toUserToken(amount_in_base, config.data.base_decimals),
-        denom: config.data.base_denom,
-        symbol: config.data.base_symbol,
-        optionAmount: null,
-        strikeAmount: toUserToken(amount_in_base, config.data.base_decimals),
-      };
-    }
+    return getCollateralSize(
+      formState.get("type"),
+      config.data,
+      formState.get("optionSize"),
+      formState.get("optionPrice"),
+    );
   }, [formState, config.data]);
 
   const orderCreateEnabled = useMemo(() => {
@@ -428,7 +388,7 @@ export default function CallForm() {
                   message: `Order successfully created`,
                 });
               } catch (e: any) {
-                if (e?.errorMessage?.includes("Matched own position")) {
+                if (e?.originalMessage?.includes("Matched own position")) {
                   setSnackbar({
                     message: "Matched your own position, the order is rejected",
                   });

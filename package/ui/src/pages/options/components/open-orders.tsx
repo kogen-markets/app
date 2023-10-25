@@ -2,6 +2,8 @@ import {
   Box,
   Button,
   ButtonTypeMap,
+  Chip,
+  ChipTypeMap,
   Divider,
   Table,
   TableBody,
@@ -19,11 +21,14 @@ import {
   useKogenMarketsBidsQuery,
   useKogenMarketsAsksQuery,
 } from "../../../codegen/KogenMarkets.react-query";
-import { toUserToken } from "../../../lib/token";
+import { getCollateralSize, toUserToken } from "../../../lib/token";
 import { chainState } from "../../../state/cosmos";
 import { metamaskAddressState } from "../../../state/injective";
 import useKogenQueryClient from "../../../hooks/use-kogen-query-client";
-import { ArrayOfOrdersResponse } from "../../../codegen/KogenMarkets.types";
+import {
+  ArrayOfOrdersResponse,
+  Config,
+} from "../../../codegen/KogenMarkets.types";
 import { useCancelOrderMutation } from "../tx";
 import { snackbarState } from "../../../state/snackbar";
 import { ORDER_TYPE, ORDER_TYPES } from "../../../types/types";
@@ -69,26 +74,42 @@ export default function OpenOrders() {
   const [, setSnackbar] = useRecoilState(snackbarState);
 
   function OrdersTableBody({
+    config,
     orders,
     type,
-    text = "close ask",
     color = "primary",
   }: {
+    config: Config;
     orders: ArrayOfOrdersResponse | undefined;
     type: ORDER_TYPE;
-    text?: string;
     color?: ButtonTypeMap["props"]["color"];
   }) {
     return (
       <Fragment>
         {orders?.map((orderItem) => {
           return orderItem.orders.map((o) => {
+            const collateral = getCollateralSize(
+              type,
+              config,
+              toUserToken(o.quantity_in_base, config.base_decimals),
+              toUserToken(orderItem.price, config.quote_decimals),
+            );
+
             return (
               <TableRow
                 key={orderItem.price}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
-                <TableCell align="left">
+                <TableCell align="right">
+                  <Chip
+                    label={type === ORDER_TYPES.ASK ? "ask" : "bid"}
+                    variant="outlined"
+                    size="small"
+                    color={color as ChipTypeMap["props"]["color"]}
+                  />
+                </TableCell>
+
+                <TableCell align="center">
                   <Typography
                     variant="caption"
                     sx={{
@@ -96,10 +117,9 @@ export default function OpenOrders() {
                     }}
                   >
                     {toUserToken(
-                      o.quantity_in_base,
-                      config.data?.base_decimals,
-                    ).toFixed(3)}{" "}
-                    {config.data?.base_symbol}
+                      orderItem.price,
+                      config.quote_decimals,
+                    ).toFixed(3)}
                   </Typography>
                 </TableCell>
                 <TableCell align="center">
@@ -109,15 +129,22 @@ export default function OpenOrders() {
                       fontFamily: "monospace",
                     }}
                   >
-                    {toUserToken(orderItem.price, config.data?.quote_decimals)
-                      .mul(
-                        toUserToken(
-                          o.quantity_in_base,
-                          config.data?.base_decimals,
-                        ),
-                      )
-                      .toFixed(3)}{" "}
-                    {config.data?.quote_symbol}
+                    {toUserToken(
+                      o.quantity_in_base,
+                      config.base_decimals,
+                    ).toFixed(3)}
+                  </Typography>
+                </TableCell>
+                <TableCell align="center">
+                  <Typography
+                    variant="caption"
+                    sx={{
+                      fontFamily: "monospace",
+                    }}
+                  >
+                    <Fragment>
+                      {collateral?.amount.toFixed()} {collateral?.symbol}
+                    </Fragment>
                   </Typography>
                 </TableCell>
                 <TableCell align="center" width={140}>
@@ -148,7 +175,7 @@ export default function OpenOrders() {
                       }
                     }}
                   >
-                    {text}
+                    Cancel
                   </Button>
                 </TableCell>
               </TableRow>
@@ -167,24 +194,34 @@ export default function OpenOrders() {
         <Table sx={{ width: "100%" }} aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell align="left">Size</TableCell>
-              <TableCell align="center">Total</TableCell>
-              <TableCell></TableCell>
+              <TableCell align="center" width={"auto"}></TableCell>
+              <TableCell align="left">
+                Price ({config.data?.quote_symbol})
+              </TableCell>
+              <TableCell align="center">
+                Size ({config.data?.base_symbol})
+              </TableCell>
+              <TableCell align="center">Value</TableCell>
+              <TableCell align="right" width={"1%"}></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            <OrdersTableBody
-              orders={asks.data}
-              type={ORDER_TYPES.ASK}
-              text="cancel ask"
-              color="primary"
-            />
-            <OrdersTableBody
-              orders={bids.data}
-              type={ORDER_TYPES.BID}
-              text="cancel bid"
-              color="secondary"
-            />
+            {config.data && (
+              <Fragment>
+                <OrdersTableBody
+                  config={config.data}
+                  orders={asks.data}
+                  type={ORDER_TYPES.ASK}
+                  color="primary"
+                />
+                <OrdersTableBody
+                  config={config.data}
+                  orders={bids.data}
+                  type={ORDER_TYPES.BID}
+                  color="secondary"
+                />
+              </Fragment>
+            )}
           </TableBody>
         </Table>
       </TableContainer>
