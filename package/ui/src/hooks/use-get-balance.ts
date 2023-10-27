@@ -1,16 +1,10 @@
-import { useRecoilValue } from "recoil";
-import { chainState } from "../state/cosmos";
 import { useQuery } from "@tanstack/react-query";
-import { useChain } from "@cosmos-kit/react-lite";
-import { metamaskAddressState } from "../state/injective";
 import useQueryClient from "./use-query-client";
+import useGetAddress from "./use-get-address";
 
 export default function useGetBalance(addr?: string, denom?: string) {
   const client = useQueryClient();
-  const chain = useRecoilValue(chainState);
-  const { address: cosmosAddress } = useChain(chain.chain_name);
-  const metamaskAddress = useRecoilValue(metamaskAddressState);
-  const walletAddr = cosmosAddress || metamaskAddress?.injective;
+  const walletAddr = useGetAddress();
 
   const checkAddr = walletAddr || addr;
 

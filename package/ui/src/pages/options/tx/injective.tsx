@@ -10,20 +10,15 @@ import { ORDER_TYPE } from "../../../types/types";
 import { contractsState } from "../../../state/kogen";
 import { TESTNET } from "../../../lib/config";
 import { cosmosKitWalletToInjective } from "../../../lib/wallet";
-import {
-  metamaskAddressState,
-  metamaskWalletStrategyState,
-} from "../../../state/injective";
+import { metamaskWalletStrategyState } from "../../../state/injective";
+import useGetAddress from "../../../hooks/use-get-address";
 
 export function useInjectiveCallOptionMutation() {
   const chain = useRecoilValue(chainState);
   const queryClient = useQueryClient();
-  const { address: cosmosAddress, wallet: cosmosWallet } = useChain(
-    chain.chain_name,
-  );
+  const { wallet: cosmosWallet } = useChain(chain.chain_name);
   const metamaskWalletStrategy = useRecoilValue(metamaskWalletStrategyState);
-  const metamaskAddress = useRecoilValue(metamaskAddressState);
-  const address = cosmosAddress || metamaskAddress?.injective;
+  const address = useGetAddress();
 
   const contracts = useRecoilValue(contractsState);
 
@@ -103,12 +98,9 @@ export function useInjectiveCallOptionMutation() {
 export function useInjectiveExerciseCallOptionMutation() {
   const chain = useRecoilValue(chainState);
   const queryClient = useQueryClient();
-  const { address: cosmosAddress, wallet: cosmosWallet } = useChain(
-    chain.chain_name,
-  );
+  const { wallet: cosmosWallet } = useChain(chain.chain_name);
   const metamaskWalletStrategy = useRecoilValue(metamaskWalletStrategyState);
-  const metamaskAddress = useRecoilValue(metamaskAddressState);
-  const address = cosmosAddress || metamaskAddress?.injective;
+  const address = useGetAddress();
 
   const contracts = useRecoilValue(contractsState);
   return useMutation(
@@ -172,12 +164,9 @@ export function useInjectiveExerciseCallOptionMutation() {
 export function useInjectiveCancelOrderMutation() {
   const chain = useRecoilValue(chainState);
   const queryClient = useQueryClient();
-  const { address: cosmosAddress, wallet: cosmosWallet } = useChain(
-    chain.chain_name,
-  );
+  const { wallet: cosmosWallet } = useChain(chain.chain_name);
   const metamaskWalletStrategy = useRecoilValue(metamaskWalletStrategyState);
-  const metamaskAddress = useRecoilValue(metamaskAddressState);
-  const address = cosmosAddress || metamaskAddress?.injective;
+  const address = useGetAddress();
 
   const contracts = useRecoilValue(contractsState);
 

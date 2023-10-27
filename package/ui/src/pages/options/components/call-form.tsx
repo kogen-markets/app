@@ -1,4 +1,6 @@
 import {
+  Alert,
+  AlertTitle,
   Box,
   Button,
   ButtonGroup,
@@ -24,11 +26,16 @@ import {
   toBaseToken,
   toUserToken,
 } from "../../../lib/token";
-import { useKogenMarketsConfigQuery } from "../../../codegen/KogenMarkets.react-query";
+import {
+  useKogenMarketsAsksQuery,
+  useKogenMarketsBidsQuery,
+  useKogenMarketsConfigQuery,
+} from "../../../codegen/KogenMarkets.react-query";
 import { useCallOptionMutation } from "../tx";
 import WithWallet from "../../../components/with-wallet";
 import useGetBalance from "../../../hooks/use-get-balance";
 import useKogenQueryClient from "../../../hooks/use-kogen-query-client";
+import useGetAddress from "../../../hooks/use-get-address";
 
 export const optionSizeValidator = Joi.number().label("Option size");
 export const optionPriceValidator = Joi.number().label("Price").greater(0);
@@ -133,6 +140,32 @@ export default function CallForm() {
   const balance = useGetBalance(
     undefined,
     isBid ? config.data?.quote_denom : config.data?.base_denom,
+  );
+
+  const address = useGetAddress();
+
+  const bids = useKogenMarketsBidsQuery({
+    client: kogenClient,
+    args: {
+      sender: address,
+    },
+    options: {
+      suspense: true,
+    },
+  });
+
+  const asks = useKogenMarketsAsksQuery({
+    client: kogenClient,
+    args: {
+      sender: address,
+    },
+    options: {
+      suspense: true,
+    },
+  });
+
+  const isOpenOrderInOppositeDirection = Boolean(
+    isBid ? asks.data?.length : bids.data?.length,
   );
 
   return (
@@ -348,75 +381,95 @@ export default function CallForm() {
 
       <Divider sx={{ mt: 2 }} />
       <Box sx={{ textAlign: "right", pt: 2 }}>
-        <WithWallet
-          WalletButtonProps={{
-            color: isBid ? "secondary" : "primary",
-            size: "large",
-          }}
-        >
-          <Button
-            variant="outlined"
-            size="large"
-            sx={{ width: { xs: "100%", lg: "50%" } }}
-            onClick={async () => {
-              setSnackbar({ message: "Please confirm the transaction" });
+        {isOpenOrderInOppositeDirection && (
+          <Fragment>
+            <Alert
+              severity="warning"
+              variant="outlined"
+              sx={{ textAlign: "initial" }}
+            >
+              <AlertTitle>Cannot create a new order</AlertTitle>
+              <span>
+                Please{" "}
+                <strong>
+                  cancel outstanding {isBid ? "ask" : "bid"} orders
+                </strong>
+              </span>
+            </Alert>
+          </Fragment>
+        )}
+        {!isOpenOrderInOppositeDirection && (
+          <WithWallet
+            WalletButtonProps={{
+              color: isBid ? "secondary" : "primary",
+              size: "large",
+            }}
+          >
+            <Button
+              variant="outlined"
+              size="large"
+              sx={{ width: { xs: "100%", lg: "50%" } }}
+              onClick={async () => {
+                setSnackbar({ message: "Please confirm the transaction" });
 
-              if (!collateral) {
-                return null;
-              }
+                if (!collateral) {
+                  return null;
+                }
 
-              try {
-                await createOrder({
-                  type: formState.get("type"),
-                  price: toBaseToken(
-                    formState.get("optionPrice"),
-                    config.data?.quote_decimals,
-                  ).toFixed(0),
-                  quantity: toBaseToken(
-                    formState.get("optionSize"),
-                    config.data?.base_decimals,
-                  ).toFixed(0),
-                  funds: [
-                    {
-                      amount: collateral.amountBase,
-                      denom: collateral.denom,
-                    },
-                  ],
-                });
-
-                setSnackbar({
-                  message: `Order successfully created`,
-                });
-              } catch (e: any) {
-                if (e?.originalMessage?.includes("Matched own position")) {
-                  setSnackbar({
-                    message: "Matched your own position, the order is rejected",
+                try {
+                  await createOrder({
+                    type: formState.get("type"),
+                    price: toBaseToken(
+                      formState.get("optionPrice"),
+                      config.data?.quote_decimals,
+                    ).toFixed(0),
+                    quantity: toBaseToken(
+                      formState.get("optionSize"),
+                      config.data?.base_decimals,
+                    ).toFixed(0),
+                    funds: [
+                      {
+                        amount: collateral.amountBase,
+                        denom: collateral.denom,
+                      },
+                    ],
                   });
 
-                  return;
+                  setSnackbar({
+                    message: `Order successfully created`,
+                  });
+                } catch (e: any) {
+                  if (e?.originalMessage?.includes("Matched own position")) {
+                    setSnackbar({
+                      message:
+                        "Matched your own position, the order is rejected",
+                    });
+
+                    return;
+                  }
+                  setSnackbar({
+                    message: "Error creating order: " + e.message,
+                  });
                 }
-                setSnackbar({
-                  message: "Error creating order: " + e.message,
-                });
-              }
-            }}
-            color={isBid ? "secondary" : "primary"}
-            disabled={isCreateOrderLoading || !orderCreateEnabled}
-          >
-            {isCreateOrderLoading ? (
-              <Fragment>
-                <CircularProgress
-                  size={15}
-                  sx={{ mr: 1 }}
-                  color={isBid ? "secondary" : "primary"}
-                />{" "}
-                Loading
-              </Fragment>
-            ) : (
-              `Create ${isBid ? "bid" : "ask"} order`
-            )}
-          </Button>
-        </WithWallet>
+              }}
+              color={isBid ? "secondary" : "primary"}
+              disabled={isCreateOrderLoading || !orderCreateEnabled}
+            >
+              {isCreateOrderLoading ? (
+                <Fragment>
+                  <CircularProgress
+                    size={15}
+                    sx={{ mr: 1 }}
+                    color={isBid ? "secondary" : "primary"}
+                  />{" "}
+                  Loading
+                </Fragment>
+              ) : (
+                `Create ${isBid ? "bid" : "ask"} order`
+              )}
+            </Button>
+          </WithWallet>
+        )}
       </Box>
     </Fragment>
   );

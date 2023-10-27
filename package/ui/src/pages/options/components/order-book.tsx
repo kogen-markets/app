@@ -1,7 +1,5 @@
 import { Box, Divider, Typography, alpha } from "@mui/material";
 import { Fragment } from "react";
-import { useRecoilValue } from "recoil";
-import { useChain } from "@cosmos-kit/react-lite";
 import Decimal from "decimal.js";
 import AdjustIcon from "@mui/icons-material/Adjust";
 import {
@@ -13,10 +11,9 @@ import {
   OrderBookItem,
   OrdersResponse,
 } from "../../../codegen/KogenMarkets.types";
-import { chainState } from "../../../state/cosmos";
-import { metamaskAddressState } from "../../../state/injective";
 import useKogenQueryClient from "../../../hooks/use-kogen-query-client";
 import { toUserToken } from "../../../lib/token";
+import useGetAddress from "../../../hooks/use-get-address";
 
 function sumOrders(orders?: OrderBookItem[]) {
   if (!orders) {
@@ -44,10 +41,7 @@ function OrdersItem({
   order: OrdersResponse;
   color: "primary" | "secondary";
 }) {
-  const chain = useRecoilValue(chainState);
-  const { address: cosmosAddress } = useChain(chain.chain_name);
-  const metamaskAddress = useRecoilValue(metamaskAddressState);
-  const address = cosmosAddress || metamaskAddress?.injective;
+  const address = useGetAddress();
 
   const kogenClient = useKogenQueryClient();
   const config = useKogenMarketsConfigQuery({

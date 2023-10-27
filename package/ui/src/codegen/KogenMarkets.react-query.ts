@@ -351,7 +351,7 @@ export function useKogenMarketsExerciseMutation(
     options,
   );
 }
-export interface KogenMarketsCloseAskOrderMutation {
+export interface KogenMarketsCancelAskOrderMutation {
   client: KogenMarketsClient;
   msg: {
     price: Uint128;
@@ -363,19 +363,23 @@ export interface KogenMarketsCloseAskOrderMutation {
     funds?: Coin[];
   };
 }
-export function useKogenMarketsCloseAskOrderMutation(
+export function useKogenMarketsCancelAskOrderMutation(
   options?: Omit<
-    UseMutationOptions<ExecuteResult, Error, KogenMarketsCloseAskOrderMutation>,
+    UseMutationOptions<
+      ExecuteResult,
+      Error,
+      KogenMarketsCancelAskOrderMutation
+    >,
     "mutationFn"
   >,
 ) {
-  return useMutation<ExecuteResult, Error, KogenMarketsCloseAskOrderMutation>(
+  return useMutation<ExecuteResult, Error, KogenMarketsCancelAskOrderMutation>(
     ({ client, msg, args: { fee, memo, funds } = {} }) =>
-      client.closeAskOrder(msg, fee, memo, funds),
+      client.cancelAskOrder(msg, fee, memo, funds),
     options,
   );
 }
-export interface KogenMarketsCloseBidOrderMutation {
+export interface KogenMarketsCancelBidOrderMutation {
   client: KogenMarketsClient;
   msg: {
     price: Uint128;
@@ -387,21 +391,26 @@ export interface KogenMarketsCloseBidOrderMutation {
     funds?: Coin[];
   };
 }
-export function useKogenMarketsCloseBidOrderMutation(
+export function useKogenMarketsCancelBidOrderMutation(
   options?: Omit<
-    UseMutationOptions<ExecuteResult, Error, KogenMarketsCloseBidOrderMutation>,
+    UseMutationOptions<
+      ExecuteResult,
+      Error,
+      KogenMarketsCancelBidOrderMutation
+    >,
     "mutationFn"
   >,
 ) {
-  return useMutation<ExecuteResult, Error, KogenMarketsCloseBidOrderMutation>(
+  return useMutation<ExecuteResult, Error, KogenMarketsCancelBidOrderMutation>(
     ({ client, msg, args: { fee, memo, funds } = {} }) =>
-      client.closeBidOrder(msg, fee, memo, funds),
+      client.cancelBidOrder(msg, fee, memo, funds),
     options,
   );
 }
 export interface KogenMarketsBidOrderMutation {
   client: KogenMarketsClient;
   msg: {
+    closingPosition?: Uint128;
     price: Uint128;
     quantity: Uint128;
   };
@@ -426,6 +435,7 @@ export function useKogenMarketsBidOrderMutation(
 export interface KogenMarketsAskOrderMutation {
   client: KogenMarketsClient;
   msg: {
+    closingPosition?: Uint128;
     price: Uint128;
     quantity: Uint128;
   };

@@ -31,24 +31,26 @@ export type ExecuteMsg =
     }
   | {
       ask_order: {
+        closing_position?: Uint128 | null;
         price: Uint128;
         quantity: Uint128;
       };
     }
   | {
       bid_order: {
+        closing_position?: Uint128 | null;
         price: Uint128;
         quantity: Uint128;
       };
     }
   | {
-      close_bid_order: {
+      cancel_bid_order: {
         price: Uint128;
         quantity: Uint128;
       };
     }
   | {
-      close_ask_order: {
+      cancel_ask_order: {
         price: Uint128;
         quantity: Uint128;
       };

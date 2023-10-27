@@ -11,25 +11,19 @@ import {
   Typography,
 } from "@mui/material";
 import { Fragment, useMemo } from "react";
-import { useRecoilValue } from "recoil";
 import Decimal from "decimal.js";
-import { useChain } from "@cosmos-kit/react-lite";
 import {
   useKogenMarketsLockedAmountQuery,
   useKogenMarketsPositionQuery,
   useKogenMarketsConfigQuery,
 } from "../../../codegen/KogenMarkets.react-query";
 import { toUserToken } from "../../../lib/token";
-import { chainState } from "../../../state/cosmos";
-import { metamaskAddressState } from "../../../state/injective";
 import useKogenQueryClient from "../../../hooks/use-kogen-query-client";
+import useGetAddress from "../../../hooks/use-get-address";
 
 export default function YourPosition() {
   const kogenClient = useKogenQueryClient();
-  const chain = useRecoilValue(chainState);
-  const { address: cosmosAddress } = useChain(chain.chain_name);
-  const metamaskAddress = useRecoilValue(metamaskAddressState);
-  const address = cosmosAddress || metamaskAddress?.injective;
+  const address = useGetAddress();
 
   const lockedAmount = useKogenMarketsLockedAmountQuery({
     client: kogenClient,

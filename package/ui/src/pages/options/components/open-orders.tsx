@@ -14,16 +14,13 @@ import {
   Typography,
 } from "@mui/material";
 import { Fragment } from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { useChain } from "@cosmos-kit/react-lite";
+import { useRecoilState } from "recoil";
 import {
   useKogenMarketsConfigQuery,
   useKogenMarketsBidsQuery,
   useKogenMarketsAsksQuery,
 } from "../../../codegen/KogenMarkets.react-query";
 import { getCollateralSize, toUserToken } from "../../../lib/token";
-import { chainState } from "../../../state/cosmos";
-import { metamaskAddressState } from "../../../state/injective";
 import useKogenQueryClient from "../../../hooks/use-kogen-query-client";
 import {
   ArrayOfOrdersResponse,
@@ -32,13 +29,11 @@ import {
 import { useCancelOrderMutation } from "../tx";
 import { snackbarState } from "../../../state/snackbar";
 import { ORDER_TYPE, ORDER_TYPES } from "../../../types/types";
+import useGetAddress from "../../../hooks/use-get-address";
 
 export default function OpenOrders() {
   const kogenClient = useKogenQueryClient();
-  const chain = useRecoilValue(chainState);
-  const { address: cosmosAddress } = useChain(chain.chain_name);
-  const metamaskAddress = useRecoilValue(metamaskAddressState);
-  const address = cosmosAddress || metamaskAddress?.injective;
+  const address = useGetAddress();
 
   const config = useKogenMarketsConfigQuery({
     client: kogenClient,
