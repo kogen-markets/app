@@ -22,7 +22,7 @@
     "@emotion/react": "11.11.1",
     "@emotion/styled": "11.11.0",
     "@injectivelabs/networks": "1.14.1",
-    "@injectivelabs/sdk-ts": "1.13.0",
+    "@injectivelabs/sdk-ts": "1.14.1",
     "@injectivelabs/ts-types": "1.13.0",
     "@injectivelabs/utils": "1.13.0",
     "@injectivelabs/wallet-ts": "1.13.0",
