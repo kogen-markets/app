@@ -28,11 +28,13 @@ export function useInjectiveCallOptionMutation() {
       type,
       price,
       quantity,
+      closing_position,
       funds,
     }: {
       type: ORDER_TYPE;
       price: string;
       quantity: string;
+      closing_position?: string;
       funds: {
         denom: string;
         amount: string;
@@ -62,6 +64,7 @@ export function useInjectiveCallOptionMutation() {
           [`${type}_order`]: {
             price,
             quantity,
+            closing_position,
           },
         },
         funds: funds,

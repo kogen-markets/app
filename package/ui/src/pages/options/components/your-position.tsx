@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   Chip,
   Divider,
   Table,
@@ -10,34 +11,24 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import { Fragment, useMemo } from "react";
-import Decimal from "decimal.js";
+import { Fragment, useCallback } from "react";
 import {
   useKogenMarketsLockedAmountQuery,
-  useKogenMarketsPositionQuery,
   useKogenMarketsConfigQuery,
 } from "../../../codegen/KogenMarkets.react-query";
 import { toUserToken } from "../../../lib/token";
 import useKogenQueryClient from "../../../hooks/use-kogen-query-client";
 import useGetAddress from "../../../hooks/use-get-address";
+import useGetPosition from "../../../hooks/use-get-position";
+import { useRecoilState } from "recoil";
+import { externalOpenOrderFormState } from "../../../state/kogen";
+import { ORDER_TYPES } from "../../../types/types";
 
 export default function YourPosition() {
   const kogenClient = useKogenQueryClient();
   const address = useGetAddress();
 
   const lockedAmount = useKogenMarketsLockedAmountQuery({
-    client: kogenClient,
-    args: {
-      owner: address || "",
-    },
-    options: {
-      enabled: Boolean(address),
-      staleTime: 10000,
-      suspense: true,
-    },
-  });
-
-  const position = useKogenMarketsPositionQuery({
     client: kogenClient,
     args: {
       owner: address || "",
@@ -57,15 +48,23 @@ export default function YourPosition() {
     },
   });
 
-  const position_in_base = useMemo(() => {
-    if (!position.data) {
-      return new Decimal(0);
+  const position_in_base = useGetPosition();
+  const hasPosition = !position_in_base.eq(0);
+  const [, setOpenOrderType] = useRecoilState(externalOpenOrderFormState);
+  const closePosition = useCallback(() => {
+    if (position_in_base.eq(0)) {
+      return;
     }
 
-    return new Decimal(position.data?.bid_position_in_base || 0).sub(
-      position.data?.ask_position_in_base || 0,
-    );
-  }, [position]);
+    const oppositeOrderType = position_in_base.gt(0)
+      ? ORDER_TYPES.ASK
+      : ORDER_TYPES.BID;
+
+    setOpenOrderType({
+      type: oppositeOrderType,
+      size: toUserToken(position_in_base, config.data?.base_decimals),
+    });
+  }, [position_in_base, setOpenOrderType, config]);
 
   return (
     <Fragment>
@@ -79,6 +78,7 @@ export default function YourPosition() {
                 Locked balance
               </TableCell>
               <TableCell align="center">CALL</TableCell>
+              {hasPosition && <TableCell align="right" width="1px"></TableCell>}
             </TableRow>
           </TableHead>
           <TableBody>
@@ -117,6 +117,40 @@ export default function YourPosition() {
                   sx={{ fontWeight: "bold" }}
                 />
               </TableCell>
+              {hasPosition && (
+                <TableCell align="right">
+                  <Button
+                    variant="text"
+                    size="small"
+                    color={position_in_base.lt(0) ? "secondary" : "primary"}
+                    // disabled={isCloseOrderLoading}
+                    onClick={async () => {
+                      closePosition();
+                      // setSnackbar({
+                      //   message: "Please confirm the transaction",
+                      // });
+
+                      // try {
+                      //   await closeOrderMutation({
+                      //     type: type,
+                      //     price: orderItem.price,
+                      //     quantity: o.quantity_in_base,
+                      //   });
+
+                      //   setSnackbar({
+                      //     message: `Order successfully cancelled`,
+                      //   });
+                      // } catch (e: any) {
+                      //   setSnackbar({
+                      //     message: "Error cancelling order: " + e.message,
+                      //   });
+                      // }
+                    }}
+                  >
+                    Close
+                  </Button>
+                </TableCell>
+              )}
             </TableRow>
           </TableBody>
         </Table>

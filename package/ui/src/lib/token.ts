@@ -25,6 +25,7 @@ export type Collateral = {
   symbol: string;
   optionAmount: Decimal | null;
   strikeAmount: Decimal;
+  closingAmount: Decimal;
 };
 
 export function getCollateralSize(
@@ -32,47 +33,54 @@ export function getCollateralSize(
   config: Config,
   optionSize: Decimal.Value,
   optionPrice: Decimal.Value,
+  closingSize: Decimal = new Decimal(0),
 ): Collateral | null {
+  const closingAmount = Decimal.min(optionSize, closingSize);
+  const optionSizeWithoutClosing = new Decimal(optionSize).sub(closingAmount);
+
   if (type === ORDER_TYPES.BID) {
-    const amount_in_base = toBaseToken(optionPrice, config.quote_decimals)
-      .add(config.strike_price_in_quote)
-      .mul(optionSize);
-
-    if (amount_in_base.isNaN()) {
-      return null;
-    }
-
-    const optionAmountBase = toBaseToken(
+    const optionAmountInBase = toBaseToken(
       optionPrice,
       config.quote_decimals,
     ).mul(optionSize);
 
-    const strikeAmountBase = new Decimal(config.strike_price_in_quote).mul(
-      optionSize,
+    const strikeAmountInBase = new Decimal(config.strike_price_in_quote).mul(
+      optionSizeWithoutClosing,
     );
 
-    return {
-      amountBase: amount_in_base.toFixed(0),
-      amount: toUserToken(amount_in_base, config.quote_decimals),
-      denom: config.quote_denom,
-      symbol: config.quote_symbol,
-      optionAmount: toUserToken(optionAmountBase, config.quote_decimals),
-      strikeAmount: toUserToken(strikeAmountBase, config.quote_decimals),
-    };
-  } else if (type === ORDER_TYPES.ASK) {
-    const amount_in_base = toBaseToken(optionSize, config.base_decimals);
+    const totalAmountInBase = optionAmountInBase.add(strikeAmountInBase);
 
-    if (amount_in_base.isNaN()) {
+    if (totalAmountInBase.isNaN()) {
       return null;
     }
 
     return {
-      amountBase: amount_in_base.toFixed(0),
-      amount: toUserToken(amount_in_base, config.base_decimals),
+      amountBase: totalAmountInBase.toFixed(0),
+      amount: toUserToken(totalAmountInBase, config.quote_decimals),
+      denom: config.quote_denom,
+      symbol: config.quote_symbol,
+      optionAmount: toUserToken(optionAmountInBase, config.quote_decimals),
+      strikeAmount: toUserToken(strikeAmountInBase, config.quote_decimals),
+      closingAmount,
+    };
+  } else if (type === ORDER_TYPES.ASK) {
+    const totalAmountInBase = toBaseToken(
+      optionSizeWithoutClosing,
+      config.base_decimals,
+    );
+
+    if (totalAmountInBase.isNaN()) {
+      return null;
+    }
+
+    return {
+      amountBase: totalAmountInBase.toFixed(0),
+      amount: toUserToken(totalAmountInBase, config.base_decimals),
       denom: config.base_denom,
       symbol: config.base_symbol,
       optionAmount: null,
-      strikeAmount: toUserToken(amount_in_base, config.base_decimals),
+      strikeAmount: toUserToken(totalAmountInBase, config.base_decimals),
+      closingAmount,
     };
   }
 

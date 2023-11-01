@@ -11,7 +11,7 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import { Fragment, useMemo } from "react";
+import { Fragment, useEffect, useMemo } from "react";
 import { useRecoilState } from "recoil";
 import Joi from "joi";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
@@ -36,6 +36,8 @@ import WithWallet from "../../../components/with-wallet";
 import useGetBalance from "../../../hooks/use-get-balance";
 import useKogenQueryClient from "../../../hooks/use-kogen-query-client";
 import useGetAddress from "../../../hooks/use-get-address";
+import { externalOpenOrderFormState } from "../../../state/kogen";
+import useGetPosition from "../../../hooks/use-get-position";
 
 export const optionSizeValidator = Joi.number().label("Option size");
 export const optionPriceValidator = Joi.number().label("Price").greater(0);
@@ -55,6 +57,26 @@ export default function CallForm() {
     optionSize: 0.1,
     optionPrice: 10,
   });
+
+  const [externalOpenOrderForm, setExternalOpenOrderForm] = useRecoilState(
+    externalOpenOrderFormState,
+  );
+  useEffect(() => {
+    if (externalOpenOrderForm?.type) {
+      setFormState((x) => x.set("type", externalOpenOrderForm.type));
+    }
+
+    if (externalOpenOrderForm?.size) {
+      setFormState((x) =>
+        x.set("optionSize", externalOpenOrderForm.size?.toNumber()),
+      );
+    }
+  }, [externalOpenOrderForm, setFormState]);
+
+  // reset the external open order form state
+  useEffect(() => {
+    setExternalOpenOrderForm(null);
+  }, [formState, setExternalOpenOrderForm]);
 
   const optionSizeValidatorConfig = useMemo(() => {
     if (!config.data) {
@@ -114,19 +136,6 @@ export default function CallForm() {
     [formState],
   );
 
-  const collateral = useMemo(() => {
-    if (!config.data) {
-      return null;
-    }
-
-    return getCollateralSize(
-      formState.get("type"),
-      config.data,
-      formState.get("optionSize"),
-      formState.get("optionPrice"),
-    );
-  }, [formState, config.data]);
-
   const orderCreateEnabled = useMemo(() => {
     return (
       callFormValidatorConfig.validate(formState.toJSON(), { convert: false })
@@ -164,9 +173,47 @@ export default function CallForm() {
     },
   });
 
+  const positionInBase = useGetPosition();
+  const positionInUser = useMemo(
+    () => toUserToken(positionInBase, config.data?.base_decimals),
+    [positionInBase, config],
+  );
+  const positionRelativeToTheType = useMemo(() => {
+    if (
+      (positionInUser.lt(0) && formState.get("type") === ORDER_TYPES.BID) ||
+      (positionInUser.gt(0) && formState.get("type") === ORDER_TYPES.ASK)
+    ) {
+      return positionInUser.abs();
+    }
+
+    return new Decimal(0);
+  }, [positionInUser, formState]);
+
+  const isOrderLessThanPosition = useMemo(() => {
+    if (positionRelativeToTheType.eq(0)) {
+      return false;
+    }
+
+    return positionRelativeToTheType.gte(formState.get("optionSize"));
+  }, [positionRelativeToTheType, formState]);
+
   const isOpenOrderInOppositeDirection = Boolean(
     isBid ? asks.data?.length : bids.data?.length,
   );
+
+  const collateral = useMemo(() => {
+    if (!config.data) {
+      return null;
+    }
+
+    return getCollateralSize(
+      formState.get("type"),
+      config.data,
+      formState.get("optionSize"),
+      formState.get("optionPrice"),
+      positionRelativeToTheType,
+    );
+  }, [formState, config.data, positionRelativeToTheType]);
 
   return (
     <Fragment>
@@ -380,7 +427,7 @@ export default function CallForm() {
       </Box>
 
       <Divider sx={{ mt: 2 }} />
-      <Box sx={{ textAlign: "right", pt: 2 }}>
+      <Box sx={{ pt: 2 }}>
         {isOpenOrderInOppositeDirection && (
           <Fragment>
             <Alert
@@ -405,69 +452,95 @@ export default function CallForm() {
               size: "large",
             }}
           >
-            <Button
-              variant="outlined"
-              size="large"
-              sx={{ width: { xs: "100%", lg: "50%" } }}
-              onClick={async () => {
-                setSnackbar({ message: "Please confirm the transaction" });
-
-                if (!collateral) {
-                  return null;
-                }
-
-                try {
-                  await createOrder({
-                    type: formState.get("type"),
-                    price: toBaseToken(
-                      formState.get("optionPrice"),
-                      config.data?.quote_decimals,
-                    ).toFixed(0),
-                    quantity: toBaseToken(
-                      formState.get("optionSize"),
-                      config.data?.base_decimals,
-                    ).toFixed(0),
-                    funds: [
-                      {
-                        amount: collateral.amountBase,
-                        denom: collateral.denom,
-                      },
-                    ],
-                  });
-
-                  setSnackbar({
-                    message: `Order successfully created`,
-                  });
-                } catch (e: any) {
-                  if (e?.originalMessage?.includes("Matched own position")) {
-                    setSnackbar({
-                      message:
-                        "Matched your own position, the order is rejected",
-                    });
-
-                    return;
-                  }
-                  setSnackbar({
-                    message: "Error creating order: " + e.message,
-                  });
-                }
-              }}
-              color={isBid ? "secondary" : "primary"}
-              disabled={isCreateOrderLoading || !orderCreateEnabled}
+            <Grid
+              container
+              spacing={2}
+              alignItems={"center"}
+              justifyContent={"space-between"}
             >
-              {isCreateOrderLoading ? (
-                <Fragment>
-                  <CircularProgress
-                    size={15}
-                    sx={{ mr: 1 }}
-                    color={isBid ? "secondary" : "primary"}
-                  />{" "}
-                  Loading
-                </Fragment>
-              ) : (
-                `Create ${isBid ? "bid" : "ask"} order`
-              )}
-            </Button>
+              <Grid item xs={12} md={6}>
+                {collateral?.closingAmount.gt(0) && (
+                  <Typography variant="caption">
+                    You are closing {collateral?.closingAmount.toFixed(3)}{" "}
+                    {positionInBase.gt(0) ? "long" : "short"} position
+                  </Typography>
+                )}
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <Button
+                  variant="outlined"
+                  size="large"
+                  fullWidth
+                  onClick={async () => {
+                    setSnackbar({ message: "Please confirm the transaction" });
+
+                    if (!collateral) {
+                      return null;
+                    }
+
+                    try {
+                      await createOrder({
+                        type: formState.get("type"),
+                        price: toBaseToken(
+                          formState.get("optionPrice"),
+                          config.data?.quote_decimals,
+                        ).toFixed(0),
+                        quantity: toBaseToken(
+                          formState.get("optionSize"),
+                          config.data?.base_decimals,
+                        ).toFixed(0),
+                        closing_position: toBaseToken(
+                          collateral.closingAmount,
+                          config.data?.base_decimals,
+                        ).toFixed(0),
+                        funds: [
+                          {
+                            amount: collateral.amountBase,
+                            denom: collateral.denom,
+                          },
+                        ],
+                      });
+
+                      setSnackbar({
+                        message: `Order successfully created`,
+                      });
+                    } catch (e: any) {
+                      if (
+                        e?.originalMessage?.includes("Matched own position")
+                      ) {
+                        setSnackbar({
+                          message:
+                            "Matched your own position, the order is rejected",
+                        });
+
+                        return;
+                      }
+                      setSnackbar({
+                        message: "Error creating order: " + e.message,
+                      });
+                    }
+                  }}
+                  color={isBid ? "secondary" : "primary"}
+                  disabled={isCreateOrderLoading || !orderCreateEnabled}
+                >
+                  {isOrderLessThanPosition &&
+                    `Close ${isBid ? "ask" : "bid"} position`}
+                  {!isOrderLessThanPosition &&
+                    (isCreateOrderLoading ? (
+                      <Fragment>
+                        <CircularProgress
+                          size={15}
+                          sx={{ mr: 1 }}
+                          color={isBid ? "secondary" : "primary"}
+                        />{" "}
+                        Loading
+                      </Fragment>
+                    ) : (
+                      `Create ${isBid ? "bid" : "ask"} order`
+                    ))}
+                </Button>
+              </Grid>
+            </Grid>
           </WithWallet>
         )}
       </Box>

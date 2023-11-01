@@ -2,6 +2,8 @@ import { atom, selector } from "recoil";
 import { localStorageEffect, LOCAL_STORAGE_DARK_MODE } from "./effects";
 import { chainState } from "./cosmos";
 import { TESTNET } from "../lib/config";
+import { ORDER_TYPE } from "../types/types";
+import Decimal from "decimal.js";
 
 export const densInitializedState = atom({
   key: "densInitializedState",
@@ -11,6 +13,16 @@ export const densInitializedState = atom({
 export const drawerOpenedState = atom({
   key: "drawerOpenedState",
   default: false,
+});
+
+export type ExternalOpenOrderForm = Partial<{
+  type: ORDER_TYPE;
+  size: Decimal;
+}>;
+
+export const externalOpenOrderFormState = atom<ExternalOpenOrderForm | null>({
+  key: "externalOpenOrderFormState",
+  default: null,
 });
 
 export const darkModeState = atom<"dark" | "light" | "auto">({
