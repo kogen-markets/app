@@ -14,7 +14,7 @@ import { useExerciseCallOptionMutation } from "../tx";
 import WithWallet from "../../../components/with-wallet";
 import useKogenQueryClient from "../../../hooks/use-kogen-query-client";
 
-export const expiryPriceValidator = Joi.number();
+export const expiryPriceValidator = Joi.number().prefs({ convert: true });
 
 export default function Exercise() {
   const kogenClient = useKogenQueryClient();
