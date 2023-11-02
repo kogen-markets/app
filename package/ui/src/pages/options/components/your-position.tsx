@@ -79,7 +79,6 @@ export default function YourPosition() {
                 Locked balance
               </TableCell>
               <TableCell align="center">CALL</TableCell>
-              {hasPosition && <TableCell align="right" width="1px"></TableCell>}
             </TableRow>
           </TableHead>
           <TableBody>
@@ -118,40 +117,6 @@ export default function YourPosition() {
                   sx={{ fontWeight: "bold" }}
                 />
               </TableCell>
-              {hasPosition && (
-                <TableCell align="right">
-                  <Button
-                    variant="text"
-                    size="small"
-                    color={position_in_base.lt(0) ? "secondary" : "primary"}
-                    // disabled={isCloseOrderLoading}
-                    onClick={async () => {
-                      closePosition();
-                      // setSnackbar({
-                      //   message: "Please confirm the transaction",
-                      // });
-
-                      // try {
-                      //   await closeOrderMutation({
-                      //     type: type,
-                      //     price: orderItem.price,
-                      //     quantity: o.quantity_in_base,
-                      //   });
-
-                      //   setSnackbar({
-                      //     message: `Order successfully cancelled`,
-                      //   });
-                      // } catch (e: any) {
-                      //   setSnackbar({
-                      //     message: "Error cancelling order: " + e.message,
-                      //   });
-                      // }
-                    }}
-                  >
-                    Close
-                  </Button>
-                </TableCell>
-              )}
             </TableRow>
           </TableBody>
         </Table>
