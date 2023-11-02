@@ -25,6 +25,7 @@ export type Collateral = {
   symbol: string;
   optionAmount: Decimal | null;
   strikeAmount: Decimal;
+  closingSize: Decimal;
   closingAmount: Decimal;
 };
 
@@ -35,8 +36,8 @@ export function getCollateralSize(
   optionPrice: Decimal.Value,
   closingSize: Decimal = new Decimal(0),
 ): Collateral | null {
-  const closingAmount = Decimal.min(optionSize, closingSize);
-  const optionSizeWithoutClosing = new Decimal(optionSize).sub(closingAmount);
+  closingSize = Decimal.min(optionSize, closingSize);
+  const optionSizeWithoutClosing = new Decimal(optionSize).sub(closingSize);
 
   if (type === ORDER_TYPES.BID) {
     const optionAmountInBase = toBaseToken(
@@ -47,8 +48,10 @@ export function getCollateralSize(
     const strikeAmountInBase = new Decimal(config.strike_price_in_quote).mul(
       optionSizeWithoutClosing,
     );
-
     const totalAmountInBase = optionAmountInBase.add(strikeAmountInBase);
+    const closingAmountInBase = new Decimal(config.strike_price_in_quote).mul(
+      closingSize,
+    );
 
     if (totalAmountInBase.isNaN()) {
       return null;
@@ -61,7 +64,8 @@ export function getCollateralSize(
       symbol: config.quote_symbol,
       optionAmount: toUserToken(optionAmountInBase, config.quote_decimals),
       strikeAmount: toUserToken(strikeAmountInBase, config.quote_decimals),
-      closingAmount,
+      closingSize: closingSize,
+      closingAmount: toUserToken(closingAmountInBase, config.quote_decimals),
     };
   } else if (type === ORDER_TYPES.ASK) {
     const totalAmountInBase = toBaseToken(
@@ -80,7 +84,8 @@ export function getCollateralSize(
       symbol: config.base_symbol,
       optionAmount: null,
       strikeAmount: toUserToken(totalAmountInBase, config.base_decimals),
-      closingAmount,
+      closingSize: closingSize,
+      closingAmount: closingSize,
     };
   }
 

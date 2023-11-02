@@ -3,6 +3,7 @@ import {
   Button,
   Chip,
   Divider,
+  Grid,
   Table,
   TableBody,
   TableCell,
@@ -62,7 +63,7 @@ export default function YourPosition() {
 
     setOpenOrderType({
       type: oppositeOrderType,
-      size: toUserToken(position_in_base, config.data?.base_decimals),
+      size: toUserToken(position_in_base, config.data?.base_decimals).abs(),
     });
   }, [position_in_base, setOpenOrderType, config]);
 
@@ -156,6 +157,21 @@ export default function YourPosition() {
         </Table>
       </TableContainer>
       <Divider />
+      {hasPosition && (
+        <Grid container justifyContent={"flex-end"} sx={{ mt: 2 }}>
+          <Grid item xs={12} md="auto">
+            <Button
+              fullWidth
+              variant="text"
+              size="small"
+              color={position_in_base.lt(0) ? "secondary" : "primary"}
+              onClick={closePosition}
+            >
+              Close
+            </Button>
+          </Grid>
+        </Grid>
+      )}
     </Fragment>
   );
 }

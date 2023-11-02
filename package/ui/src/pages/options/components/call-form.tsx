@@ -11,7 +11,7 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import { Fragment, useEffect, useMemo } from "react";
+import { Fragment, useEffect, useMemo, useRef } from "react";
 import { useRecoilState } from "recoil";
 import Joi from "joi";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
@@ -43,6 +43,7 @@ export const optionSizeValidator = Joi.number().label("Option size");
 export const optionPriceValidator = Joi.number().label("Price").greater(0);
 
 export default function CallForm() {
+  const callFormRef = useRef<HTMLInputElement>(null);
   const kogenClient = useKogenQueryClient();
   const config = useKogenMarketsConfigQuery({
     client: kogenClient,
@@ -63,6 +64,10 @@ export default function CallForm() {
   );
   useEffect(() => {
     if (externalOpenOrderForm?.type) {
+      callFormRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
       setFormState((x) => x.set("type", externalOpenOrderForm.type));
     }
 
@@ -189,12 +194,20 @@ export default function CallForm() {
     return new Decimal(0);
   }, [positionInUser, formState]);
 
-  const isOrderLessThanPosition = useMemo(() => {
+  const isOrderSizeLessThanPosition = useMemo(() => {
     if (positionRelativeToTheType.eq(0)) {
       return false;
     }
 
-    return positionRelativeToTheType.gte(formState.get("optionSize"));
+    return positionRelativeToTheType.gt(formState.get("optionSize"));
+  }, [positionRelativeToTheType, formState]);
+
+  const isOrderSizeEqPosition = useMemo(() => {
+    if (positionRelativeToTheType.eq(0)) {
+      return false;
+    }
+
+    return positionRelativeToTheType.eq(formState.get("optionSize"));
   }, [positionRelativeToTheType, formState]);
 
   const isOpenOrderInOppositeDirection = Boolean(
@@ -217,7 +230,9 @@ export default function CallForm() {
 
   return (
     <Fragment>
-      <Typography variant="caption">Order type</Typography>
+      <Typography variant="caption" ref={callFormRef}>
+        Order type
+      </Typography>
       <ButtonGroup variant="outlined" aria-label="call option" fullWidth>
         <Button
           onClick={() => setFormState((x) => x.set("type", ORDER_TYPES.BID))}
@@ -393,6 +408,21 @@ export default function CallForm() {
                           {collateral?.symbol}
                         </span>
                       </Typography>
+                      {collateral?.closingSize.gt(0) && (
+                        <Typography
+                          variant="caption"
+                          sx={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            gap: 2,
+                          }}
+                        >
+                          <span>
+                            Closing {isBid ? "ask" : "bid"} position:{" "}
+                          </span>
+                          <span>{collateral?.closingSize.toFixed(3)}</span>
+                        </Typography>
+                      )}
                     </Fragment>
                   }
                 >
@@ -446,27 +476,28 @@ export default function CallForm() {
           </Fragment>
         )}
         {!isOpenOrderInOppositeDirection && (
-          <WithWallet
-            WalletButtonProps={{
-              color: isBid ? "secondary" : "primary",
-              size: "large",
-            }}
+          <Grid
+            container
+            spacing={2}
+            alignItems={"center"}
+            justifyContent={"space-between"}
           >
-            <Grid
-              container
-              spacing={2}
-              alignItems={"center"}
-              justifyContent={"space-between"}
-            >
-              <Grid item xs={12} md={6}>
-                {collateral?.closingAmount.gt(0) && (
-                  <Typography variant="caption">
-                    You are closing {collateral?.closingAmount.toFixed(3)}{" "}
-                    {positionInBase.gt(0) ? "long" : "short"} position
-                  </Typography>
-                )}
-              </Grid>
-              <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={6}>
+              {collateral?.closingSize.gt(0) && (
+                <Typography variant="caption">
+                  You are closing {collateral?.closingSize.toFixed(3)}{" "}
+                  {positionInBase.gt(0) ? "long" : "short"} position
+                </Typography>
+              )}
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <WithWallet
+                WalletButtonProps={{
+                  color: isBid ? "secondary" : "primary",
+                  size: "large",
+                  fullWidth: true,
+                }}
+              >
                 <Button
                   variant="outlined"
                   size="large"
@@ -490,7 +521,7 @@ export default function CallForm() {
                           config.data?.base_decimals,
                         ).toFixed(0),
                         closing_position: toBaseToken(
-                          collateral.closingAmount,
+                          collateral.closingSize,
                           config.data?.base_decimals,
                         ).toFixed(0),
                         funds: [
@@ -523,9 +554,12 @@ export default function CallForm() {
                   color={isBid ? "secondary" : "primary"}
                   disabled={isCreateOrderLoading || !orderCreateEnabled}
                 >
-                  {isOrderLessThanPosition &&
+                  {isOrderSizeEqPosition &&
                     `Close ${isBid ? "ask" : "bid"} position`}
-                  {!isOrderLessThanPosition &&
+                  {isOrderSizeLessThanPosition &&
+                    `Reduce ${isBid ? "ask" : "bid"} position`}
+                  {!isOrderSizeEqPosition &&
+                    !isOrderSizeLessThanPosition &&
                     (isCreateOrderLoading ? (
                       <Fragment>
                         <CircularProgress
@@ -539,9 +573,9 @@ export default function CallForm() {
                       `Create ${isBid ? "bid" : "ask"} order`
                     ))}
                 </Button>
-              </Grid>
+              </WithWallet>
             </Grid>
-          </WithWallet>
+          </Grid>
         )}
       </Box>
     </Fragment>
