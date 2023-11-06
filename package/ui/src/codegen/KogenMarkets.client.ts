@@ -25,6 +25,7 @@ import {
   Config,
   LockedAmountResponse,
   PositionResponse,
+  Int128,
   PositionState,
   Settlement,
   Position,

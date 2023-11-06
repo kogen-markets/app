@@ -48,7 +48,8 @@ export default function YourPosition() {
     },
   });
 
-  const { positionInBase } = useGetPosition();
+  const { positionInBase, positionInBaseWithoutCollateralClosing } =
+    useGetPosition();
   const hasPosition = !positionInBase.eq(0);
   const [, setFormState] = useRecoilState(openOrderFormState);
 
@@ -106,14 +107,14 @@ export default function YourPosition() {
               <TableCell align="center">
                 <Chip
                   label={toUserToken(
-                    positionInBase,
+                    positionInBaseWithoutCollateralClosing,
                     config.data?.base_decimals,
                   ).toFixed(3)}
                   variant="outlined"
                   color={
-                    positionInBase.lessThan(0)
+                    positionInBaseWithoutCollateralClosing.lessThan(0)
                       ? "primary"
-                      : positionInBase.equals(0)
+                      : positionInBaseWithoutCollateralClosing.equals(0)
                       ? "default"
                       : "secondary"
                   }

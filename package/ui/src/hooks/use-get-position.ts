@@ -42,9 +42,17 @@ export default function useGetPosition() {
       return new Decimal(0);
     }
 
-    return new Decimal(position.data?.bid_position_in_base || 0).sub(
-      position.data?.ask_position_in_base || 0,
+    return new Decimal(position.data?.position_in_base || 0).sub(
+      position.data?.position_closing_in_orderbook_in_base || 0,
     );
+  }, [position]);
+
+  const positionInBaseWithoutCollateralClosing = useMemo(() => {
+    if (!position.data) {
+      return new Decimal(0);
+    }
+
+    return new Decimal(position.data?.position_in_base || 0);
   }, [position]);
 
   const positionInUser = useMemo(
@@ -64,6 +72,7 @@ export default function useGetPosition() {
 
   return {
     positionInBase,
+    positionInBaseWithoutCollateralClosing,
     positionInUser,
     positionInUserRelativeToTheType,
   };

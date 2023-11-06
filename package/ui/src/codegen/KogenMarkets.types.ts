@@ -128,11 +128,12 @@ export interface LockedAmountResponse {
   locked_quote_denom: Uint128;
 }
 export type PositionResponse = Position;
+export type Int128 = string;
 export type PositionState = "open" | "settled";
 export type Settlement = "i_t_m" | "o_t_m";
 export interface Position {
-  ask_position_in_base: Uint128;
-  bid_position_in_base: Uint128;
+  position_closing_in_orderbook_in_base: Int128;
+  position_in_base: Int128;
   settled?: PositionState | null;
   settlement?: Settlement | null;
 }
