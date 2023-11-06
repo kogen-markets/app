@@ -125,11 +125,9 @@ export interface KogenMarketsInterface extends KogenMarketsReadOnlyInterface {
   ) => Promise<ExecuteResult>;
   askOrder: (
     {
-      closingPosition,
       price,
       quantity,
     }: {
-      closingPosition?: Uint128;
       price: Uint128;
       quantity: Uint128;
     },
@@ -139,11 +137,9 @@ export interface KogenMarketsInterface extends KogenMarketsReadOnlyInterface {
   ) => Promise<ExecuteResult>;
   bidOrder: (
     {
-      closingPosition,
       price,
       quantity,
     }: {
-      closingPosition?: Uint128;
       price: Uint128;
       quantity: Uint128;
     },
@@ -164,6 +160,30 @@ export interface KogenMarketsInterface extends KogenMarketsReadOnlyInterface {
     _funds?: Coin[],
   ) => Promise<ExecuteResult>;
   cancelAskOrder: (
+    {
+      price,
+      quantity,
+    }: {
+      price: Uint128;
+      quantity: Uint128;
+    },
+    fee?: number | StdFee | "auto",
+    memo?: string,
+    _funds?: Coin[],
+  ) => Promise<ExecuteResult>;
+  closeLongPositionOrder: (
+    {
+      price,
+      quantity,
+    }: {
+      price: Uint128;
+      quantity: Uint128;
+    },
+    fee?: number | StdFee | "auto",
+    memo?: string,
+    _funds?: Coin[],
+  ) => Promise<ExecuteResult>;
+  closeShortPositionOrder: (
     {
       price,
       quantity,
@@ -208,6 +228,8 @@ export class KogenMarketsClient
     this.bidOrder = this.bidOrder.bind(this);
     this.cancelBidOrder = this.cancelBidOrder.bind(this);
     this.cancelAskOrder = this.cancelAskOrder.bind(this);
+    this.closeLongPositionOrder = this.closeLongPositionOrder.bind(this);
+    this.closeShortPositionOrder = this.closeShortPositionOrder.bind(this);
     this.exercise = this.exercise.bind(this);
   }
 
@@ -229,11 +251,9 @@ export class KogenMarketsClient
   };
   askOrder = async (
     {
-      closingPosition,
       price,
       quantity,
     }: {
-      closingPosition?: Uint128;
       price: Uint128;
       quantity: Uint128;
     },
@@ -246,7 +266,6 @@ export class KogenMarketsClient
       this.contractAddress,
       {
         ask_order: {
-          closing_position: closingPosition,
           price,
           quantity,
         },
@@ -258,11 +277,9 @@ export class KogenMarketsClient
   };
   bidOrder = async (
     {
-      closingPosition,
       price,
       quantity,
     }: {
-      closingPosition?: Uint128;
       price: Uint128;
       quantity: Uint128;
     },
@@ -275,7 +292,6 @@ export class KogenMarketsClient
       this.contractAddress,
       {
         bid_order: {
-          closing_position: closingPosition,
           price,
           quantity,
         },
@@ -328,6 +344,58 @@ export class KogenMarketsClient
       this.contractAddress,
       {
         cancel_ask_order: {
+          price,
+          quantity,
+        },
+      },
+      fee,
+      memo,
+      _funds,
+    );
+  };
+  closeLongPositionOrder = async (
+    {
+      price,
+      quantity,
+    }: {
+      price: Uint128;
+      quantity: Uint128;
+    },
+    fee: number | StdFee | "auto" = "auto",
+    memo?: string,
+    _funds?: Coin[],
+  ): Promise<ExecuteResult> => {
+    return await this.client.execute(
+      this.sender,
+      this.contractAddress,
+      {
+        close_long_position_order: {
+          price,
+          quantity,
+        },
+      },
+      fee,
+      memo,
+      _funds,
+    );
+  };
+  closeShortPositionOrder = async (
+    {
+      price,
+      quantity,
+    }: {
+      price: Uint128;
+      quantity: Uint128;
+    },
+    fee: number | StdFee | "auto" = "auto",
+    memo?: string,
+    _funds?: Coin[],
+  ): Promise<ExecuteResult> => {
+    return await this.client.execute(
+      this.sender,
+      this.contractAddress,
+      {
+        close_short_position_order: {
           price,
           quantity,
         },

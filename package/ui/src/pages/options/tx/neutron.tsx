@@ -4,7 +4,7 @@ import { useChain } from "@cosmos-kit/react-lite";
 import { MsgExecuteContract } from "cosmjs-types/cosmwasm/wasm/v1/tx.js";
 
 import { chainState } from "../../../state/cosmos";
-import { ORDER_TYPE } from "../../../types/types";
+import { ORDER_TYPE, ORDER_TYPES } from "../../../types/types";
 import { contractsState } from "../../../state/kogen";
 import { toUtf8 } from "@cosmjs/encoding";
 
@@ -21,13 +21,11 @@ export function useNeutronCallOptionMutation() {
       type,
       price,
       quantity,
-      closing_position,
       funds,
     }: {
       type: ORDER_TYPE;
       price: string;
       quantity: string;
-      closing_position?: string;
       funds: {
         denom: string;
         amount: string;
@@ -47,7 +45,6 @@ export function useNeutronCallOptionMutation() {
               [`${type}_order`]: {
                 price,
                 quantity,
-                closing_position,
               },
             }),
           ),
@@ -75,6 +72,73 @@ export function useNeutronCallOptionMutation() {
       },
     },
   );
+}
+
+export function useNeutronClosePositionOrderMutation() {
+  const chain = useRecoilValue(chainState);
+  const queryClient = useQueryClient();
+  const { address, getSigningCosmWasmClient } = useChain(chain.chain_name);
+
+  const contracts = useRecoilValue(contractsState);
+
+  return useMutation({
+    mutationKey: ["closePositionOrder"],
+    mutationFn: async ({
+      type,
+      price,
+      quantity,
+      funds,
+    }: {
+      type: ORDER_TYPE;
+      price: string;
+      quantity: string;
+      funds: {
+        denom: string;
+        amount: string;
+      }[];
+    }) => {
+      if (!address) {
+        return null;
+      }
+
+      const orderMsg = {
+        typeUrl: "/cosmwasm.wasm.v1.MsgExecuteContract",
+        value: MsgExecuteContract.fromPartial({
+          contract: contracts,
+          sender: address,
+          msg: toUtf8(
+            JSON.stringify({
+              [type === ORDER_TYPES.ASK
+                ? "close_long_position_order"
+                : "close_short_position_order"]: {
+                price,
+                quantity,
+              },
+            }),
+          ),
+          funds: funds,
+        }),
+      };
+
+      const signClient = await getSigningCosmWasmClient();
+
+      const result = await signClient.signAndBroadcast(
+        address,
+        [orderMsg],
+        "auto",
+      );
+
+      console.log(result);
+    },
+
+    onSuccess: () => {
+      queryClient.invalidateQueries([{ method: "asks" }]);
+      queryClient.invalidateQueries([{ method: "bids" }]);
+      queryClient.invalidateQueries([{ method: "locked_amount" }]);
+      queryClient.invalidateQueries([{ method: "position" }]);
+      queryClient.invalidateQueries(["get_balance", address]);
+    },
+  });
 }
 
 export function useNeutronExerciseCallOptionMutation() {

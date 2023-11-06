@@ -3,7 +3,6 @@ import {
   Button,
   Chip,
   Divider,
-  Grid,
   Table,
   TableBody,
   TableCell,
@@ -22,7 +21,7 @@ import useKogenQueryClient from "../../../hooks/use-kogen-query-client";
 import useGetAddress from "../../../hooks/use-get-address";
 import useGetPosition from "../../../hooks/use-get-position";
 import { useRecoilState } from "recoil";
-import { externalOpenOrderFormState } from "../../../state/kogen";
+import { openOrderFormState } from "../../../state/kogen";
 import { ORDER_TYPES } from "../../../types/types";
 
 export default function YourPosition() {
@@ -49,23 +48,27 @@ export default function YourPosition() {
     },
   });
 
-  const position_in_base = useGetPosition();
-  const hasPosition = !position_in_base.eq(0);
-  const [, setOpenOrderType] = useRecoilState(externalOpenOrderFormState);
+  const { positionInBase } = useGetPosition();
+  const hasPosition = !positionInBase.eq(0);
+  const [, setFormState] = useRecoilState(openOrderFormState);
+
   const closePosition = useCallback(() => {
-    if (position_in_base.eq(0)) {
+    if (positionInBase.eq(0)) {
       return;
     }
 
-    const oppositeOrderType = position_in_base.gt(0)
+    const oppositeOrderType = positionInBase.gt(0)
       ? ORDER_TYPES.ASK
       : ORDER_TYPES.BID;
 
-    setOpenOrderType({
+    setFormState((x) => ({
+      ...x,
       type: oppositeOrderType,
-      size: toUserToken(position_in_base, config.data?.base_decimals).abs(),
-    });
-  }, [position_in_base, setOpenOrderType, config]);
+      optionSize: toUserToken(positionInBase, config.data?.base_decimals)
+        .abs()
+        .toNumber(),
+    }));
+  }, [positionInBase, setFormState, config]);
 
   return (
     <Fragment>
@@ -79,6 +82,7 @@ export default function YourPosition() {
                 Locked balance
               </TableCell>
               <TableCell align="center">CALL</TableCell>
+              <TableCell align="center"></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -102,14 +106,14 @@ export default function YourPosition() {
               <TableCell align="center">
                 <Chip
                   label={toUserToken(
-                    position_in_base,
+                    positionInBase,
                     config.data?.base_decimals,
                   ).toFixed(3)}
                   variant="outlined"
                   color={
-                    position_in_base.lessThan(0)
+                    positionInBase.lessThan(0)
                       ? "primary"
-                      : position_in_base.equals(0)
+                      : positionInBase.equals(0)
                       ? "default"
                       : "secondary"
                   }
@@ -117,26 +121,24 @@ export default function YourPosition() {
                   sx={{ fontWeight: "bold" }}
                 />
               </TableCell>
+              <TableCell align="center" width="1px">
+                {hasPosition && (
+                  <Button
+                    fullWidth
+                    variant="text"
+                    size="small"
+                    color={positionInBase.lt(0) ? "primary" : "secondary"}
+                    onClick={closePosition}
+                  >
+                    Close
+                  </Button>
+                )}
+              </TableCell>
             </TableRow>
           </TableBody>
         </Table>
       </TableContainer>
       <Divider />
-      {hasPosition && (
-        <Grid container justifyContent={"flex-end"} sx={{ mt: 2 }}>
-          <Grid item xs={12} md="auto">
-            <Button
-              fullWidth
-              variant="text"
-              size="small"
-              color={position_in_base.lt(0) ? "secondary" : "primary"}
-              onClick={closePosition}
-            >
-              Close
-            </Button>
-          </Grid>
-        </Grid>
-      )}
     </Fragment>
   );
 }

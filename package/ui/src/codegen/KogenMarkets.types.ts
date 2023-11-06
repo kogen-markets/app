@@ -31,14 +31,12 @@ export type ExecuteMsg =
     }
   | {
       ask_order: {
-        closing_position?: Uint128 | null;
         price: Uint128;
         quantity: Uint128;
       };
     }
   | {
       bid_order: {
-        closing_position?: Uint128 | null;
         price: Uint128;
         quantity: Uint128;
       };
@@ -51,6 +49,18 @@ export type ExecuteMsg =
     }
   | {
       cancel_ask_order: {
+        price: Uint128;
+        quantity: Uint128;
+      };
+    }
+  | {
+      close_long_position_order: {
+        price: Uint128;
+        quantity: Uint128;
+      };
+    }
+  | {
+      close_short_position_order: {
         price: Uint128;
         quantity: Uint128;
       };
@@ -92,6 +102,7 @@ export interface OrdersResponse {
   price: Uint128;
 }
 export interface OrderBookItem {
+  is_closing: boolean;
   owner: Addr;
   quantity_in_base: Uint128;
 }

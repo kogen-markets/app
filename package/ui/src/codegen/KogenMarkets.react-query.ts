@@ -351,6 +351,70 @@ export function useKogenMarketsExerciseMutation(
     options,
   );
 }
+export interface KogenMarketsCloseShortPositionOrderMutation {
+  client: KogenMarketsClient;
+  msg: {
+    price: Uint128;
+    quantity: Uint128;
+  };
+  args?: {
+    fee?: number | StdFee | "auto";
+    memo?: string;
+    funds?: Coin[];
+  };
+}
+export function useKogenMarketsCloseShortPositionOrderMutation(
+  options?: Omit<
+    UseMutationOptions<
+      ExecuteResult,
+      Error,
+      KogenMarketsCloseShortPositionOrderMutation
+    >,
+    "mutationFn"
+  >,
+) {
+  return useMutation<
+    ExecuteResult,
+    Error,
+    KogenMarketsCloseShortPositionOrderMutation
+  >(
+    ({ client, msg, args: { fee, memo, funds } = {} }) =>
+      client.closeShortPositionOrder(msg, fee, memo, funds),
+    options,
+  );
+}
+export interface KogenMarketsCloseLongPositionOrderMutation {
+  client: KogenMarketsClient;
+  msg: {
+    price: Uint128;
+    quantity: Uint128;
+  };
+  args?: {
+    fee?: number | StdFee | "auto";
+    memo?: string;
+    funds?: Coin[];
+  };
+}
+export function useKogenMarketsCloseLongPositionOrderMutation(
+  options?: Omit<
+    UseMutationOptions<
+      ExecuteResult,
+      Error,
+      KogenMarketsCloseLongPositionOrderMutation
+    >,
+    "mutationFn"
+  >,
+) {
+  return useMutation<
+    ExecuteResult,
+    Error,
+    KogenMarketsCloseLongPositionOrderMutation
+  >(
+    ({ client, msg, args: { fee, memo, funds } = {} }) =>
+      client.closeLongPositionOrder(msg, fee, memo, funds),
+    options,
+  );
+}
 export interface KogenMarketsCancelAskOrderMutation {
   client: KogenMarketsClient;
   msg: {
@@ -410,7 +474,6 @@ export function useKogenMarketsCancelBidOrderMutation(
 export interface KogenMarketsBidOrderMutation {
   client: KogenMarketsClient;
   msg: {
-    closingPosition?: Uint128;
     price: Uint128;
     quantity: Uint128;
   };
@@ -435,7 +498,6 @@ export function useKogenMarketsBidOrderMutation(
 export interface KogenMarketsAskOrderMutation {
   client: KogenMarketsClient;
   msg: {
-    closingPosition?: Uint128;
     price: Uint128;
     quantity: Uint128;
   };
