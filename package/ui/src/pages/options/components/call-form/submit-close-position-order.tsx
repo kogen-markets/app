@@ -107,7 +107,12 @@ export default function SubmitClosePositionOrder({
                 formState.optionSize,
                 config.base_decimals,
               ).toFixed(0),
-              funds: [],
+              funds: [
+                {
+                  amount: collateral.amountBase,
+                  denom: collateral.denom,
+                },
+              ],
             });
 
             setSnackbar({
