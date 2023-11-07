@@ -11,7 +11,7 @@ import { pythServiceState } from "../../../state/cosmos";
 import { useKogenMarketsConfigQuery } from "../../../codegen/KogenMarkets.react-query";
 import Decimal from "decimal.js";
 import { useExerciseCallOptionMutation } from "../tx";
-import WithWallet from "../../../components/with-wallet";
+import WithWalletConnect from "../../../components/with-wallet";
 import useKogenQueryClient from "../../../hooks/use-kogen-query-client";
 
 export const expiryPriceValidator = Joi.number().prefs({ convert: true });
@@ -98,7 +98,7 @@ export default function Exercise() {
           ),
         }}
       />
-      <WithWallet WalletButtonProps={{ fullWidth: true, variant: "text" }}>
+      <WithWalletConnect WalletButtonProps={{ fullWidth: true, variant: "text" }}>
         <Button
           variant="text"
           size="large"
@@ -134,7 +134,7 @@ export default function Exercise() {
             "Exercise option"
           )}
         </Button>
-      </WithWallet>
+      </WithWalletConnect>
     </Fragment>
   );
 }

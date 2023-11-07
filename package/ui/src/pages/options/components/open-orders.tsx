@@ -30,6 +30,7 @@ import { useCancelOrderMutation } from "../tx";
 import { snackbarState } from "../../../state/snackbar";
 import { ORDER_TYPE, ORDER_TYPES } from "../../../types/types";
 import useGetAddress from "../../../hooks/use-get-address";
+import { WithWallet } from "../../../components/with-wallet";
 
 export default function OpenOrders() {
   const kogenClient = useKogenQueryClient();
@@ -51,6 +52,7 @@ export default function OpenOrders() {
     options: {
       staleTime: 1000,
       suspense: true,
+      enabled: Boolean(address),
     },
   });
 
@@ -62,6 +64,7 @@ export default function OpenOrders() {
     options: {
       staleTime: 1000,
       suspense: true,
+      enabled: Boolean(address),
     },
   });
 
@@ -185,44 +188,54 @@ export default function OpenOrders() {
 
   return (
     <Fragment>
-      <Typography variant="caption">Open orders</Typography>
-
-      <TableContainer component={Box}>
-        <Table sx={{ width: "100%" }} aria-label="simple table">
-          <TableHead>
-            <TableRow>
-              <TableCell align="center" width={"auto"}></TableCell>
-              <TableCell align="left">
-                Price ({config.data?.quote_symbol})
-              </TableCell>
-              <TableCell align="center">
-                Size ({config.data?.base_symbol})
-              </TableCell>
-              <TableCell align="center">Value</TableCell>
-              <TableCell align="right" width={"1%"}></TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {config.data && (
-              <Fragment>
-                <OrdersTableBody
-                  config={config.data}
-                  orders={asks.data}
-                  type={ORDER_TYPES.ASK}
-                  color="primary"
-                />
-                <OrdersTableBody
-                  config={config.data}
-                  orders={bids.data}
-                  type={ORDER_TYPES.BID}
-                  color="secondary"
-                />
-              </Fragment>
-            )}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      <Divider />
+      <Typography variant="caption">Your open orders</Typography>
+      <WithWallet>
+        {[
+          <Fragment key="with-wallet">
+            <TableContainer component={Box}>
+              <Table sx={{ width: "100%" }} aria-label="simple table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell align="center" width={"auto"}></TableCell>
+                    <TableCell align="left">
+                      Price ({config.data?.quote_symbol})
+                    </TableCell>
+                    <TableCell align="center">
+                      Size ({config.data?.base_symbol})
+                    </TableCell>
+                    <TableCell align="center">Value</TableCell>
+                    <TableCell align="right" width={"1%"}></TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  <Fragment>
+                    <OrdersTableBody
+                      config={config.data!}
+                      orders={asks.data}
+                      type={ORDER_TYPES.ASK}
+                      color="primary"
+                    />
+                    <OrdersTableBody
+                      config={config.data!}
+                      orders={bids.data}
+                      type={ORDER_TYPES.BID}
+                      color="secondary"
+                    />
+                  </Fragment>
+                </TableBody>
+              </Table>
+            </TableContainer>
+            <Divider />
+          </Fragment>,
+          <Fragment key="without-wallet">
+            <Box sx={{ p: 3, textAlign: "center" }}>
+              <Typography variant="body1">
+                Connect your wallet to see your open orders
+              </Typography>
+            </Box>
+          </Fragment>,
+        ]}
+      </WithWallet>
     </Fragment>
   );
 }

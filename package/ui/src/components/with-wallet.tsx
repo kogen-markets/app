@@ -6,20 +6,32 @@ import WalletButton from "./wallet-button";
 import { ButtonProps } from "@mui/material";
 import { metamaskAddressState } from "../state/injective";
 
-export default function WithWallet({
+export function WithWallet({ children }: { children: React.ReactNode[] }) {
+  const chain = useRecoilValue(chainState);
+  const { isWalletConnected } = useChain(chain.chain_name);
+  const metamaskAddress = useRecoilValue(metamaskAddressState);
+
+  if (!isWalletConnected && !metamaskAddress) {
+    return children[1];
+  } else {
+    console.log(isWalletConnected, metamaskAddress);
+    return <Fragment>{children[0]}</Fragment>;
+  }
+}
+
+export default function WithWalletConnect({
   children,
   WalletButtonProps,
 }: {
   children?: React.ReactNode;
   WalletButtonProps?: ButtonProps;
 }) {
-  const chain = useRecoilValue(chainState);
-  const { isWalletConnected } = useChain(chain.chain_name);
-  const metamaskAddress = useRecoilValue(metamaskAddressState);
-
-  if (!isWalletConnected && !metamaskAddress) {
-    return <WalletButton ButtonProps={WalletButtonProps} />;
-  } else {
-    return <Fragment>{children}</Fragment>;
-  }
+  return (
+    <WithWallet>
+      {[
+        children,
+        <WalletButton key="wallet-button" ButtonProps={WalletButtonProps} />,
+      ]}
+    </WithWallet>
+  );
 }

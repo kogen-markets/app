@@ -18,7 +18,7 @@ import {
   useKogenMarketsBidsQuery,
   useKogenMarketsConfigQuery,
 } from "../../../codegen/KogenMarkets.react-query";
-import WithWallet from "../../../components/with-wallet";
+import WithWalletConnect from "../../../components/with-wallet";
 import useKogenQueryClient from "../../../hooks/use-kogen-query-client";
 import useGetAddress from "../../../hooks/use-get-address";
 import { openOrderFormState } from "../../../state/kogen";
@@ -236,7 +236,7 @@ export default function CallForm() {
               )}
             </Grid>
             <Grid item xs={12} md={6}>
-              <WithWallet
+              <WithWalletConnect
                 WalletButtonProps={{
                   color: isBid ? "secondary" : "primary",
                   size: "large",
@@ -248,7 +248,7 @@ export default function CallForm() {
                 ) : (
                   <SubmitClosePositionOrder config={configData} />
                 )}
-              </WithWallet>
+              </WithWalletConnect>
             </Grid>
           </Grid>
         )}
