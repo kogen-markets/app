@@ -6,7 +6,7 @@ import { useRecoilState } from "recoil";
 
 import { MemoTextField } from "../../../../components/memo-textfield";
 import useFormValidation from "../../../../hooks/use-form-validation";
-import { OpenOrderForm, openOrderFormState } from "../../../../state/kogen";
+import { openOrderFormState } from "../../../../state/kogen";
 import useOnChange from "../../../../hooks/use-on-change";
 import { ORDER_TYPES } from "../../../../types/types";
 import { Config } from "../../../../codegen/KogenMarkets.types";

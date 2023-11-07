@@ -114,7 +114,7 @@ export default function CallForm() {
     },
   });
   const isOpenOrderInOppositeDirection = Boolean(
-    isBid ? asks.data?.length : bids.data?.length,
+    Boolean(address) && (isBid ? asks.data?.length : bids.data?.length),
   );
 
   const { positionInBase, positionInUserRelativeToTheType } = useGetPosition();

@@ -7,6 +7,7 @@ import { getCollateralSize } from "../../../../lib/token";
 import { ORDER_TYPES } from "../../../../types/types";
 import useGetPosition from "../../../../hooks/use-get-position";
 import { Config } from "../../../../codegen/KogenMarkets.types";
+import Decimal from "decimal.js";
 
 export default function PriceAndCollateral({ config }: { config: Config }) {
   const formState = useRecoilValue(openOrderFormState);
@@ -49,7 +50,11 @@ export default function PriceAndCollateral({ config }: { config: Config }) {
                   >
                     <span>Option price:</span>
                     <span>
-                      {collateral.optionAmount.toFixed(2)} {collateral?.symbol}
+                      {collateral.optionAmount.toFixed(
+                        config.quote_decimals -
+                          new Decimal(config.min_tick_quote).log(10).toNumber(),
+                      )}{" "}
+                      {collateral?.symbol}
                     </span>
                   </Typography>
                 )}{" "}
@@ -63,7 +68,11 @@ export default function PriceAndCollateral({ config }: { config: Config }) {
                 >
                   <span>Collateral: </span>
                   <span>
-                    {collateral?.strikeAmount.toFixed(2)} {collateral?.symbol}
+                    {collateral?.strikeAmount.toFixed(
+                      config.quote_decimals -
+                        new Decimal(config.min_tick_quote).log(10).toNumber(),
+                    )}{" "}
+                    {collateral?.symbol}
                   </span>
                 </Typography>
                 {collateral?.closingSize.gt(0) && (
