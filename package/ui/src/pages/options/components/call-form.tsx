@@ -8,7 +8,7 @@ import {
   Grid,
   Typography,
 } from "@mui/material";
-import { Fragment, useMemo, useRef } from "react";
+import { Fragment, useCallback, useMemo, useRef } from "react";
 import { useRecoilState } from "recoil";
 import Joi from "joi";
 import { ORDER_TYPES } from "../../../types/types";
@@ -35,12 +35,24 @@ import PriceAndCollateral from "./call-form/final-price";
 import Balance from "./call-form/balance";
 import SubmitOpenOrder from "./call-form/submit-open-order";
 import SubmitClosePositionOrder from "./call-form/submit-close-position-order";
+import useCustomEventListener, {
+  GLOBAL_CUSTOM_EVENTS,
+} from "../../../hooks/use-event-listener";
 
 export const optionSizeValidator = Joi.number().label("Option size");
 export const optionPriceValidator = Joi.number().label("Price").greater(0);
 
 export default function CallForm() {
   const callFormRef = useRef<HTMLInputElement>(null);
+  useCustomEventListener(
+    GLOBAL_CUSTOM_EVENTS.SCROLL_CALL_FORM_INTO_VIEW,
+    useCallback(() => {
+      callFormRef.current?.scrollIntoView({
+        behavior: "smooth",
+      });
+    }, []),
+  );
+
   const kogenClient = useKogenQueryClient();
   const config = useKogenMarketsConfigQuery({
     client: kogenClient,
@@ -120,7 +132,12 @@ export default function CallForm() {
 
   return (
     <Fragment>
-      <Typography variant="caption" ref={callFormRef}>
+      <Typography
+        variant="caption"
+        ref={callFormRef}
+        // scroll into view offset
+        sx={{ mt: "-30px", pt: "30px" }}
+      >
         Order type
       </Typography>
       <ButtonGroup variant="outlined" aria-label="call option" fullWidth>

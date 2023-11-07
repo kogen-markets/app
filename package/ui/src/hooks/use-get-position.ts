@@ -31,6 +31,7 @@ export default function useGetPosition() {
     options: {
       enabled: Boolean(address),
       staleTime: 10000,
+      refetchInterval: 10000,
       suspense: true,
     },
   });
@@ -55,6 +56,16 @@ export default function useGetPosition() {
     return new Decimal(position.data?.position_in_base || 0);
   }, [position]);
 
+  const positionInBaseOnlyCollateralClosing = useMemo(() => {
+    if (!position.data) {
+      return new Decimal(0);
+    }
+
+    return new Decimal(
+      position.data?.position_closing_in_orderbook_in_base || 0,
+    );
+  }, [position]);
+
   const positionInUser = useMemo(
     () => toUserToken(positionInBase, config.data?.base_decimals),
     [positionInBase, config],
@@ -73,6 +84,7 @@ export default function useGetPosition() {
   return {
     positionInBase,
     positionInBaseWithoutCollateralClosing,
+    positionInBaseOnlyCollateralClosing,
     positionInUser,
     positionInUserRelativeToTheType,
   };

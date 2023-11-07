@@ -23,6 +23,10 @@ import useGetPosition from "../../../hooks/use-get-position";
 import { useRecoilState } from "recoil";
 import { openOrderFormState } from "../../../state/kogen";
 import { ORDER_TYPES } from "../../../types/types";
+import {
+  GLOBAL_CUSTOM_EVENTS,
+  dispatch,
+} from "../../../hooks/use-event-listener";
 
 export default function YourPosition() {
   const kogenClient = useKogenQueryClient();
@@ -48,8 +52,11 @@ export default function YourPosition() {
     },
   });
 
-  const { positionInBase, positionInBaseWithoutCollateralClosing } =
-    useGetPosition();
+  const {
+    positionInBase,
+    positionInBaseWithoutCollateralClosing,
+    positionInBaseOnlyCollateralClosing,
+  } = useGetPosition();
   const hasPosition = !positionInBase.eq(0);
   const [, setFormState] = useRecoilState(openOrderFormState);
 
@@ -69,6 +76,8 @@ export default function YourPosition() {
         .abs()
         .toNumber(),
     }));
+
+    dispatch(GLOBAL_CUSTOM_EVENTS.SCROLL_CALL_FORM_INTO_VIEW);
   }, [positionInBase, setFormState, config]);
 
   return (
@@ -133,6 +142,15 @@ export default function YourPosition() {
                   >
                     Close
                   </Button>
+                )}
+                {!positionInBaseOnlyCollateralClosing.eq(0) && (
+                  <Typography variant="caption">
+                    {toUserToken(
+                      positionInBaseOnlyCollateralClosing,
+                      config.data?.base_decimals,
+                    ).toFixed(3)}{" "}
+                    used as collateral
+                  </Typography>
                 )}
               </TableCell>
             </TableRow>
