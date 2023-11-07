@@ -99,6 +99,7 @@ export default function CallForm() {
       sender: address,
     },
     options: {
+      staleTime: 1000,
       suspense: true,
     },
   });
@@ -108,6 +109,7 @@ export default function CallForm() {
       sender: address,
     },
     options: {
+      staleTime: 1000,
       suspense: true,
     },
   });

@@ -49,6 +49,7 @@ export default function OpenOrders() {
       sender: address,
     },
     options: {
+      staleTime: 1000,
       suspense: true,
     },
   });
@@ -59,6 +60,7 @@ export default function OpenOrders() {
       sender: address,
     },
     options: {
+      staleTime: 1000,
       suspense: true,
     },
   });

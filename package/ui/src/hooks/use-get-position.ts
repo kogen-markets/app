@@ -30,7 +30,7 @@ export default function useGetPosition() {
     },
     options: {
       enabled: Boolean(address),
-      staleTime: 10000,
+      staleTime: 1000,
       refetchInterval: 10000,
       suspense: true,
     },

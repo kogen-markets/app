@@ -96,7 +96,7 @@ export default function Orderbook() {
     client: kogenClient,
     args: {},
     options: {
-      staleTime: 10000,
+      staleTime: 1000,
       refetchInterval: 10000,
       suspense: true,
     },
