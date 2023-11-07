@@ -61,7 +61,7 @@ export default function PriceAndCollateral({ config }: { config: Config }) {
                     gap: 2,
                   }}
                 >
-                  <span>Strike price collateral: </span>
+                  <span>Collateral: </span>
                   <span>
                     {collateral?.strikeAmount.toFixed(2)} {collateral?.symbol}
                   </span>

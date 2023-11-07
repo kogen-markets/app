@@ -14,6 +14,9 @@ import {
 import useKogenQueryClient from "../../../hooks/use-kogen-query-client";
 import { toUserToken } from "../../../lib/token";
 import useGetAddress from "../../../hooks/use-get-address";
+import { useRecoilState } from "recoil";
+import { openOrderFormState } from "../../../state/kogen";
+import { ORDER_TYPE, ORDER_TYPES, oppositeType } from "../../../types/types";
 
 function sumOrders(orders?: OrderBookItem[]) {
   if (!orders) {
@@ -36,10 +39,10 @@ function includesSender(orders: OrderBookItem[], sender?: string) {
 
 function OrdersItem({
   order,
-  color,
+  type,
 }: {
   order: OrdersResponse;
-  color: "primary" | "secondary";
+  type: ORDER_TYPE;
 }) {
   const address = useGetAddress();
 
@@ -51,6 +54,16 @@ function OrdersItem({
       suspense: true,
     },
   });
+
+  const [, setFormState] = useRecoilState(openOrderFormState);
+
+  const priceInUser = toUserToken(order.price, config.data?.quote_decimals);
+  const sizeInUser = toUserToken(
+    sumOrders(order.orders),
+    config.data?.base_decimals,
+  );
+
+  const color = type === ORDER_TYPES.ASK ? "primary" : "secondary";
 
   return (
     <Fragment>
@@ -74,16 +87,31 @@ function OrdersItem({
             sx={{ fontSize: "12px" }}
           />
         )}
-        <span style={{ flexGrow: 1, textAlign: "right" }}>
-          {toUserToken(order.price, config.data?.quote_decimals)
-            .toFixed(3)
-            .toString()}
+        <span
+          style={{ flexGrow: 1, textAlign: "right", cursor: "pointer" }}
+          onClick={() => {
+            setFormState((x) => ({
+              ...x,
+              optionPrice: priceInUser.toNumber(),
+              type: oppositeType(type),
+            }));
+          }}
+        >
+          {priceInUser.toFixed(3)}
         </span>
       </Typography>
-      <Typography variant="body1" sx={{ fontFamily: "monospace" }}>
-        {toUserToken(sumOrders(order.orders), config.data?.base_decimals)
-          .toFixed(3)
-          .toString()}
+      <Typography
+        variant="body1"
+        sx={{ fontFamily: "monospace", cursor: "pointer" }}
+        onClick={() => {
+          setFormState((x) => ({
+            ...x,
+            optionSize: sizeInUser.toNumber(),
+            type: oppositeType(type),
+          }));
+        }}
+      >
+        {sizeInUser.toFixed(3)}
       </Typography>
     </Fragment>
   );
@@ -151,7 +179,7 @@ export default function Orderbook() {
               key={ix}
               sx={{ display: "flex", justifyContent: "space-between" }}
             >
-              <OrdersItem order={ask} color="primary" />
+              <OrdersItem order={ask} type={ORDER_TYPES.ASK} />
             </Box>
           ))}
         </Box>
@@ -165,7 +193,7 @@ export default function Orderbook() {
                 justifyContent: "space-between",
               }}
             >
-              <OrdersItem order={bid} color="secondary" />
+              <OrdersItem order={bid} type={ORDER_TYPES.BID} />
             </Box>
           ))}
         </Box>
