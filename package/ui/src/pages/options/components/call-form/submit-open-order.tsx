@@ -94,6 +94,8 @@ export default function SubmitOpenOrder({ config }: { config: Config }) {
             setSnackbar({
               message: "Error creating order: " + e.message,
             });
+
+            throw e.originalMessage;
           }
         }}
         color={isBid ? "secondary" : "primary"}

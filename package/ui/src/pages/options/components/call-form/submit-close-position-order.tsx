@@ -129,6 +129,8 @@ export default function SubmitClosePositionOrder({
             setSnackbar({
               message: "Error creating close position order: " + e.message,
             });
+
+            throw e.originalMessage;
           }
         }}
         color={isBid ? "secondary" : "primary"}

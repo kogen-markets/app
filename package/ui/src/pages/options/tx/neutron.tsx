@@ -64,11 +64,11 @@ export function useNeutronCallOptionMutation() {
     },
     {
       onSuccess: () => {
-        queryClient.invalidateQueries([{ method: "asks" }]);
-        queryClient.invalidateQueries([{ method: "bids" }]);
-        queryClient.invalidateQueries([{ method: "locked_amount" }]);
-        queryClient.invalidateQueries([{ method: "position" }]);
-        queryClient.invalidateQueries(["get_balance", address]);
+        queryClient.refetchQueries([{ method: "asks" }]);
+        queryClient.refetchQueries([{ method: "bids" }]);
+        queryClient.refetchQueries([{ method: "locked_amount" }]);
+        queryClient.refetchQueries([{ method: "position" }]);
+        queryClient.refetchQueries(["get_balance", address]);
       },
     },
   );
@@ -132,11 +132,11 @@ export function useNeutronClosePositionOrderMutation() {
     },
 
     onSuccess: () => {
-      queryClient.invalidateQueries([{ method: "asks" }]);
-      queryClient.invalidateQueries([{ method: "bids" }]);
-      queryClient.invalidateQueries([{ method: "locked_amount" }]);
-      queryClient.invalidateQueries([{ method: "position" }]);
-      queryClient.invalidateQueries(["get_balance", address]);
+      queryClient.refetchQueries([{ method: "asks" }]);
+      queryClient.refetchQueries([{ method: "bids" }]);
+      queryClient.refetchQueries([{ method: "locked_amount" }]);
+      queryClient.refetchQueries([{ method: "position" }]);
+      queryClient.refetchQueries(["get_balance", address]);
     },
   });
 }
@@ -182,11 +182,11 @@ export function useNeutronExerciseCallOptionMutation() {
     },
     {
       onSuccess: () => {
-        queryClient.invalidateQueries([{ method: "asks" }]);
-        queryClient.invalidateQueries([{ method: "bids" }]);
-        queryClient.invalidateQueries([{ method: "locked_amount" }]);
-        queryClient.invalidateQueries([{ method: "position" }]);
-        queryClient.invalidateQueries(["get_balance", address]);
+        queryClient.refetchQueries([{ method: "asks" }]);
+        queryClient.refetchQueries([{ method: "bids" }]);
+        queryClient.refetchQueries([{ method: "locked_amount" }]);
+        queryClient.refetchQueries([{ method: "position" }]);
+        queryClient.refetchQueries(["get_balance", address]);
       },
     },
   );
@@ -243,11 +243,11 @@ export function useNeutronCancelOrderMutation() {
     },
     {
       onSuccess: () => {
-        queryClient.invalidateQueries([{ method: "asks" }]);
-        queryClient.invalidateQueries([{ method: "bids" }]);
-        queryClient.invalidateQueries([{ method: "locked_amount" }]);
-        queryClient.invalidateQueries([{ method: "position" }]);
-        queryClient.invalidateQueries(["get_balance", address]);
+        queryClient.refetchQueries([{ method: "asks" }]);
+        queryClient.refetchQueries([{ method: "bids" }]);
+        queryClient.refetchQueries([{ method: "locked_amount" }]);
+        queryClient.refetchQueries([{ method: "position" }]);
+        queryClient.refetchQueries(["get_balance", address]);
       },
     },
   );

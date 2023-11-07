@@ -51,7 +51,13 @@ const router = createBrowserRouter([
 ]);
 
 const queryClient = new QueryClient({
-  defaultOptions: {},
+  defaultOptions: {
+    mutations: {
+      onError: (e: any) => {
+        rollbar.error(e);
+      },
+    },
+  },
 });
 
 function App() {
