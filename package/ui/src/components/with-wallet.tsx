@@ -14,7 +14,6 @@ export function WithWallet({ children }: { children: React.ReactNode[] }) {
   if (!isWalletConnected && !metamaskAddress) {
     return children[1];
   } else {
-    console.log(isWalletConnected, metamaskAddress);
     return <Fragment>{children[0]}</Fragment>;
   }
 }

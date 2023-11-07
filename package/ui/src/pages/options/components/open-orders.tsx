@@ -87,7 +87,7 @@ export default function OpenOrders() {
     return (
       <Fragment>
         {orders?.map((orderItem) => {
-          return orderItem.orders.map((o) => {
+          return orderItem.orders.map((o, ix) => {
             const collateral = getCollateralSize(
               type,
               config,
@@ -97,7 +97,7 @@ export default function OpenOrders() {
 
             return (
               <TableRow
-                key={orderItem.price}
+                key={orderItem.price + "_" + ix}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
                 <TableCell align="right">

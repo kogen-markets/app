@@ -98,7 +98,9 @@ export default function Exercise() {
           ),
         }}
       />
-      <WithWalletConnect WalletButtonProps={{ fullWidth: true, variant: "text" }}>
+      <WithWalletConnect
+        WalletButtonProps={{ fullWidth: true, variant: "text" }}
+      >
         <Button
           variant="text"
           size="large"
@@ -117,7 +119,6 @@ export default function Exercise() {
                 message: `Option successfully exercised`,
               });
             } catch (e: any) {
-              console.log(e);
               setSnackbar({
                 message: "Error exercising the contract: " + e.message,
               });

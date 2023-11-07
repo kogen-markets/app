@@ -289,7 +289,6 @@ export function useInjectiveCancelOrderMutation() {
             quantity,
           },
         },
-        funds: [],
       });
 
       const msgBroadcaster = new MsgBroadcaster({
