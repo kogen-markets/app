@@ -23,7 +23,7 @@
     "@emotion/styled": "11.11.0",
     "@injectivelabs/networks": "1.14.2",
     "@injectivelabs/sdk-ts": "1.14.2",
-    "@injectivelabs/ts-types": "1.14.1",
+    "@injectivelabs/ts-types": "1.14.2",
     "@injectivelabs/utils": "1.14.1",
     "@injectivelabs/wallet-ts": "1.14.1",
     "@keplr-wallet/types": "0.12.40",
