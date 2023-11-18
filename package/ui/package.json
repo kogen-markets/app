@@ -24,7 +24,7 @@
     "@injectivelabs/networks": "1.14.3",
     "@injectivelabs/sdk-ts": "1.14.3",
     "@injectivelabs/ts-types": "1.14.3",
-    "@injectivelabs/utils": "1.14.2",
+    "@injectivelabs/utils": "1.14.3",
     "@injectivelabs/wallet-ts": "1.14.2",
     "@keplr-wallet/types": "0.12.43",
     "@mui/icons-material": "5.14.18",
