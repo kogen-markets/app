@@ -21,7 +21,8 @@ import Loading from "./components/loading";
 import { ENABLED_TESTNETS, TESTNET } from "./lib/config";
 
 const WalletDialog = lazy(() => import("./components/wallet-dialog"));
-const OptionsPage = lazy(() => import("./pages/options/index"));
+const CallOptionPage = lazy(() => import("./pages/options/call-index"));
+const PutOptionPage = lazy(() => import("./pages/options/put-index"));
 
 const router = createBrowserRouter([
   {
@@ -43,7 +44,8 @@ const router = createBrowserRouter([
         ),
         children: [
           { index: true, element: <Navigate to="call" replace /> },
-          { path: "call", element: <OptionsPage /> },
+          { path: "call", element: <CallOptionPage /> },
+          { path: "put", element: <PutOptionPage /> },
         ],
       },
     ],

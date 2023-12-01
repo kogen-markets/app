@@ -96,13 +96,46 @@ export default function Menu() {
               <ListItemButton
                 component={Link}
                 to={"/options"}
-                selected={getPathnameElements(1) === "/options"}
+                selected={getPathnameElements(2) === "/options"}
               >
                 <ListItemIcon>
                   <AltRouteIcon />
                 </ListItemIcon>
                 <ListItemText primary="Options" />
               </ListItemButton>
+              <List
+                component="div"
+                disablePadding
+                sx={{
+                  "&& .Mui-selected": {
+                    backgroundColor: (theme) =>
+                      alpha(theme.palette.secondary.main, 0.2),
+                  },
+                  "& .MuiListItemButton-root": {
+                    ml: 4,
+                    pl: 4,
+                    "&:hover": {
+                      backgroundColor: (theme) =>
+                        alpha(theme.palette.secondary.main, 0.2) + "!important",
+                    },
+                  },
+                }}
+              >
+                <ListItemButton
+                  component={Link}
+                  to={"/options/call"}
+                  selected={getPathnameElements(2) === "/options/call"}
+                >
+                  <ListItemText primary="Calls" />
+                </ListItemButton>
+                <ListItemButton
+                  component={Link}
+                  to={"/options/put"}
+                  selected={getPathnameElements(2) === "/options/put"}
+                >
+                  <ListItemText primary="Puts" />
+                </ListItemButton>
+              </List>
               <ListItemButton
                 component={Link}
                 to={"/help"}

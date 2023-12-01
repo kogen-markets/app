@@ -12,7 +12,7 @@ export default function Options() {
   return (
     <Fragment>
       <Typography variant="h4" component="h2" sx={{ mb: { xs: 1, lg: 4 } }}>
-        Call Options
+        Put Option
       </Typography>
 
       <Grid

@@ -44,8 +44,8 @@ export default function ChainSelect({
           }}
         >
           <MenuItem value={TESTNET.INJECTIVE}>Injective (Testnet)</MenuItem>
-          <MenuItem value={TESTNET.NEUTRON}>Neutron (Testnet)</MenuItem>
-          <MenuItem value={TESTNET.ARCHWAY}>Archway (Testnet)</MenuItem>
+          {/* <MenuItem value={TESTNET.NEUTRON}>Neutron (Testnet)</MenuItem>
+          <MenuItem value={TESTNET.ARCHWAY}>Archway (Testnet)</MenuItem> */}
         </Select>
       </FormControl>
     </Fragment>
