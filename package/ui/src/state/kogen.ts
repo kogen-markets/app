@@ -42,18 +42,31 @@ export const darkModeState = atom<"dark" | "light" | "auto">({
   effects: [localStorageEffect(LOCAL_STORAGE_DARK_MODE)],
 });
 
+export const callOptionTypeState = atom<"put" | "call">({
+  key: "callOptionTypeState",
+  default: "call",
+});
+
 export const contractsState = selector<string>({
   key: "contractsState",
   get: async ({ get }) => {
     const chain = get(chainState);
-    if (chain.chain_id === TESTNET.INJECTIVE) {
-      return import.meta.env.VITE_CONTRACT_INJECTIVE_TESTNET;
-    }
-    if (chain.chain_id === TESTNET.NEUTRON) {
-      return import.meta.env.VITE_CONTRACT_NEUTRON_TESTNET;
-    }
-    if (chain.chain_id === TESTNET.ARCHWAY) {
-      return import.meta.env.VITE_CONTRACT_ARCHWAY_TESTNET;
+    const callOptionType = get(callOptionTypeState);
+
+    if (callOptionType === "call") {
+      if (chain.chain_id === TESTNET.INJECTIVE) {
+        return import.meta.env.VITE_CONTRACT_INJECTIVE_TESTNET;
+      }
+      if (chain.chain_id === TESTNET.NEUTRON) {
+        return import.meta.env.VITE_CONTRACT_NEUTRON_TESTNET;
+      }
+      if (chain.chain_id === TESTNET.ARCHWAY) {
+        return import.meta.env.VITE_CONTRACT_ARCHWAY_TESTNET;
+      }
+    } else if (callOptionType === "put") {
+      if (chain.chain_id === TESTNET.INJECTIVE) {
+        return import.meta.env.VITE_CONTRACT_PUT_INJECTIVE_TESTNET;
+      }
     }
 
     throw new Error("unknown chain_id " + chain.chain_id);

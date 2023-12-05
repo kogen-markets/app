@@ -29,7 +29,7 @@ export type Collateral = {
   closingAmount: Decimal;
 };
 
-export function getCollateralSize(
+export function getCallCollateralSize(
   type: ORDER_TYPE,
   config: Config,
   optionSize: Decimal.Value,
@@ -84,6 +84,75 @@ export function getCollateralSize(
       symbol: config.base_symbol,
       optionAmount: null,
       strikeAmount: toUserToken(totalAmountInBase, config.base_decimals),
+      closingSize: closingSize,
+      closingAmount: closingSize,
+    };
+  }
+
+  throw new Error("unknown type " + type);
+}
+
+export function getPutCollateralSize(
+  type: ORDER_TYPE,
+  config: Config,
+  optionSize: Decimal.Value,
+  optionPrice: Decimal.Value,
+  closingSize: Decimal = new Decimal(0),
+): Collateral | null {
+  closingSize = Decimal.min(optionSize, closingSize);
+  const optionSizeWithoutClosing = new Decimal(optionSize).sub(closingSize);
+
+  if (type === ORDER_TYPES.BID) {
+    const optionAmountInBase = toBaseToken(
+      optionPrice,
+      config.quote_decimals,
+    ).mul(optionSize);
+
+    const totalAmountInBase = optionAmountInBase;
+    const closingAmountInBase = new Decimal(config.strike_price_in_quote).mul(
+      closingSize,
+    );
+
+    if (totalAmountInBase.isNaN()) {
+      return null;
+    }
+
+    return {
+      amountBase: totalAmountInBase.toFixed(0),
+      amount: toUserToken(totalAmountInBase, config.quote_decimals),
+      denom: config.quote_denom,
+      symbol: config.quote_symbol,
+      optionAmount: toUserToken(optionAmountInBase, config.quote_decimals),
+      strikeAmount: new Decimal(0),
+      closingSize: closingSize,
+      closingAmount: toUserToken(closingAmountInBase, config.quote_decimals),
+    };
+  } else if (type === ORDER_TYPES.ASK) {
+    const strikeAmountInBase = new Decimal(config.strike_price_in_quote).mul(
+      optionSizeWithoutClosing,
+    );
+    const totalAmountInBase = strikeAmountInBase;
+
+    // const closingAmountInBase = new Decimal(config.strike_price_in_quote).mul(
+    //   closingSize,
+    // );
+
+    // const totalAmountInBase = toBaseToken(
+    //   optionSizeWithoutClosing,
+    //   config.base_decimals,
+    // );
+
+    if (totalAmountInBase.isNaN()) {
+      return null;
+    }
+
+    return {
+      amountBase: totalAmountInBase.toFixed(0),
+      amount: toUserToken(totalAmountInBase, config.quote_decimals),
+      denom: config.quote_denom,
+      symbol: config.quote_symbol,
+      optionAmount: null,
+      strikeAmount: toUserToken(totalAmountInBase, config.quote_decimals),
       closingSize: closingSize,
       closingAmount: closingSize,
     };

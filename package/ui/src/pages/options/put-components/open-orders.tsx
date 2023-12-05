@@ -20,7 +20,7 @@ import {
   useKogenMarketsBidsQuery,
   useKogenMarketsAsksQuery,
 } from "../../../codegen/KogenMarkets.react-query";
-import { getCallCollateralSize, toUserToken } from "../../../lib/token";
+import { getPutCollateralSize, toUserToken } from "../../../lib/token";
 import useKogenQueryClient from "../../../hooks/use-kogen-query-client";
 import {
   ArrayOfOrdersResponse,
@@ -88,7 +88,7 @@ export default function OpenOrders() {
       <Fragment>
         {orders?.map((orderItem) => {
           return orderItem.orders.map((o, ix) => {
-            const collateral = getCallCollateralSize(
+            const collateral = getPutCollateralSize(
               type,
               config,
               toUserToken(o.quantity_in_base, config.base_decimals),

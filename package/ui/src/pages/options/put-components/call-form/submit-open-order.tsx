@@ -3,7 +3,7 @@ import { Fragment, useMemo } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { snackbarState } from "../../../../state/snackbar";
 import { Config } from "../../../../codegen/KogenMarkets.types";
-import { getCallCollateralSize, toBaseToken } from "../../../../lib/token";
+import { getPutCollateralSize, toBaseToken } from "../../../../lib/token";
 import { openOrderFormState } from "../../../../state/kogen";
 import { useCallOptionMutation } from "../../tx";
 import { useOptionSizeValidatorWithConfig } from "./option-size-input";
@@ -20,7 +20,7 @@ export default function SubmitOpenOrder({ config }: { config: Config }) {
     useCallOptionMutation();
 
   const collateral = useMemo(() => {
-    return getCallCollateralSize(
+    return getPutCollateralSize(
       formState.type,
       config,
       formState.optionSize,

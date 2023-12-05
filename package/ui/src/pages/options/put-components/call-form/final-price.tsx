@@ -3,7 +3,7 @@ import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import { Fragment, useMemo } from "react";
 import { useRecoilValue } from "recoil";
 import { openOrderFormState } from "../../../../state/kogen";
-import { getCallCollateralSize } from "../../../../lib/token";
+import { getPutCollateralSize } from "../../../../lib/token";
 import { ORDER_TYPES } from "../../../../types/types";
 import useGetPosition from "../../../../hooks/use-get-position";
 import { Config } from "../../../../codegen/KogenMarkets.types";
@@ -15,7 +15,7 @@ export default function PriceAndCollateral({ config }: { config: Config }) {
   const { positionInUserRelativeToTheType } = useGetPosition();
 
   const collateral = useMemo(() => {
-    return getCallCollateralSize(
+    return getPutCollateralSize(
       formState.type,
       config,
       formState.optionSize,

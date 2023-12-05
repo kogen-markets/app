@@ -3,7 +3,7 @@ import { Fragment, useMemo } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { snackbarState } from "../../../../state/snackbar";
 import { Config } from "../../../../codegen/KogenMarkets.types";
-import { getCollateralSize, toBaseToken } from "../../../../lib/token";
+import { getCallCollateralSize, toBaseToken } from "../../../../lib/token";
 import { openOrderFormState } from "../../../../state/kogen";
 import { useClosePositionOrderMutation } from "../../tx";
 import { useOptionSizeValidatorWithConfig } from "./option-size-input";
@@ -51,7 +51,7 @@ export default function SubmitClosePositionOrder({
   }, [positionInUserRelativeToTheType, formState]);
 
   const collateral = useMemo(() => {
-    return getCollateralSize(
+    return getCallCollateralSize(
       formState.type,
       config,
       formState.optionSize,

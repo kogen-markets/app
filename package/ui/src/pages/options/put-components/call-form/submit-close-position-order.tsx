@@ -3,32 +3,67 @@ import { Fragment, useMemo } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { snackbarState } from "../../../../state/snackbar";
 import { Config } from "../../../../codegen/KogenMarkets.types";
-import { getCallCollateralSize, toBaseToken } from "../../../../lib/token";
+import { getPutCollateralSize, toBaseToken } from "../../../../lib/token";
 import { openOrderFormState } from "../../../../state/kogen";
-import { useCallOptionMutation } from "../../tx";
+import { useClosePositionOrderMutation } from "../../tx";
 import { useOptionSizeValidatorWithConfig } from "./option-size-input";
 import { useOptionPriceValidatorWithConfig } from "./option-price-input";
 import Joi from "joi";
 import { ORDER_TYPES } from "../../../../types/types";
+import useGetPosition from "../../../../hooks/use-get-position";
 
-export default function SubmitOpenOrder({ config }: { config: Config }) {
+export default function SubmitClosePositionOrder({
+  config,
+}: {
+  config: Config;
+}) {
   const [, setSnackbar] = useRecoilState(snackbarState);
   const formState = useRecoilValue(openOrderFormState);
   const isBid = useMemo(() => formState.type === ORDER_TYPES.BID, [formState]);
 
-  const { mutateAsync: createOrder, isLoading: isCreateOrderLoading } =
-    useCallOptionMutation();
+  const { mutateAsync: closePositionOrder, isLoading: isClosePositionLoading } =
+    useClosePositionOrderMutation();
+
+  const { positionInUserRelativeToTheType } = useGetPosition();
+
+  const isOrderSizeLessThanPosition = useMemo(() => {
+    if (positionInUserRelativeToTheType.eq(0)) {
+      return false;
+    }
+
+    return positionInUserRelativeToTheType.gt(formState.optionSize);
+  }, [positionInUserRelativeToTheType, formState]);
+
+  const isOrderSizeEqPosition = useMemo(() => {
+    if (positionInUserRelativeToTheType.eq(0)) {
+      return false;
+    }
+
+    return positionInUserRelativeToTheType.eq(formState.optionSize);
+  }, [positionInUserRelativeToTheType, formState]);
+
+  const isOrderSizeGreaterThanPosition = useMemo(() => {
+    if (positionInUserRelativeToTheType.eq(0)) {
+      return false;
+    }
+
+    return positionInUserRelativeToTheType.lt(formState.optionSize);
+  }, [positionInUserRelativeToTheType, formState]);
 
   const collateral = useMemo(() => {
-    return getCallCollateralSize(
+    return getPutCollateralSize(
       formState.type,
       config,
       formState.optionSize,
       formState.optionPrice,
+      positionInUserRelativeToTheType,
     );
-  }, [formState, config]);
+  }, [formState, config, positionInUserRelativeToTheType]);
 
-  const optionSizeValidatorConfig = useOptionSizeValidatorWithConfig(config);
+  const optionSizeValidatorConfig = useOptionSizeValidatorWithConfig(
+    config,
+    positionInUserRelativeToTheType,
+  );
   const optionPriceValidatorConfig = useOptionPriceValidatorWithConfig(config);
 
   const callFormValidatorConfig = useMemo(
@@ -62,7 +97,7 @@ export default function SubmitOpenOrder({ config }: { config: Config }) {
           }
 
           try {
-            await createOrder({
+            await closePositionOrder({
               type: formState.type,
               price: toBaseToken(
                 formState.optionPrice,
@@ -81,7 +116,7 @@ export default function SubmitOpenOrder({ config }: { config: Config }) {
             });
 
             setSnackbar({
-              message: `Order successfully created`,
+              message: `Close position order successfully created`,
             });
           } catch (e: any) {
             if (e?.originalMessage?.includes("Matched own position")) {
@@ -92,16 +127,16 @@ export default function SubmitOpenOrder({ config }: { config: Config }) {
               return;
             }
             setSnackbar({
-              message: "Error creating order: " + e.message,
+              message: "Error creating close position order: " + e.message,
             });
 
             throw e.originalMessage;
           }
         }}
         color={isBid ? "secondary" : "primary"}
-        disabled={isCreateOrderLoading || !orderCreateEnabled}
+        disabled={isClosePositionLoading || !orderCreateEnabled}
       >
-        {isCreateOrderLoading ? (
+        {isClosePositionLoading ? (
           <Fragment>
             <CircularProgress
               size={15}
@@ -111,7 +146,12 @@ export default function SubmitOpenOrder({ config }: { config: Config }) {
             Loading
           </Fragment>
         ) : (
-          `Create ${isBid ? "bid" : "ask"} order`
+          <Fragment>
+            {isOrderSizeEqPosition && `Close ${isBid ? "ask" : "bid"} position`}
+            {isOrderSizeLessThanPosition &&
+              `Reduce ${isBid ? "ask" : "bid"} position`}
+            {isOrderSizeGreaterThanPosition && `Cannot close position`}
+          </Fragment>
         )}
       </Button>
     </Fragment>
