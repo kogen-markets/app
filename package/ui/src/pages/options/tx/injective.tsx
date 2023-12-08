@@ -187,7 +187,7 @@ export function useInjectiveExerciseCallOptionMutation() {
   const contracts = useRecoilValue(contractsState);
   return useMutation(
     ["exercise"],
-    async ({ expiry_price }: { expiry_price: string }) => {
+    async ({ expiry_price }: { expiry_price?: string }) => {
       let walletStrategy: WalletStrategy;
       if (metamaskWalletStrategy) {
         walletStrategy = metamaskWalletStrategy;

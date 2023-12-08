@@ -10,7 +10,7 @@ import { useTheme } from "@emotion/react";
 import { pythServiceState } from "../../../state/cosmos";
 import { useKogenMarketsConfigQuery } from "../../../codegen/KogenMarkets.react-query";
 import Decimal from "decimal.js";
-import { useExerciseCallOptionMutation } from "../tx";
+import { useExerciseOptionMutation } from "../tx";
 import WithWalletConnect from "../../../components/with-wallet";
 import useKogenQueryClient from "../../../hooks/use-kogen-query-client";
 
@@ -27,7 +27,7 @@ export default function Exercise() {
   });
 
   const { mutateAsync: exercise, isLoading: isExerciseLoading } =
-    useExerciseCallOptionMutation();
+    useExerciseOptionMutation();
 
   const [, setSnackbar] = useRecoilState(snackbarState);
 
@@ -108,12 +108,13 @@ export default function Exercise() {
           sx={{}}
           onClick={async () => {
             setSnackbar({ message: "Please confirm the transaction" });
+            const providedExpiryPrice: string | undefined = expiryPrice
+              ? toBaseToken(expiryPrice, config.data?.quote_decimals).toFixed(0)
+              : undefined;
+
             try {
               await exercise({
-                expiry_price: toBaseToken(
-                  expiryPrice,
-                  config.data?.quote_decimals,
-                ).toFixed(0),
+                expiry_price: providedExpiryPrice,
               });
               setSnackbar({
                 message: `Option successfully exercised`,
@@ -125,7 +126,7 @@ export default function Exercise() {
             }
           }}
           color={"secondary"}
-          disabled={isExerciseLoading || !expiryPrice}
+          disabled={isExerciseLoading}
         >
           {isExerciseLoading ? (
             <Fragment>

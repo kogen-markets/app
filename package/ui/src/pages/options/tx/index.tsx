@@ -4,13 +4,13 @@ import {
   useInjectiveCallOptionMutation,
   useInjectiveCancelOrderMutation,
   useInjectiveClosePositionOrderMutation,
-  useInjectiveExerciseCallOptionMutation,
+  useInjectiveExerciseCallOptionMutation as useInjectiveExerciseOptionMutation,
 } from "./injective";
 import {
   useNeutronCallOptionMutation,
   useNeutronCancelOrderMutation,
   useNeutronClosePositionOrderMutation,
-  useNeutronExerciseCallOptionMutation,
+  useNeutronExerciseCallOptionMutation as useNeutronExerciseOptionMutation,
 } from "./neutron";
 import { TESTNET } from "../../../lib/config";
 
@@ -50,10 +50,10 @@ export function useClosePositionOrderMutation() {
   throw new Error("unimplemented");
 }
 
-export function useExerciseCallOptionMutation() {
+export function useExerciseOptionMutation() {
   const chain = useRecoilValue(chainState);
-  const inj = useInjectiveExerciseCallOptionMutation();
-  const neutron = useNeutronExerciseCallOptionMutation();
+  const inj = useInjectiveExerciseOptionMutation();
+  const neutron = useNeutronExerciseOptionMutation();
 
   if (chain.chain_id === TESTNET.INJECTIVE) {
     return inj;

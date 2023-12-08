@@ -149,7 +149,7 @@ export function useNeutronExerciseCallOptionMutation() {
   const contracts = useRecoilValue(contractsState);
   return useMutation(
     ["exercise"],
-    async ({ expiry_price }: { expiry_price: string }) => {
+    async ({ expiry_price }: { expiry_price?: string }) => {
       if (!address) {
         return null;
       }
