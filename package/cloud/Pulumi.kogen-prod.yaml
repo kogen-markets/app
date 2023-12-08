@@ -11,8 +11,8 @@ config:
   pulumi:env_files: []
   webapp:API_DOMAIN: app.kogen.markets
   webapp:ROUTE53_ZONE_NAME: kogen.markets
-  kogen:VITE_CONTRACT_INJECTIVE_TESTNET: inj1snaj2u2x4jzln2rfzy3akkx6daz739xn3y6ueh
+  kogen:VITE_CONTRACT_INJECTIVE_TESTNET: inj1gs4fh46pejr750v88yqcyssdpr8g60hqwjgs5w
   kogen:VITE_CONTRACT_NEUTRON_TESTNET: neutron1wcfy2mrs2tr055p5jp6sjk4llnetl7lck6q8u2xthazhu4ut8wrsp69yep
   kogen:VITE_CONTRACT_ARCHWAY_TESTNET: archway1z0hzpy4p7nfhmykzk0h4axj9y8dc0ljc2wxtn82twfevrjt4vg4s42y0a3
 
-  kogen:VITE_CONTRACT_PUT_INJECTIVE_TESTNET: inj1x6pm5nctfrglr8l5369dvvn4dn8k4nrhl7l9ee
+  kogen:VITE_CONTRACT_PUT_INJECTIVE_TESTNET: inj1wps6ahmhu33xvhxjqrk2du7h85vmr6jmtpkgu3
