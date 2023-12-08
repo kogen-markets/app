@@ -17,7 +17,7 @@ export default function SubmitClosePositionOrder({
   isCall,
 }: {
   config: Config;
-  isCall: true;
+  isCall: boolean;
 }) {
   const [, setSnackbar] = useRecoilState(snackbarState);
   const formState = useRecoilValue(openOrderFormState);

@@ -18,6 +18,36 @@ export function addressShort(address: string | null) {
   return `${address.slice(0, 9)}...${address.slice(-4)}`;
 }
 
+export type FEE_RESULT = {
+  feeAmount: Decimal;
+  amountWithoutFee: Decimal;
+};
+
+export function calculateFeePerc(config: Config): Decimal {
+  const feePerc = new Decimal(config.fee_perc)
+    .div(config.fee_perc_denom)
+    .mul(100);
+
+  return feePerc;
+}
+
+export function calculateFee(
+  amountInBase: Decimal,
+  config: Config,
+): FEE_RESULT {
+  const feeAmount = new Decimal(config.fee_perc)
+    .div(config.fee_perc_denom)
+    .mul(amountInBase)
+    .floor();
+
+  const amountWithoutFee = amountInBase.minus(feeAmount);
+
+  return {
+    feeAmount,
+    amountWithoutFee,
+  };
+}
+
 export type Collateral = {
   amountBase: string;
   amount: Decimal;

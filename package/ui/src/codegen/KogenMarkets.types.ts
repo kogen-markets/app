@@ -14,6 +14,8 @@ export interface InstantiateMsg {
   base_denom: string;
   base_symbol: string;
   expiry: Timestamp;
+  fee_perc: Uint128;
+  fee_perc_denom?: Uint128 | null;
   min_order_quantity: Uint128;
   min_tick_base: Uint128;
   min_tick_quote: Uint128;
@@ -27,7 +29,9 @@ export interface InstantiateMsg {
 }
 export type ExecuteMsg =
   | {
-      update_config: {};
+      update_config: {
+        new_config: Config;
+      };
     }
   | {
       ask_order: {
@@ -70,6 +74,25 @@ export type ExecuteMsg =
         expiry_price?: Uint128 | null;
       };
     };
+export interface Config {
+  base_decimals: number;
+  base_denom: string;
+  base_symbol: string;
+  expiry: Timestamp;
+  fee_perc: Uint128;
+  fee_perc_denom: Uint128;
+  instantiated: Timestamp;
+  min_order_quantity_in_base: Uint128;
+  min_tick_base: Uint128;
+  min_tick_quote: Uint128;
+  owner: Addr;
+  pyth_base_price_feed: Identifier;
+  pyth_contract_addr: Addr;
+  quote_decimals: number;
+  quote_denom: string;
+  quote_symbol: string;
+  strike_price_in_quote: Uint128;
+}
 export type QueryMsg =
   | {
       config: {};
@@ -105,23 +128,6 @@ export interface OrderBookItem {
   is_closing: boolean;
   owner: Addr;
   quantity_in_base: Uint128;
-}
-export interface Config {
-  base_decimals: number;
-  base_denom: string;
-  base_symbol: string;
-  expiry: Timestamp;
-  instantiated: Timestamp;
-  min_order_quantity_in_base: Uint128;
-  min_tick_base: Uint128;
-  min_tick_quote: Uint128;
-  owner: Addr;
-  pyth_base_price_feed: Identifier;
-  pyth_contract_addr: Addr;
-  quote_decimals: number;
-  quote_denom: string;
-  quote_symbol: string;
-  strike_price_in_quote: Uint128;
 }
 export interface LockedAmountResponse {
   locked_base_denom: Uint128;

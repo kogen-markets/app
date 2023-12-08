@@ -12,7 +12,7 @@ import { Fragment, useCallback, useMemo, useRef } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import Joi from "joi";
 import { ORDER_TYPES } from "../../../types/types";
-import { getCollateralSize } from "../../../lib/token";
+import { calculateFeePerc, getCollateralSize } from "../../../lib/token";
 import {
   useKogenMarketsAsksQuery,
   useKogenMarketsBidsQuery,
@@ -38,6 +38,7 @@ import SubmitClosePositionOrder from "./call-form/submit-close-position-order";
 import useCustomEventListener, {
   GLOBAL_CUSTOM_EVENTS,
 } from "../../../hooks/use-event-listener";
+import Decimal from "decimal.js";
 
 export const optionSizeValidator = Joi.number().label("Option size");
 export const optionPriceValidator = Joi.number().label("Price").greater(0);
@@ -231,9 +232,14 @@ export default function CallForm() {
           >
             <Grid item xs={12} md={6}>
               {collateral?.closingSize.gt(0) && (
-                <Typography variant="caption">
+                <Typography variant="caption" display="block">
                   You are closing {collateral?.closingSize.toFixed(3)}{" "}
                   {positionInBase.gt(0) ? "long" : "short"} position
+                </Typography>
+              )}
+              {orderCreateEnabled && (
+                <Typography variant="caption" display="block">
+                  Protocol fee {calculateFeePerc(configData).toFixed(2)}%
                 </Typography>
               )}
             </Grid>

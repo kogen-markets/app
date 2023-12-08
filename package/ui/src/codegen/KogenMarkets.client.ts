@@ -18,11 +18,11 @@ import {
   Identifier,
   InstantiateMsg,
   ExecuteMsg,
+  Config,
   QueryMsg,
   ArrayOfOrdersResponse,
   OrdersResponse,
   OrderBookItem,
-  Config,
   LockedAmountResponse,
   PositionResponse,
   Int128,
@@ -120,6 +120,11 @@ export interface KogenMarketsInterface extends KogenMarketsReadOnlyInterface {
   contractAddress: string;
   sender: string;
   updateConfig: (
+    {
+      newConfig,
+    }: {
+      newConfig: Config;
+    },
     fee?: number | StdFee | "auto",
     memo?: string,
     _funds?: Coin[],
@@ -235,6 +240,11 @@ export class KogenMarketsClient
   }
 
   updateConfig = async (
+    {
+      newConfig,
+    }: {
+      newConfig: Config;
+    },
     fee: number | StdFee | "auto" = "auto",
     memo?: string,
     _funds?: Coin[],
@@ -243,7 +253,9 @@ export class KogenMarketsClient
       this.sender,
       this.contractAddress,
       {
-        update_config: {},
+        update_config: {
+          new_config: newConfig,
+        },
       },
       fee,
       memo,

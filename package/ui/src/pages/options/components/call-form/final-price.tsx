@@ -41,30 +41,11 @@ export default function PriceAndCollateral({
       >
         You need to deposit {collateral?.amount?.toPrecision(4)}{" "}
         {collateral?.symbol}
-        {isBid && (
-          <Tooltip
-            enterTouchDelay={0}
-            title={
-              <Fragment>
-                {collateral?.optionAmount && (
-                  <Typography
-                    variant="caption"
-                    sx={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      gap: 2,
-                    }}
-                  >
-                    <span>Option price:</span>
-                    <span>
-                      {collateral.optionAmount.toFixed(
-                        config.quote_decimals -
-                          new Decimal(config.min_tick_quote).log(10).toNumber(),
-                      )}{" "}
-                      {collateral?.symbol}
-                    </span>
-                  </Typography>
-                )}{" "}
+        <Tooltip
+          enterTouchDelay={0}
+          title={
+            <Fragment>
+              {collateral?.optionAmount && (
                 <Typography
                   variant="caption"
                   sx={{
@@ -73,34 +54,51 @@ export default function PriceAndCollateral({
                     gap: 2,
                   }}
                 >
-                  <span>Collateral: </span>
+                  <span>Option price:</span>
                   <span>
-                    {collateral?.strikeAmount.toFixed(
+                    {collateral.optionAmount.toFixed(
                       config.quote_decimals -
                         new Decimal(config.min_tick_quote).log(10).toNumber(),
                     )}{" "}
                     {collateral?.symbol}
                   </span>
                 </Typography>
-                {collateral?.closingSize.gt(0) && (
-                  <Typography
-                    variant="caption"
-                    sx={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      gap: 2,
-                    }}
-                  >
-                    <span>Closing {isBid ? "ask" : "bid"} position: </span>
-                    <span>{collateral?.closingSize.toFixed(3)}</span>
-                  </Typography>
-                )}
-              </Fragment>
-            }
-          >
-            <HelpOutlineIcon fontSize="small" />
-          </Tooltip>
-        )}
+              )}{" "}
+              <Typography
+                variant="caption"
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  gap: 2,
+                }}
+              >
+                <span>Collateral: </span>
+                <span>
+                  {collateral?.strikeAmount.toFixed(
+                    config.quote_decimals -
+                      new Decimal(config.min_tick_quote).log(10).toNumber(),
+                  )}{" "}
+                  {collateral?.symbol}
+                </span>
+              </Typography>
+              {collateral?.closingSize.gt(0) && (
+                <Typography
+                  variant="caption"
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    gap: 2,
+                  }}
+                >
+                  <span>Closing {isBid ? "ask" : "bid"} position: </span>
+                  <span>{collateral?.closingSize.toFixed(3)}</span>
+                </Typography>
+              )}
+            </Fragment>
+          }
+        >
+          <HelpOutlineIcon fontSize="small" />
+        </Tooltip>
       </Typography>
     </Fragment>
   );

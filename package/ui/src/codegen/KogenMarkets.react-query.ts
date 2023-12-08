@@ -20,11 +20,11 @@ import {
   Identifier,
   InstantiateMsg,
   ExecuteMsg,
+  Config,
   QueryMsg,
   ArrayOfOrdersResponse,
   OrdersResponse,
   OrderBookItem,
-  Config,
   LockedAmountResponse,
   PositionResponse,
   Int128,
@@ -522,6 +522,9 @@ export function useKogenMarketsAskOrderMutation(
 }
 export interface KogenMarketsUpdateConfigMutation {
   client: KogenMarketsClient;
+  msg: {
+    newConfig: Config;
+  };
   args?: {
     fee?: number | StdFee | "auto";
     memo?: string;
@@ -535,8 +538,8 @@ export function useKogenMarketsUpdateConfigMutation(
   >,
 ) {
   return useMutation<ExecuteResult, Error, KogenMarketsUpdateConfigMutation>(
-    ({ client, args: { fee, memo, funds } = {} }) =>
-      client.updateConfig(fee, memo, funds),
+    ({ client, msg, args: { fee, memo, funds } = {} }) =>
+      client.updateConfig(msg, fee, memo, funds),
     options,
   );
 }
