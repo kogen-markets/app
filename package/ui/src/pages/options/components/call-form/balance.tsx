@@ -7,20 +7,27 @@ import { ORDER_TYPES } from "../../../../types/types";
 import useGetBalance from "../../../../hooks/use-get-balance";
 import { Config } from "../../../../codegen/KogenMarkets.types";
 
-export default function Balance({ config }: { config: Config }) {
+export default function Balance({
+  config,
+  isCall,
+}: {
+  config: Config;
+  isCall: boolean;
+}) {
   const formState = useRecoilValue(openOrderFormState);
   const isBid = useMemo(() => formState.type === ORDER_TYPES.BID, [formState]);
+  const showQuoteDenomBalance = isBid || !isCall;
 
   const balance = useGetBalance(
     undefined,
-    isBid ? config.quote_denom : config.base_denom,
+    showQuoteDenomBalance ? config.quote_denom : config.base_denom,
   );
 
   return (
     <Fragment>
       <Typography variant="caption">Available</Typography>
       {balance.data?.amount &&
-        (isBid ? (
+        (showQuoteDenomBalance ? (
           <Typography variant="body1" sx={{ mb: 2 }}>
             {toUserToken(balance.data.amount, config.quote_decimals).toFixed(2)}
             {config.quote_symbol}

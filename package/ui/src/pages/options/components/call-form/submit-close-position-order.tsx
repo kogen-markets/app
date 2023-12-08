@@ -3,7 +3,7 @@ import { Fragment, useMemo } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { snackbarState } from "../../../../state/snackbar";
 import { Config } from "../../../../codegen/KogenMarkets.types";
-import { getCallCollateralSize, toBaseToken } from "../../../../lib/token";
+import { getCollateralSize, toBaseToken } from "../../../../lib/token";
 import { openOrderFormState } from "../../../../state/kogen";
 import { useClosePositionOrderMutation } from "../../tx";
 import { useOptionSizeValidatorWithConfig } from "./option-size-input";
@@ -14,8 +14,10 @@ import useGetPosition from "../../../../hooks/use-get-position";
 
 export default function SubmitClosePositionOrder({
   config,
+  isCall,
 }: {
   config: Config;
+  isCall: true;
 }) {
   const [, setSnackbar] = useRecoilState(snackbarState);
   const formState = useRecoilValue(openOrderFormState);
@@ -51,14 +53,15 @@ export default function SubmitClosePositionOrder({
   }, [positionInUserRelativeToTheType, formState]);
 
   const collateral = useMemo(() => {
-    return getCallCollateralSize(
+    return getCollateralSize(
+      isCall,
       formState.type,
       config,
       formState.optionSize,
       formState.optionPrice,
       positionInUserRelativeToTheType,
     );
-  }, [formState, config, positionInUserRelativeToTheType]);
+  }, [isCall, formState, config, positionInUserRelativeToTheType]);
 
   const optionSizeValidatorConfig = useOptionSizeValidatorWithConfig(
     config,

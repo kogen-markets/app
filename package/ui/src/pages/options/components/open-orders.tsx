@@ -14,13 +14,13 @@ import {
   Typography,
 } from "@mui/material";
 import { Fragment } from "react";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import {
   useKogenMarketsConfigQuery,
   useKogenMarketsBidsQuery,
   useKogenMarketsAsksQuery,
 } from "../../../codegen/KogenMarkets.react-query";
-import { getCallCollateralSize, toUserToken } from "../../../lib/token";
+import { getCollateralSize, toUserToken } from "../../../lib/token";
 import useKogenQueryClient from "../../../hooks/use-kogen-query-client";
 import {
   ArrayOfOrdersResponse,
@@ -31,10 +31,12 @@ import { snackbarState } from "../../../state/snackbar";
 import { ORDER_TYPE, ORDER_TYPES } from "../../../types/types";
 import useGetAddress from "../../../hooks/use-get-address";
 import { WithWallet } from "../../../components/with-wallet";
+import { isCallOptionState } from "../../../state/kogen";
 
 export default function OpenOrders() {
   const kogenClient = useKogenQueryClient();
   const address = useGetAddress();
+  const isCall = useRecoilValue(isCallOptionState);
 
   const config = useKogenMarketsConfigQuery({
     client: kogenClient,
@@ -88,7 +90,8 @@ export default function OpenOrders() {
       <Fragment>
         {orders?.map((orderItem) => {
           return orderItem.orders.map((o, ix) => {
-            const collateral = getCallCollateralSize(
+            const collateral = getCollateralSize(
+              isCall,
               type,
               config,
               toUserToken(o.quantity_in_base, config.base_decimals),

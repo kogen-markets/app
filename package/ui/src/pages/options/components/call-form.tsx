@@ -9,10 +9,10 @@ import {
   Typography,
 } from "@mui/material";
 import { Fragment, useCallback, useMemo, useRef } from "react";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import Joi from "joi";
 import { ORDER_TYPES } from "../../../types/types";
-import { getCallCollateralSize } from "../../../lib/token";
+import { getCollateralSize } from "../../../lib/token";
 import {
   useKogenMarketsAsksQuery,
   useKogenMarketsBidsQuery,
@@ -21,7 +21,7 @@ import {
 import WithWalletConnect from "../../../components/with-wallet";
 import useKogenQueryClient from "../../../hooks/use-kogen-query-client";
 import useGetAddress from "../../../hooks/use-get-address";
-import { openOrderFormState } from "../../../state/kogen";
+import { isCallOptionState, openOrderFormState } from "../../../state/kogen";
 import useGetPosition from "../../../hooks/use-get-position";
 import StrikePrice from "./call-form/strike-price";
 import Expiry from "./call-form/expiry";
@@ -117,20 +117,22 @@ export default function CallForm() {
     Boolean(address) && (isBid ? asks.data?.length : bids.data?.length),
   );
 
+  const isCall = useRecoilValue(isCallOptionState);
   const { positionInBase, positionInUserRelativeToTheType } = useGetPosition();
   const collateral = useMemo(() => {
     if (!config.data) {
       return null;
     }
 
-    return getCallCollateralSize(
+    return getCollateralSize(
+      isCall,
       formState.type,
       config.data,
       formState.optionSize,
       formState.optionPrice,
       positionInUserRelativeToTheType,
     );
-  }, [formState, config.data, positionInUserRelativeToTheType]);
+  }, [isCall, formState, config.data, positionInUserRelativeToTheType]);
 
   return (
     <Fragment>
@@ -197,12 +199,12 @@ export default function CallForm() {
       <Box>
         <Typography variant="caption">Price and collateral</Typography>
         {Boolean(collateral?.amount) && orderCreateEnabled && (
-          <PriceAndCollateral config={configData} />
+          <PriceAndCollateral isCall={isCall} config={configData} />
         )}
       </Box>
 
       <Box>
-        <Balance config={configData} />
+        <Balance isCall={isCall} config={configData} />
       </Box>
 
       <Divider sx={{ mt: 2 }} />
@@ -244,9 +246,12 @@ export default function CallForm() {
                 }}
               >
                 {positionInUserRelativeToTheType.eq(0) ? (
-                  <SubmitOpenOrder config={configData} />
+                  <SubmitOpenOrder isCall={isCall} config={configData} />
                 ) : (
-                  <SubmitClosePositionOrder config={configData} />
+                  <SubmitClosePositionOrder
+                    isCall={isCall}
+                    config={configData}
+                  />
                 )}
               </WithWalletConnect>
             </Grid>

@@ -29,6 +29,33 @@ export type Collateral = {
   closingAmount: Decimal;
 };
 
+export function getCollateralSize(
+  isCall: boolean,
+  type: ORDER_TYPE,
+  config: Config,
+  optionSize: Decimal.Value,
+  optionPrice: Decimal.Value,
+  closingSize: Decimal = new Decimal(0),
+): Collateral | null {
+  if (isCall) {
+    return getCallCollateralSize(
+      type,
+      config,
+      optionSize,
+      optionPrice,
+      closingSize,
+    );
+  } else {
+    return getPutCollateralSize(
+      type,
+      config,
+      optionSize,
+      optionPrice,
+      closingSize,
+    );
+  }
+}
+
 export function getCallCollateralSize(
   type: ORDER_TYPE,
   config: Config,

@@ -3,26 +3,33 @@ import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import { Fragment, useMemo } from "react";
 import { useRecoilValue } from "recoil";
 import { openOrderFormState } from "../../../../state/kogen";
-import { getCallCollateralSize } from "../../../../lib/token";
+import { getCollateralSize } from "../../../../lib/token";
 import { ORDER_TYPES } from "../../../../types/types";
 import useGetPosition from "../../../../hooks/use-get-position";
 import { Config } from "../../../../codegen/KogenMarkets.types";
 import Decimal from "decimal.js";
 
-export default function PriceAndCollateral({ config }: { config: Config }) {
+export default function PriceAndCollateral({
+  config,
+  isCall,
+}: {
+  config: Config;
+  isCall: boolean;
+}) {
   const formState = useRecoilValue(openOrderFormState);
 
   const { positionInUserRelativeToTheType } = useGetPosition();
 
   const collateral = useMemo(() => {
-    return getCallCollateralSize(
+    return getCollateralSize(
+      isCall,
       formState.type,
       config,
       formState.optionSize,
       formState.optionPrice,
       positionInUserRelativeToTheType,
     );
-  }, [formState, config, positionInUserRelativeToTheType]);
+  }, [isCall, formState, config, positionInUserRelativeToTheType]);
 
   const isBid = useMemo(() => formState.type === ORDER_TYPES.BID, [formState]);
 

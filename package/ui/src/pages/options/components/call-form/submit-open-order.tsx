@@ -3,7 +3,7 @@ import { Fragment, useMemo } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { snackbarState } from "../../../../state/snackbar";
 import { Config } from "../../../../codegen/KogenMarkets.types";
-import { getCallCollateralSize, toBaseToken } from "../../../../lib/token";
+import { getCollateralSize, toBaseToken } from "../../../../lib/token";
 import { openOrderFormState } from "../../../../state/kogen";
 import { useCallOptionMutation } from "../../tx";
 import { useOptionSizeValidatorWithConfig } from "./option-size-input";
@@ -11,7 +11,13 @@ import { useOptionPriceValidatorWithConfig } from "./option-price-input";
 import Joi from "joi";
 import { ORDER_TYPES } from "../../../../types/types";
 
-export default function SubmitOpenOrder({ config }: { config: Config }) {
+export default function SubmitOpenOrder({
+  config,
+  isCall,
+}: {
+  config: Config;
+  isCall: boolean;
+}) {
   const [, setSnackbar] = useRecoilState(snackbarState);
   const formState = useRecoilValue(openOrderFormState);
   const isBid = useMemo(() => formState.type === ORDER_TYPES.BID, [formState]);
@@ -20,13 +26,14 @@ export default function SubmitOpenOrder({ config }: { config: Config }) {
     useCallOptionMutation();
 
   const collateral = useMemo(() => {
-    return getCallCollateralSize(
+    return getCollateralSize(
+      isCall,
       formState.type,
       config,
       formState.optionSize,
       formState.optionPrice,
     );
-  }, [formState, config]);
+  }, [isCall, formState, config]);
 
   const optionSizeValidatorConfig = useOptionSizeValidatorWithConfig(config);
   const optionPriceValidatorConfig = useOptionPriceValidatorWithConfig(config);

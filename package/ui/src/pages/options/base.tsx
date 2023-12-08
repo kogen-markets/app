@@ -1,25 +1,21 @@
 import { Box, Card, Grid, Paper, Typography } from "@mui/material";
-
-import { Fragment, Suspense, useEffect } from "react";
-import CallForm from "./put-components/call-form";
+import { useRecoilValue } from "recoil";
+import { Fragment, Suspense } from "react";
+import CallForm from "./components/call-form";
 import Orderbook from "./components/order-book";
 import Loading from "../../components/loading";
 import YourPosition from "./components/your-position";
-import Exercise from "./put-components/exercise";
-import OpenOrders from "./put-components/open-orders";
-import { useSetRecoilState } from "recoil";
-import { callOptionTypeState } from "../../state/kogen";
+import Exercise from "./components/exercise";
+import OpenOrders from "./components/open-orders";
+import { optionTypeState } from "../../state/kogen";
 
-export default function Options() {
-  const setCallOptionType = useSetRecoilState(callOptionTypeState);
-  useEffect(() => {
-    setCallOptionType("put");
-  }, [setCallOptionType]);
+export function BaseOption() {
+  const optionType = useRecoilValue(optionTypeState);
 
   return (
     <Fragment>
       <Typography variant="h4" component="h2" sx={{ mb: { xs: 1, lg: 4 } }}>
-        Put Option
+        {optionType.toUpperCase()} Option
       </Typography>
 
       <Grid

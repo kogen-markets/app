@@ -21,8 +21,8 @@ import Loading from "./components/loading";
 import { ENABLED_TESTNETS, TESTNET } from "./lib/config";
 
 const WalletDialog = lazy(() => import("./components/wallet-dialog"));
-const CallOptionPage = lazy(() => import("./pages/options/call-index"));
-const PutOptionPage = lazy(() => import("./pages/options/put-index"));
+const CallOptionPage = lazy(() => import("./pages/options/call"));
+const PutOptionPage = lazy(() => import("./pages/options/put"));
 
 const router = createBrowserRouter([
   {
