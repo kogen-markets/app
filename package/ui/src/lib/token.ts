@@ -50,6 +50,7 @@ export function calculateFee(
 
 export type Collateral = {
   amountBase: string;
+  amountWithoutFee: Decimal;
   amount: Decimal;
   denom: string;
   symbol: string;
@@ -125,6 +126,10 @@ export function getCallCollateralSize(
 
     return {
       amountBase: totalAmountInBase.toFixed(0),
+      amountWithoutFee: toUserToken(
+        totalAmountInBase.minus(refundableFeeAmountBase),
+        config.quote_decimals,
+      ),
       amount: toUserToken(totalAmountInBase, config.quote_decimals),
       denom: config.quote_denom,
       symbol: config.quote_symbol,
@@ -149,6 +154,7 @@ export function getCallCollateralSize(
 
     return {
       amountBase: totalAmountInBase.toFixed(0),
+      amountWithoutFee: toUserToken(totalAmountInBase, config.base_decimals),
       amount: toUserToken(totalAmountInBase, config.base_decimals),
       denom: config.base_denom,
       symbol: config.base_symbol,
@@ -195,6 +201,10 @@ export function getPutCollateralSize(
 
     return {
       amountBase: totalAmountInBase.toFixed(0),
+      amountWithoutFee: toUserToken(
+        totalAmountInBase.minus(refundableFeeAmountBase),
+        config.quote_decimals,
+      ),
       amount: toUserToken(totalAmountInBase, config.quote_decimals),
       denom: config.quote_denom,
       symbol: config.quote_symbol,
@@ -219,6 +229,7 @@ export function getPutCollateralSize(
 
     return {
       amountBase: totalAmountInBase.toFixed(0),
+      amountWithoutFee: toUserToken(totalAmountInBase, config.base_decimals),
       amount: toUserToken(totalAmountInBase, config.quote_decimals),
       denom: config.quote_denom,
       symbol: config.quote_symbol,

@@ -39,7 +39,7 @@ export default function PriceAndCollateral({
         variant="body1"
         sx={{ mb: 2, display: "flex", alignItems: "center", gap: 1 }}
       >
-        You need to deposit {collateral?.amount?.toPrecision(4)}{" "}
+        You need to deposit {collateral?.amount?.toFixed(2)}{" "}
         {collateral?.symbol}
         <Tooltip
           enterTouchDelay={0}
@@ -92,7 +92,7 @@ export default function PriceAndCollateral({
                 >
                   <span>Refundable fee: </span>
                   <span>
-                    {collateral?.refundableFeeAmount.toFixed(3)}{" "}
+                    {collateral?.refundableFeeAmount.toFixed(2)}{" "}
                     {config.quote_symbol}
                   </span>
                 </Typography>

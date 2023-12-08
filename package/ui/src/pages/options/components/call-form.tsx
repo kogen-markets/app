@@ -262,8 +262,8 @@ export default function CallForm() {
                               <span>
                                 Fees are paid by the user who submits the
                                 matching order (the “taker”). If your order is
-                                not matching orders, the fee is sent back within
-                                the create order transaction.
+                                not the matching one, the fee is sent back
+                                within the same transaction.
                               </span>
                             </Typography>
                           )}{" "}

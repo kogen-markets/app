@@ -146,7 +146,8 @@ export default function OpenOrders() {
                     }}
                   >
                     <Fragment>
-                      {collateral?.amount.toFixed()} {collateral?.symbol}
+                      {collateral?.amountWithoutFee.toFixed()}{" "}
+                      {collateral?.symbol}
                     </Fragment>
                   </Typography>
                 </TableCell>
@@ -206,7 +207,7 @@ export default function OpenOrders() {
                     <TableCell align="center">
                       Size ({config.data?.base_symbol})
                     </TableCell>
-                    <TableCell align="center">Collateral</TableCell>
+                    <TableCell align="center">Locked collateral</TableCell>
                     <TableCell align="right" width={"1%"}></TableCell>
                   </TableRow>
                 </TableHead>
