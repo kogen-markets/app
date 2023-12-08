@@ -81,6 +81,22 @@ export default function PriceAndCollateral({
                   {collateral?.symbol}
                 </span>
               </Typography>
+              {collateral?.refundableFeeAmount?.gt(0) && (
+                <Typography
+                  variant="caption"
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    gap: 2,
+                  }}
+                >
+                  <span>Refundable fee: </span>
+                  <span>
+                    {collateral?.refundableFeeAmount.toFixed(3)}{" "}
+                    {config.quote_symbol}
+                  </span>
+                </Typography>
+              )}
               {collateral?.closingSize.gt(0) && (
                 <Typography
                   variant="caption"

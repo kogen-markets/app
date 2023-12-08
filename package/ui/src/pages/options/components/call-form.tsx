@@ -6,10 +6,12 @@ import {
   ButtonGroup,
   Divider,
   Grid,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import { Fragment, useCallback, useMemo, useRef } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
+import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import Joi from "joi";
 import { ORDER_TYPES } from "../../../types/types";
 import { calculateFeePerc, getCollateralSize } from "../../../lib/token";
@@ -38,7 +40,6 @@ import SubmitClosePositionOrder from "./call-form/submit-close-position-order";
 import useCustomEventListener, {
   GLOBAL_CUSTOM_EVENTS,
 } from "../../../hooks/use-event-listener";
-import Decimal from "decimal.js";
 
 export const optionSizeValidator = Joi.number().label("Option size");
 export const optionPriceValidator = Joi.number().label("Price").greater(0);
@@ -227,7 +228,7 @@ export default function CallForm() {
           <Grid
             container
             spacing={2}
-            alignItems={"center"}
+            alignItems={"baseline"}
             justifyContent={"space-between"}
           >
             <Grid item xs={12} md={6}>
@@ -238,8 +239,40 @@ export default function CallForm() {
                 </Typography>
               )}
               {orderCreateEnabled && (
-                <Typography variant="caption" display="block">
-                  Protocol fee {calculateFeePerc(configData).toFixed(2)}%
+                <Typography
+                  variant="caption"
+                  display="flex"
+                  alignItems={"center"}
+                >
+                  Protocol fee {calculateFeePerc(configData).toFixed(2)}%{" "}
+                  {collateral?.refundableFeeAmount?.gt(0) && (
+                    <Tooltip
+                      enterTouchDelay={0}
+                      title={
+                        <Fragment>
+                          {collateral?.optionAmount && (
+                            <Typography
+                              variant="caption"
+                              sx={{
+                                display: "flex",
+                                justifyContent: "space-between",
+                                gap: 2,
+                              }}
+                            >
+                              <span>
+                                Fees are paid by the user who submits the
+                                matching order (the “taker”). If your order is
+                                not matching orders, the fee is sent back within
+                                the create order transaction.
+                              </span>
+                            </Typography>
+                          )}{" "}
+                        </Fragment>
+                      }
+                    >
+                      <HelpOutlineIcon sx={{ fontSize: "1em", ml: 0.5 }} />
+                    </Tooltip>
+                  )}
                 </Typography>
               )}
             </Grid>

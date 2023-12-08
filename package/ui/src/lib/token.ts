@@ -57,6 +57,7 @@ export type Collateral = {
   strikeAmount: Decimal;
   closingSize: Decimal;
   closingAmount: Decimal;
+  refundableFeeAmount: Decimal | null;
 };
 
 export function getCollateralSize(
@@ -105,7 +106,15 @@ export function getCallCollateralSize(
     const strikeAmountInBase = new Decimal(config.strike_price_in_quote).mul(
       optionSizeWithoutClosing,
     );
-    const totalAmountInBase = optionAmountInBase.add(strikeAmountInBase);
+    const refundableFeeAmountBase = calculateFee(
+      optionAmountInBase,
+      config,
+    ).feeAmount;
+
+    const totalAmountInBase = optionAmountInBase
+      .add(strikeAmountInBase)
+      .add(refundableFeeAmountBase);
+
     const closingAmountInBase = new Decimal(config.strike_price_in_quote).mul(
       closingSize,
     );
@@ -123,6 +132,10 @@ export function getCallCollateralSize(
       strikeAmount: toUserToken(strikeAmountInBase, config.quote_decimals),
       closingSize: closingSize,
       closingAmount: toUserToken(closingAmountInBase, config.quote_decimals),
+      refundableFeeAmount: toUserToken(
+        refundableFeeAmountBase,
+        config.quote_decimals,
+      ),
     };
   } else if (type === ORDER_TYPES.ASK) {
     const totalAmountInBase = toBaseToken(
@@ -143,6 +156,7 @@ export function getCallCollateralSize(
       strikeAmount: toUserToken(totalAmountInBase, config.base_decimals),
       closingSize: closingSize,
       closingAmount: closingSize,
+      refundableFeeAmount: null,
     };
   }
 
@@ -165,7 +179,12 @@ export function getPutCollateralSize(
       config.quote_decimals,
     ).mul(optionSize);
 
-    const totalAmountInBase = optionAmountInBase;
+    const refundableFeeAmountBase = calculateFee(
+      optionAmountInBase,
+      config,
+    ).feeAmount;
+
+    const totalAmountInBase = optionAmountInBase.add(refundableFeeAmountBase);
     const closingAmountInBase = new Decimal(config.strike_price_in_quote).mul(
       closingSize,
     );
@@ -183,21 +202,16 @@ export function getPutCollateralSize(
       strikeAmount: new Decimal(0),
       closingSize: closingSize,
       closingAmount: toUserToken(closingAmountInBase, config.quote_decimals),
+      refundableFeeAmount: toUserToken(
+        refundableFeeAmountBase,
+        config.quote_decimals,
+      ),
     };
   } else if (type === ORDER_TYPES.ASK) {
     const strikeAmountInBase = new Decimal(config.strike_price_in_quote).mul(
       optionSizeWithoutClosing,
     );
     const totalAmountInBase = strikeAmountInBase;
-
-    // const closingAmountInBase = new Decimal(config.strike_price_in_quote).mul(
-    //   closingSize,
-    // );
-
-    // const totalAmountInBase = toBaseToken(
-    //   optionSizeWithoutClosing,
-    //   config.base_decimals,
-    // );
 
     if (totalAmountInBase.isNaN()) {
       return null;
@@ -212,6 +226,7 @@ export function getPutCollateralSize(
       strikeAmount: toUserToken(totalAmountInBase, config.quote_decimals),
       closingSize: closingSize,
       closingAmount: closingSize,
+      refundableFeeAmount: null,
     };
   }
 
