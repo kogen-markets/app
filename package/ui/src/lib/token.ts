@@ -229,7 +229,7 @@ export function getPutCollateralSize(
 
     return {
       amountBase: totalAmountInBase.toFixed(0),
-      amountWithoutFee: toUserToken(totalAmountInBase, config.base_decimals),
+      amountWithoutFee: toUserToken(totalAmountInBase, config.quote_decimals),
       amount: toUserToken(totalAmountInBase, config.quote_decimals),
       denom: config.quote_denom,
       symbol: config.quote_symbol,
