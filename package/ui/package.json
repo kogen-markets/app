@@ -15,7 +15,7 @@
     "@cosmjs/cosmwasm-stargate": "0.32.1",
     "@cosmjs/encoding": "0.32.1",
     "@cosmos-kit/core": "2.7.10",
-    "@cosmos-kit/cosmostation-extension": "2.5.9",
+    "@cosmos-kit/cosmostation-extension": "2.5.12",
     "@cosmos-kit/keplr-extension": "2.5.10",
     "@cosmos-kit/leap-extension": "2.5.10",
     "@cosmos-kit/react-lite": "2.5.10",
