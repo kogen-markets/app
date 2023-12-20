@@ -1,13 +1,19 @@
 import codegen from "@cosmwasm/ts-codegen";
 
+const contracts = [
+  {
+    name: "kogen-factory",
+    dir: "../../../kogen-contracts/contracts/kogen-factory/schema",
+  },
+  {
+    name: "kogen-markets",
+    dir: "../../../kogen-contracts/packages/kogen/schema",
+  },
+];
+
 codegen
   .default({
-    contracts: [
-      {
-        name: "kogen-markets",
-        dir: "../../../kogen-contracts/schema",
-      },
-    ],
+    contracts,
     outPath: "../ui/src/codegen/",
 
     // options are completely optional ;)

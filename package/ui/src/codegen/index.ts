@@ -4,9 +4,13 @@
  * and run the @cosmwasm/ts-codegen generate command to regenerate this file.
  */
 
-import * as _0 from "./KogenMarkets.types";
-import * as _1 from "./KogenMarkets.client";
-import * as _2 from "./KogenMarkets.react-query";
+import * as _0 from "./KogenFactory.types";
+import * as _1 from "./KogenFactory.client";
+import * as _2 from "./KogenFactory.react-query";
+import * as _3 from "./KogenMarkets.types";
+import * as _4 from "./KogenMarkets.client";
+import * as _5 from "./KogenMarkets.react-query";
 export namespace contracts {
-  export const KogenMarkets = { ..._0, ..._1, ..._2 };
+  export const KogenFactory = { ..._0, ..._1, ..._2 };
+  export const KogenMarkets = { ..._3, ..._4, ..._5 };
 }
