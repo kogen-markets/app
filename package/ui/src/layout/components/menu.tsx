@@ -17,6 +17,8 @@ import { Link, useLocation } from "react-router-dom";
 import ThemeSelector from "../../components/theme-selector";
 import { useTheme } from "@emotion/react";
 import Loading from "../../components/loading";
+import { useRecoilValue } from "recoil";
+import { contractBaseDenomsState } from "../../state/kogen";
 const ChainSelect = lazy(() => import("../../components/chain-select"));
 
 export default function Menu() {
@@ -31,6 +33,8 @@ export default function Menu() {
       .slice(0, 1 + n)
       .join("/");
   }
+
+  const contractBaseDenoms = useRecoilValue(contractBaseDenomsState);
 
   return (
     <Fragment>
@@ -121,6 +125,21 @@ export default function Menu() {
                   },
                 }}
               >
+                {contractBaseDenoms.map((denom) => {
+                  const path = "/options/" + encodeURIComponent(denom.denom);
+
+                  return (
+                    <ListItemButton
+                      key={denom.denom}
+                      component={Link}
+                      to={path}
+                      selected={getPathnameElements(2) === path}
+                    >
+                      <ListItemText primary={denom.symbol} />
+                    </ListItemButton>
+                  );
+                })}
+
                 <ListItemButton
                   component={Link}
                   to={"/options/call"}

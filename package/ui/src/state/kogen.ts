@@ -43,7 +43,7 @@ export const darkModeState = atom<"dark" | "light" | "auto">({
 });
 
 export const optionTypeState = atom<"put" | "call">({
-  key: "callOptionTypeState",
+  key: "optionTypeState",
   default: "call",
 });
 
@@ -81,5 +81,23 @@ export const contractsState = selector<string>({
 
       throw new Error(`unknown chain_id ${chain.chain_id} for the put option`);
     }
+  },
+});
+
+export const contractBaseDenomsState = selector({
+  key: "contractBaseDenomsState",
+  get: ({ get }) => {
+    const chain = get(chainState);
+
+    if (chain.chain_id === TESTNET.INJECTIVE) {
+      return [
+        {
+          symbol: "ATOM",
+          denom: "factory/inj17vytdwqczqz72j65saukplrktd4gyfme5agf6c/atom",
+        },
+      ];
+    }
+
+    throw new Error(`unknown chain_id ${chain.chain_id} for the base denoms`);
   },
 });

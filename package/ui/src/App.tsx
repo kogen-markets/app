@@ -23,6 +23,9 @@ import { ENABLED_TESTNETS, TESTNET } from "./lib/config";
 const WalletDialog = lazy(() => import("./components/wallet-dialog"));
 const CallOptionPage = lazy(() => import("./pages/options/call"));
 const PutOptionPage = lazy(() => import("./pages/options/put"));
+const QuoteDenomTablePage = lazy(
+  () => import("./pages/options/quote-denom-table"),
+);
 
 const router = createBrowserRouter([
   {
@@ -46,6 +49,7 @@ const router = createBrowserRouter([
           { index: true, element: <Navigate to="call" replace /> },
           { path: "call", element: <CallOptionPage /> },
           { path: "put", element: <PutOptionPage /> },
+          { path: ":quoteDenom", element: <QuoteDenomTablePage /> },
         ],
       },
     ],
