@@ -46,7 +46,7 @@
   },
   "devDependencies": {
     "@bangjelkoski/vite-plugin-node-polyfills": "0.0.2",
-    "@types/ramda": "0.29.9",
+    "@types/ramda": "0.29.10",
     "@types/react": "18.2.48",
     "@types/react-dom": "18.2.18",
     "@types/react-helmet": "6.1.11",
