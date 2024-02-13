@@ -84,6 +84,19 @@ export const contractsState = selector<string>({
   },
 });
 
+export const factoryContractState = selector<string>({
+  key: "factoryContractState",
+  get: async ({ get }) => {
+    const chain = get(chainState);
+
+    if (chain.chain_id === TESTNET.INJECTIVE) {
+      return import.meta.env.VITE_CONTRACT_FACTORY_INJECTIVE_TESTNET;
+    }
+
+    throw new Error(`unknown chain_id ${chain.chain_id} for the put option`);
+  },
+});
+
 export const contractBaseDenomsState = selector({
   key: "contractBaseDenomsState",
   get: ({ get }) => {
