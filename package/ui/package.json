@@ -41,7 +41,7 @@
     "react-helmet": "6.1.0",
     "react-router-dom": "6.22.0",
     "recoil": "0.7.7",
-    "rollbar": "2.26.2",
+    "rollbar": "2.26.3",
     "suspend-react": "0.1.3"
   },
   "devDependencies": {
