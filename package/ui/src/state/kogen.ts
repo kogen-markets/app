@@ -3,6 +3,7 @@ import { localStorageEffect, LOCAL_STORAGE_DARK_MODE } from "./effects";
 import { chainState } from "./cosmos";
 import { TESTNET } from "../lib/config";
 import { ORDER_TYPE, ORDER_TYPES } from "../types/types";
+import { OptionType } from "../codegen/KogenFactory.types";
 
 export const densInitializedState = atom({
   key: "densInitializedState",
@@ -47,6 +48,13 @@ export const optionTypeState = atom<"put" | "call">({
   default: "call",
 });
 
+export const optionContractsAddrState = atom<
+  Record<string, Record<OptionType, string[]>>
+>({
+  key: "optionContractsAddrState",
+  default: {},
+});
+
 export const isCallOptionState = selector<boolean>({
   key: "isCallOptionState",
   get: async ({ get }) => {
@@ -61,6 +69,11 @@ export const contractsState = selector<string>({
   get: async ({ get }) => {
     const chain = get(chainState);
     const isCallOption = get(isCallOptionState);
+    const contracts = get(optionContractsAddrState);
+
+    return contracts[chain.chain_id][isCallOption ? "call" : "put"].slice(
+      -1
+    )[0];
 
     if (isCallOption) {
       if (chain.chain_id === TESTNET.INJECTIVE) {

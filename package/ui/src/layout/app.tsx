@@ -11,17 +11,56 @@ import {
 } from "@mui/material";
 import { Container } from "@mui/system";
 import { Helmet } from "react-helmet";
-import { Fragment } from "react";
+import { Fragment, useEffect } from "react";
 import { darkTheme, lightTheme } from "../lib/theme";
 import Header from "./components/header";
 import Footer from "./components/footer";
 import Menu from "./components/menu";
 import Snackbar from "../components/snackbar";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { darkModeState, drawerOpenedState } from "../state/kogen";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import {
+  darkModeState,
+  drawerOpenedState,
+  optionContractsAddrState,
+} from "../state/kogen";
 import CloseIcon from "@mui/icons-material/Close";
+import useKogenFactoryQueryClient from "../hooks/use-kogen-factory-query-client";
+import { useKogenFactoryDeployedOptionsQuery } from "../codegen/KogenFactory.react-query";
+import { chainState } from "../state/cosmos";
 
 export default function App() {
+  const chain = useRecoilValue(chainState);
+  const setOptionContractsAddrState = useSetRecoilState(
+    optionContractsAddrState
+  );
+
+  const factoryClient = useKogenFactoryQueryClient();
+  const options = useKogenFactoryDeployedOptionsQuery({
+    client: factoryClient,
+    args: {
+      afterDateInSeconds: 0,
+    },
+    options: {
+      suspense: true,
+    },
+  });
+
+  useEffect(() => {
+    const callOptionsAddr = options.data
+      ?.filter((v) => v.option_type === "call")
+      .map((v) => v.addr);
+    const putOptionsAddr = options.data
+      ?.filter((v) => v.option_type === "put")
+      .map((v) => v.addr);
+    setOptionContractsAddrState((oldAddr) => ({
+      ...oldAddr,
+      [chain.chain_id]: {
+        call: callOptionsAddr ?? [],
+        put: putOptionsAddr ?? [],
+      },
+    }));
+  }, [options.data]);
+
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
   const darkMode = useRecoilValue(darkModeState);
   const [drawerOpened, setDrawerOpened] = useRecoilState(drawerOpenedState);
