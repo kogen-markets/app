@@ -19,7 +19,7 @@
     "@cosmos-kit/keplr-extension": "2.6.4",
     "@cosmos-kit/leap-extension": "2.6.4",
     "@cosmos-kit/react-lite": "2.5.17",
-    "@emotion/react": "11.11.3",
+    "@emotion/react": "11.11.4",
     "@emotion/styled": "11.11.0",
     "@injectivelabs/networks": "1.14.5",
     "@injectivelabs/sdk-ts": "1.14.5",
