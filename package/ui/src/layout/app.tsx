@@ -2,16 +2,13 @@ import { Outlet } from "react-router-dom";
 import {
   Box,
   CssBaseline,
-  Grid,
   ThemeProvider,
   useMediaQuery,
-  alpha,
   Drawer,
   IconButton,
 } from "@mui/material";
-import { Container } from "@mui/system";
 import { Helmet } from "react-helmet";
-import { Fragment, useEffect } from "react";
+import { useEffect } from "react";
 import { darkTheme, lightTheme } from "../lib/theme";
 import Header from "./components/header";
 import Footer from "./components/footer";
@@ -31,14 +28,14 @@ import { chainState } from "../state/cosmos";
 export default function App() {
   const chain = useRecoilValue(chainState);
   const setOptionContractsAddrState = useSetRecoilState(
-    optionContractsAddrState
+    optionContractsAddrState,
   );
 
   const factoryClient = useKogenFactoryQueryClient();
   const options = useKogenFactoryDeployedOptionsQuery({
     client: factoryClient,
     args: {
-      afterDateInSeconds: 0,
+      // afterDateInSeconds: 0,
     },
     options: {
       suspense: true,
