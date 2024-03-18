@@ -72,7 +72,7 @@ export const contractsState = selector<string>({
     const contracts = get(optionContractsAddrState);
 
     return contracts[chain.chain_id][isCallOption ? "call" : "put"].slice(
-      -1
+      -1,
     )[0];
 
     if (isCallOption) {

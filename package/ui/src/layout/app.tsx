@@ -53,7 +53,7 @@ export default function App() {
       ...oldAddr,
       [chain.chain_id]: {
         call: callOptionsAddr ?? [],
-        put: putOptionsAddr ?? [],
+        put: putOptionsAddr?.reverse() ?? [],
       },
     }));
   }, [options.data]);
