@@ -54,6 +54,7 @@ jobs:
           echo "backend_url=$(pulumi stack output backend | jq -r '.url')" >> $GITHUB_ENV
           echo "alchemy_pubkey=$(pulumi config get --path alchemy:pubkey)" >> $GITHUB_ENV
           echo "VITE_CONTRACT_PUT_INJECTIVE_TESTNET=$(pulumi config get --path kogen:VITE_CONTRACT_PUT_INJECTIVE_TESTNET)" >> $GITHUB_ENV
+          echo "VITE_CONTRACT_FACTORY_INJECTIVE_TESTNET=$(pulumi config get --path kogen:VITE_CONTRACT_FACTORY_INJECTIVE_TESTNET)" >> $GITHUB_ENV
           echo "VITE_CONTRACT_INJECTIVE_TESTNET=$(pulumi config get --path kogen:VITE_CONTRACT_INJECTIVE_TESTNET)" >> $GITHUB_ENV
           echo "VITE_CONTRACT_NEUTRON_TESTNET=$(pulumi config get --path kogen:VITE_CONTRACT_NEUTRON_TESTNET)" >> $GITHUB_ENV
           echo "VITE_CONTRACT_ARCHWAY_TESTNET=$(pulumi config get --path kogen:VITE_CONTRACT_ARCHWAY_TESTNET)" >> $GITHUB_ENV

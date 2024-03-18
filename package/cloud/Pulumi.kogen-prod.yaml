@@ -16,3 +16,4 @@ config:
   kogen:VITE_CONTRACT_ARCHWAY_TESTNET: archway1z0hzpy4p7nfhmykzk0h4axj9y8dc0ljc2wxtn82twfevrjt4vg4s42y0a3
 
   kogen:VITE_CONTRACT_PUT_INJECTIVE_TESTNET: inj18ps82rf2mprkpckl3dq3dcsd7m0ywtgej39xaw
+  kogen:VITE_CONTRACT_FACTORY_INJECTIVE_TESTNET: inj136vyja5098ds34g70yvxtvkt2hsjgp3z22whrd
