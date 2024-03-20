@@ -71,8 +71,8 @@ export function useInjectiveCallOptionMutation() {
         walletStrategy,
         network:
           chain.chain_id === TESTNET.INJECTIVE
-            ? Network.TestnetK8s
-            : Network.MainnetK8s,
+            ? Network.TestnetSentry
+            : Network.MainnetSentry,
         simulateTx: true,
       });
 
@@ -155,8 +155,8 @@ export function useInjectiveClosePositionOrderMutation() {
         walletStrategy,
         network:
           chain.chain_id === TESTNET.INJECTIVE
-            ? Network.TestnetK8s
-            : Network.MainnetK8s,
+            ? Network.TestnetSentry
+            : Network.MainnetSentry,
         simulateTx: true,
       });
 
@@ -219,8 +219,8 @@ export function useInjectiveExerciseCallOptionMutation() {
         walletStrategy,
         network:
           chain.chain_id === TESTNET.INJECTIVE
-            ? Network.TestnetK8s
-            : Network.MainnetK8s,
+            ? Network.TestnetSentry
+            : Network.MainnetSentry,
         simulateTx: true,
       });
 
@@ -295,8 +295,8 @@ export function useInjectiveCancelOrderMutation() {
         walletStrategy,
         network:
           chain.chain_id === TESTNET.INJECTIVE
-            ? Network.TestnetK8s
-            : Network.MainnetK8s,
+            ? Network.TestnetSentry
+            : Network.MainnetSentry,
         simulateTx: true,
       });
 
