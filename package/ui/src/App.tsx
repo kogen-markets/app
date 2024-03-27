@@ -67,6 +67,13 @@ const queryClient = new QueryClient({
 });
 type Chain = (typeof chains)[0];
 
+if (chains.find((c) => c.chain_id === TESTNET.INJECTIVE)?.apis?.rpc) {
+  chains.find((c) => c.chain_id === TESTNET.INJECTIVE)!.apis!.rpc = [
+    {
+      address: "https://testnet.sentry.tm.injective.network:443",
+    },
+  ];
+}
 
 function App() {
   return (
