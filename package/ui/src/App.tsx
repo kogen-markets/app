@@ -79,6 +79,7 @@ if (chainIndex !== -1 && chainsCopy[chainIndex]?.apis?.rpc) {
   chainsCopy[chainIndex].apis.rpc = [{
     address: "https://testnet.sentry.tm.injective.network:443",
   }];
+  console.log("rpc address modified")
 }
 
 function App() {
