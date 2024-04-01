@@ -67,20 +67,20 @@ const queryClient = new QueryClient({
 });
 type Chain = (typeof chains)[0];
 
-// Create a deep copy of the chains array
-const chainsCopy = JSON.parse(JSON.stringify(chains));
+// // Create a deep copy of the chains array
+// const chainsCopy = JSON.parse(JSON.stringify(chains));
 
-// Find the specific chain object by chain_id
-const chainIndex = chainsCopy.findIndex((c : Chain) => c.chain_id === TESTNET.INJECTIVE);
+// // Find the specific chain object by chain_id
+// const chainIndex = chainsCopy.findIndex((c : Chain) => c.chain_id === TESTNET.INJECTIVE);
 
-// Check if the chain was found and it has the `apis` object with an `rpc` property
-if (chainIndex !== -1 && chainsCopy[chainIndex]?.apis?.rpc) {
-  // Modify the `rpc` property of the copied object
-  chainsCopy[chainIndex].apis.rpc = [{
-    address: "https://testnet.sentry.tm.injective.network:443",
-  }];
-  console.log("rpc address modified")
-}
+// // Check if the chain was found and it has the `apis` object with an `rpc` property
+// if (chainIndex !== -1 && chainsCopy[chainIndex]?.apis?.rpc) {
+//   // Modify the `rpc` property of the copied object
+//   chainsCopy[chainIndex].apis.rpc = [{
+//     address: "https://testnet.sentry.tm.injective.network:443",
+//   }];
+//   console.log("rpc address modified")
+// }
 
 function App() {
   return (
@@ -89,7 +89,7 @@ function App() {
         <QueryClientProvider client={queryClient}>
           <ErrorBoundary>
             <ChainProvider
-              chains={chainsCopy.filter((c : Chain) =>
+              chains={chains.filter((c : Chain) =>
                 ENABLED_TESTNETS.includes(c.chain_id as TESTNET),
               )}
               assetLists={assets}
