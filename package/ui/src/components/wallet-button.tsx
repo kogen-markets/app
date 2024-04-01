@@ -9,6 +9,9 @@ import {
   metamaskAddressState,
   metamaskWalletStrategyState,
 } from "../state/injective";
+import { snackbarState } from "../state/snackbar";
+
+const [, setSnackbar] = useRecoilState(snackbarState);
 
 export default function WalletButton({
   ButtonProps,
@@ -57,11 +60,23 @@ export default function WalletButton({
         color="secondary"
         variant="outlined"
         href=""
-        onClick={
-          metamaskWalletStrategy
-            ? () => setMetamaskWalletStrategy(null)
-            : disconnect
-        }
+        onClick={(e) => {
+          e.preventDefault(); // Prevent default action if it's a link
+
+          if (metamaskWalletStrategy) {
+            setMetamaskWalletStrategy(null);
+          } else {
+            // Calling disconnect with options
+            disconnect().then(() => {
+              // Informs the user that the disconnect was successful
+              setSnackbar({ message: "Disconnected successfully", type: "success" });
+            }).catch((error) => {
+              // Logging the error to the user using the snackbar
+              console.error(error); // Also log to console for debugging
+              setSnackbar({ message: "An error occurred. Please try again.", type: "error" });
+            });
+          }
+        }}
       >
         <LogoutIcon />
       </Button>
