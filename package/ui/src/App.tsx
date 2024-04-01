@@ -68,6 +68,7 @@ const queryClient = new QueryClient({
 
 type Chain = (typeof chains)[0];
 
+
 function App() {
   return (
     <RollbarProvider instance={rollbar}>
