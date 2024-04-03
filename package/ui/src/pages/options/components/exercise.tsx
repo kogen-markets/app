@@ -5,7 +5,7 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import { MemoTextField } from "../../../components/memo-textfield";
 import Joi from "joi";
 import useFormValidation from "../../../hooks/use-form-validation";
-import { toBaseToken } from "../../../lib/token";
+import { toBaseToken, toUserToken } from "../../../lib/token";
 import { useTheme } from "@emotion/react";
 import { pythServiceState } from "../../../state/cosmos";
 import { useKogenMarketsConfigQuery } from "../../../codegen/KogenMarkets.react-query";
@@ -113,11 +113,12 @@ export default function Exercise() {
               : undefined;
 
             try {
-              await exercise({
+              const actualPrice = await exercise({
                 expiry_price: providedExpiryPrice,
               });
+              const convertedActualExpiryPrice = toUserToken(actualPrice, config.data?.quote_decimals).toFixed(4)
               setSnackbar({
-                message: `Option successfully exercised`,
+                message: `Option successfully exercised at ${convertedActualExpiryPrice} with ${providedExpiryPrice}`,
               });
             } catch (e: any) {
               setSnackbar({

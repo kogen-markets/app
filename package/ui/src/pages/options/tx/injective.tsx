@@ -230,6 +230,25 @@ export function useInjectiveExerciseCallOptionMutation() {
       });
 
       console.log(result);
+
+      let expiryPrice = null;
+
+      result.logs?.forEach(log => {
+        log.events.forEach(event => {
+          if (event.type === "wasm") {
+            event.attributes.forEach(attribute => {
+              if (attribute.key === "expiry_price") {
+                expiryPrice = attribute.value;
+              }
+            });
+          }
+        });
+      });
+
+      console.log("Expiry Price:", expiryPrice);
+
+      return expiryPrice;
+      
     },
     {
       onSuccess: () => {

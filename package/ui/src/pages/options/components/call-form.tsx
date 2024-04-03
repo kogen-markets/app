@@ -206,6 +206,11 @@ export default function CallForm() {
       </Box>
 
       <Box>
+      {configData.owner}
+      </Box>
+
+
+      <Box>
         <Balance isCall={isCall} config={configData} />
       </Box>
 
