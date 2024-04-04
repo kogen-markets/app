@@ -32,7 +32,7 @@ export default function App() {
   );
 
   const factoryClient = useKogenFactoryQueryClient();
-  const options = useKogenFactoryDeployedOptionsQuery({
+  const options = useKogenFactoryDeployedOptionsQuery({ //query of the options based on the factory's address
     client: factoryClient,
     args: {
       // afterDateInSeconds: 0,
