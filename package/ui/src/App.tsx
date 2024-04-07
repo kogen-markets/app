@@ -19,6 +19,10 @@ import rollbar from "./lib/rollbar";
 import Error from "./pages/error";
 import Loading from "./components/loading";
 import { ENABLED_TESTNETS, TESTNET } from "./lib/config";
+import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate';
+
+// Pretend to use CosmWasmClient to avoid tree shaking, without side effects
+typeof CosmWasmClient === 'function' && null;
 
 const WalletDialog = lazy(() => import("./components/wallet-dialog"));
 const CallOptionPage = lazy(() => import("./pages/options/call"));

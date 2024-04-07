@@ -15,17 +15,18 @@ export default defineConfig({
   // build: {
   //   sourcemap: true, // Make sure source maps are enabled
   // },
-  optimizeDeps: {
-    exclude: [
-      // '@cosmjs/cosmwasm-stargate',
-      // '@cosmos-kit/core',
-      // 'cosmos-kit/react-lite',
-      // '@cosmos-kit/leap-extension',
-      // '@cosmos-kit/keplr-extension'
-    ] // Exclude specific dependencies from pre-bundling
-    ,
-    include: ['@cosmjs/cosmwasm-stargate']
-  },
+  // optimizeDeps: {
+  //   exclude: [
+  //     // '@injectivelabs/wallet-ts',
+  //     // '@cosmjs/cosmwasm-stargate',
+  //     // '@cosmos-kit/core',
+  //     // 'cosmos-kit/react-lite',
+  //     // '@cosmos-kit/leap-extension',
+  //     // '@cosmos-kit/keplr-extension'
+  //   ] // Exclude specific dependencies from pre-bundling
+  //   ,
+  //   include: ['@cosmjs/cosmwasm-stargate']
+  // },
 
   plugins: [react(), nodePolyfills({
     // To add only specific polyfills, add them here. If no option is passed, adds all polyfills
