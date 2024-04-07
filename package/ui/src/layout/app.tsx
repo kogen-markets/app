@@ -56,7 +56,7 @@ export default function App() {
         put: putOptionsAddr?.reverse() ?? [],
       },
     }));
-  }, [options.data]);
+  }, [options.data, chain.chain_id]);
 
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
   const darkMode = useRecoilValue(darkModeState);
