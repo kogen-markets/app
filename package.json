@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "npm test -w @kogen/kogen-ui"
+    "test": "npm test -w @kogen/kogen-ui",
+    "postinstall": "patch-package"
   },
   "author": "",
   "license": "ISC",
@@ -13,5 +14,8 @@
   ],
   "overrides": {
     "react-dom": "18.2.0"
+  },
+  "devDependencies": {
+    "patch-package": "^8.0.0"
   }
 }

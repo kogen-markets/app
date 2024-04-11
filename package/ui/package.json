@@ -9,8 +9,7 @@
     "build:dev": "npm run build",
     "build:prod": "npm run build",
     "preview": "vite preview",
-    "test": "exit 0",
-    "postinstall": "patch-package"
+    "test": "exit 0"
   },
   "overrides": {
     "react-dom": "18.2.0"

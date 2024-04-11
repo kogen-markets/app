@@ -1,8 +1,8 @@
 diff --git a/node_modules/keccak256/dist/keccak256.js b/node_modules/keccak256/dist/keccak256.js
-index 9ca0b64..1096368 100644
+index 9ca0b64..1c5bdf0 100644
 --- a/node_modules/keccak256/dist/keccak256.js
 +++ b/node_modules/keccak256/dist/keccak256.js
-@@ -3,9 +3,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
+@@ -3,9 +3,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
      return (mod && mod.__esModule) ? mod : { "default": mod };
  };
  const bn_js_1 = __importDefault(require("bn.js"));
