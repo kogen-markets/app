@@ -59,9 +59,9 @@ function App() {
           sx={{ backdropFilter: "blur(5px)" }}
         >
           Please note that Kogen is currently in active development. While we
-          strive to offer you the best user experience possible, it's important
-          to be aware that there may be occasional glitches or limitations as we
-          continue to refine and enhance the platform.
+          strive to offer you the best user experience possible, it&apos;s
+          important to be aware that there may be occasional glitches or
+          limitations as we continue to refine and enhance the platform.
         </Alert>
         <Card
           sx={{ p: 3, mt: 4, backdropFilter: "blur(5px)" }}
@@ -80,7 +80,7 @@ function App() {
           <Typography variant="body1" sx={{ my: 2 }} component="div">
             Our innovative platform empowers you to participate in trustless and
             efficient bidding and asking processes, ensuring fairness and equal
-            opportunities for all participants. Whether you're a seasoned
+            opportunities for all participants. Whether you&apos;re a seasoned
             options trader or new to the world of call options, Kogen offers a
             user-friendly interface and robust features to enhance your trading
             experience.

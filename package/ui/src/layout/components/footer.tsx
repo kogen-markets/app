@@ -1,5 +1,4 @@
-import { Grid, Link, Typography } from "@mui/material";
-import { constants } from "@kogen/kogen-shared";
+import { Grid } from "@mui/material";
 
 export default function Footer() {
   return (
