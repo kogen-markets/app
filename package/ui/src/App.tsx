@@ -19,6 +19,10 @@ import rollbar from "./lib/rollbar";
 import Error from "./pages/error";
 import Loading from "./components/loading";
 import { ENABLED_TESTNETS, TESTNET } from "./lib/config";
+import { CosmWasmClient } from "@cosmjs/cosmwasm-stargate";
+
+// Pretend to use CosmWasmClient to avoid tree shaking, without side effects
+typeof CosmWasmClient === "function" && null;
 
 const WalletDialog = lazy(() => import("./components/wallet-dialog"));
 const CallOptionPage = lazy(() => import("./pages/options/call"));
@@ -66,6 +70,8 @@ const queryClient = new QueryClient({
   },
 });
 
+type Chain = (typeof chains)[0];
+
 function App() {
   return (
     <RollbarProvider instance={rollbar}>
@@ -84,13 +90,13 @@ function App() {
               ]} // supported wallets
               signerOptions={{
                 signingCosmwasm: (chain) => {
-                  if (chain.chain_id === TESTNET.NEUTRON) {
+                  if ((chain as Chain).chain_id === TESTNET.NEUTRON) {
                     return {
                       gasPrice: GasPrice.fromString("0.01untrn"),
                     };
                   }
 
-                  if (chain.chain_id === TESTNET.ARCHWAY) {
+                  if ((chain as Chain).chain_id === TESTNET.ARCHWAY) {
                     return {
                       gasPrice: GasPrice.fromString("900000000000.0aconst"),
                     };

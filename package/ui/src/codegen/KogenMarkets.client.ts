@@ -11,24 +11,12 @@ import {
 } from "@cosmjs/cosmwasm-stargate";
 import { Coin, StdFee } from "@cosmjs/amino";
 import {
-  Timestamp,
-  Uint64,
   Uint128,
   Addr,
-  Identifier,
-  InstantiateMsg,
-  ExecuteMsg,
   Config,
-  QueryMsg,
   ArrayOfOrdersResponse,
-  OrdersResponse,
-  OrderBookItem,
   LockedAmountResponse,
   PositionResponse,
-  Int128,
-  PositionState,
-  Settlement,
-  Position,
 } from "./KogenMarkets.types";
 export interface KogenMarketsReadOnlyInterface {
   contractAddress: string;

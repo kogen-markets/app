@@ -1,5 +1,10 @@
 // eslint-disable-next-line no-undef
 module.exports = {
+  settings: {
+    react: {
+      version: "detect", // Specify your React version here
+    }
+  },
   env: {
     browser: true,
     es2021: true,
@@ -31,4 +36,7 @@ module.exports = {
       },
     ],
   },
+  overrides: [{
+    files: ['*.ts', '*.tsx']
+  }]
 };

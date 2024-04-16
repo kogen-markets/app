@@ -45,18 +45,26 @@ export default function App() {
   useEffect(() => {
     const callOptionsAddr = options.data
       ?.filter((v) => v.option_type === "call")
+      .sort(
+        (b, a) =>
+          Number(b.option_config.expiry) - Number(a.option_config.expiry),
+      )
       .map((v) => v.addr);
     const putOptionsAddr = options.data
       ?.filter((v) => v.option_type === "put")
+      .sort(
+        (b, a) =>
+          Number(b.option_config.expiry) - Number(a.option_config.expiry),
+      )
       .map((v) => v.addr);
     setOptionContractsAddrState((oldAddr) => ({
       ...oldAddr,
       [chain.chain_id]: {
         call: callOptionsAddr ?? [],
-        put: putOptionsAddr?.reverse() ?? [],
+        put: putOptionsAddr ?? [],
       },
     }));
-  }, [options.data]);
+  }, [options.data, chain.chain_id]);
 
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
   const darkMode = useRecoilValue(darkModeState);

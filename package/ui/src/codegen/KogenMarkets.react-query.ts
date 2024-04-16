@@ -13,24 +13,12 @@ import {
 import { ExecuteResult } from "@cosmjs/cosmwasm-stargate";
 import { StdFee, Coin } from "@cosmjs/amino";
 import {
-  Timestamp,
-  Uint64,
   Uint128,
   Addr,
-  Identifier,
-  InstantiateMsg,
-  ExecuteMsg,
   Config,
-  QueryMsg,
   ArrayOfOrdersResponse,
-  OrdersResponse,
-  OrderBookItem,
   LockedAmountResponse,
   PositionResponse,
-  Int128,
-  PositionState,
-  Settlement,
-  Position,
 } from "./KogenMarkets.types";
 import {
   KogenMarketsQueryClient,
