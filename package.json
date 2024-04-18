@@ -13,7 +13,8 @@
     "package/*"
   ],
   "overrides": {
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "eslint": "9.0.0"
   },
   "devDependencies": {
     "patch-package": "^8.0.0"
