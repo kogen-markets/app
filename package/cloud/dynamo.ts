@@ -16,5 +16,5 @@ export const lastProcessedBlockTable = new aws.dynamodb.Table(
     tags: {
       Environment: pulumi.getStack(),
     },
-  },
+  }
 );

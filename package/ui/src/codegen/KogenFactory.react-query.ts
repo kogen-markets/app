@@ -13,10 +13,20 @@ import {
 import { ExecuteResult } from "@cosmjs/cosmwasm-stargate";
 import { StdFee, Coin } from "@cosmjs/amino";
 import {
+  Addr,
+  InstantiateMsg,
+  ExecuteMsg,
+  Timestamp,
+  Uint64,
+  Uint128,
+  Identifier,
   OptionType,
   FactoryConfig,
   Config,
+  QueryMsg,
+  DeployedOptionStatus,
   ArrayOfDeployedOption,
+  DeployedOption,
 } from "./KogenFactory.types";
 import {
   KogenFactoryQueryClient,

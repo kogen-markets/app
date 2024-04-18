@@ -11,7 +11,7 @@ const contentBucket = new aws.s3.BucketV2(
   landingPackageName + "-contentBucket",
   {
     bucket: domain,
-  },
+  }
 );
 
 const bucketOwnershipControls = new aws.s3.BucketOwnershipControls(
@@ -21,7 +21,7 @@ const bucketOwnershipControls = new aws.s3.BucketOwnershipControls(
     rule: {
       objectOwnership: "BucketOwnerPreferred",
     },
-  },
+  }
 );
 
 const bucketPublicAccessBlock = new aws.s3.BucketPublicAccessBlock(
@@ -32,7 +32,7 @@ const bucketPublicAccessBlock = new aws.s3.BucketPublicAccessBlock(
     blockPublicPolicy: false,
     ignorePublicAcls: false,
     restrictPublicBuckets: false,
-  },
+  }
 );
 
 new aws.s3.BucketAclV2(
@@ -43,7 +43,7 @@ new aws.s3.BucketAclV2(
   },
   {
     dependsOn: [bucketOwnershipControls, bucketPublicAccessBlock],
-  },
+  }
 );
 
 const contentBucketWebsiteConf = new aws.s3.BucketWebsiteConfigurationV2(
@@ -53,7 +53,7 @@ const contentBucketWebsiteConf = new aws.s3.BucketWebsiteConfigurationV2(
     indexDocument: {
       suffix: "index.html",
     },
-  },
+  }
 );
 
 // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
@@ -73,12 +73,12 @@ const contentBucketPolicy = new aws.s3.BucketPolicy(
             Resource: [bucketArn + "/*"],
           },
         ],
-      }),
+      })
     ),
   },
   {
     dependsOn: [contentBucket],
-  },
+  }
 );
 
 const tenMinutes = 60 * 10;
@@ -94,13 +94,13 @@ const certificate = new aws.acm.Certificate(
     validationMethod: "DNS",
     subjectAlternativeNames: [`www.${domain}`],
   },
-  { provider: awsUsEast1 },
+  { provider: awsUsEast1 }
 );
 
 const hostedZoneId = aws.route53
   .getZone(
     { name: landingConfig.require("ROUTE53_ZONE_NAME") },
-    { async: true },
+    { async: true }
   )
   .then((zone) => zone.zoneId);
 
@@ -112,7 +112,7 @@ const certificateValidationDomain = new aws.route53.Record(
     type: certificate.domainValidationOptions[0].resourceRecordType,
     records: [certificate.domainValidationOptions[0].resourceRecordValue],
     ttl: tenMinutes,
-  },
+  }
 );
 
 const subdomainCertificateValidationDomain = new aws.route53.Record(
@@ -123,7 +123,7 @@ const subdomainCertificateValidationDomain = new aws.route53.Record(
     type: certificate.domainValidationOptions[1].resourceRecordType,
     records: [certificate.domainValidationOptions[1].resourceRecordValue],
     ttl: tenMinutes,
-  },
+  }
 );
 
 const validationRecordFqdns = [
@@ -137,7 +137,7 @@ const certificateValidation = new aws.acm.CertificateValidation(
     certificateArn: certificate.arn,
     validationRecordFqdns: validationRecordFqdns,
   },
-  { provider: awsUsEast1 },
+  { provider: awsUsEast1 }
 );
 
 const certificateArn = certificateValidation.certificateArn;
@@ -215,7 +215,7 @@ const distributionArgs: DistributionArgs = {
 
 const distribution = new aws.cloudfront.Distribution(
   landingPackageName + "-cdn",
-  distributionArgs,
+  distributionArgs
 );
 
 new aws.route53.Record(landingPackageName + "-" + domain, {

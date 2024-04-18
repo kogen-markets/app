@@ -26,7 +26,7 @@ function build(entrypoint: string, minify: boolean) {
 export function buildCodeAsset(
   entrypoint: string,
   minify = false,
-  optionalAssets = {},
+  optionalAssets = {}
 ) {
   return new pulumi.asset.AssetArchive({
     "index.js": new pulumi.asset.StringAsset(build(entrypoint, minify)),

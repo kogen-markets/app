@@ -10,5 +10,7 @@ import * as _2 from "./KogenFactory.react-query";
 import * as _3 from "./KogenMarkets.types";
 import * as _4 from "./KogenMarkets.client";
 import * as _5 from "./KogenMarkets.react-query";
-export const KogenFactory = { ..._0, ..._1, ..._2 };
-export const KogenMarkets = { ..._3, ..._4, ..._5 };
+export namespace contracts {
+  export const KogenFactory = { ..._0, ..._1, ..._2 };
+  export const KogenMarkets = { ..._3, ..._4, ..._5 };
+}

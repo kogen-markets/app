@@ -95,7 +95,7 @@ export interface Config {
 }
 export type QueryMsg =
   | {
-      config: Record<string, never>;
+      config: {};
     }
   | {
       bids: {
