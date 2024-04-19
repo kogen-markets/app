@@ -10,7 +10,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@cosmwasm/ts-codegen": "1.7.1",
+    "@cosmwasm/ts-codegen": "1.8.1",
     "@types/jest": "29.5.12",
     "@typescript-eslint/eslint-plugin": "7.5.0",
     "@typescript-eslint/parser": "7.5.0",
