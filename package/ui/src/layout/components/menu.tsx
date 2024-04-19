@@ -105,7 +105,7 @@ export default function Menu() {
                 <ListItemIcon>
                   <AltRouteIcon />
                 </ListItemIcon>
-                <ListItemText primary="Options" />
+                <ListItemText primary="ATOM/USDT" />
               </ListItemButton>
               <List
                 component="div"
@@ -125,35 +125,37 @@ export default function Menu() {
                   },
                 }}
               >
-                {contractBaseDenoms.map((denom) => {
-                  const path = "/options/" + encodeURIComponent(denom.denom);
-
-                  return (
-                    <ListItemButton
-                      key={denom.denom}
-                      component={Link}
-                      to={path}
-                      selected={getPathnameElements(2) === path}
-                    >
-                      <ListItemText primary={denom.symbol} />
-                    </ListItemButton>
-                  );
-                })}
 
                 <ListItemButton
                   component={Link}
-                  to={"/options/call"}
-                  selected={getPathnameElements(2) === "/options/call"}
+                  to={"/options/call-week1"}
+                  selected={getPathnameElements(2) === "/options/call-week1"}
                 >
-                  <ListItemText primary="Calls" />
+                  <ListItemText primary="Current week's call" />
                 </ListItemButton>
                 <ListItemButton
                   component={Link}
-                  to={"/options/put"}
-                  selected={getPathnameElements(2) === "/options/put"}
+                  to={"/options/call-week2"}
+                  selected={getPathnameElements(2) === "/options/call-week2"}
                 >
-                  <ListItemText primary="Puts" />
+                  <ListItemText primary="Following week's call" />
                 </ListItemButton>
+
+                <ListItemButton
+                  component={Link}
+                  to={"/options/put-week1"}
+                  selected={getPathnameElements(2) === "/options/put-week1"}
+                >
+                  <ListItemText primary="Current week's put" />
+                </ListItemButton>
+                <ListItemButton
+                  component={Link}
+                  to={"/options/put-week2"}
+                  selected={getPathnameElements(2) === "/options/put-week2"}
+                >
+                  <ListItemText primary="Following week's put" />
+                </ListItemButton>
+
               </List>
               <ListItemButton
                 component={Link}

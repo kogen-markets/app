@@ -18,7 +18,7 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import {
   darkModeState,
   drawerOpenedState,
-  optionContractsAddrState,
+  optionContractsAddrState
 } from "../state/kogen";
 import CloseIcon from "@mui/icons-material/Close";
 import useKogenFactoryQueryClient from "../hooks/use-kogen-factory-query-client";
@@ -49,14 +49,14 @@ export default function App() {
         (b, a) =>
           Number(b.option_config.expiry) - Number(a.option_config.expiry),
       )
-      .map((v) => v.addr);
+      .map((v) => v.addr).slice(-2); // 2 = MAXWEEK global variable
     const putOptionsAddr = options.data
       ?.filter((v) => v.option_type === "put")
       .sort(
         (b, a) =>
           Number(b.option_config.expiry) - Number(a.option_config.expiry),
       )
-      .map((v) => v.addr);
+      .map((v) => v.addr).slice(-2); // 2 = MAXWEEK global variable
     setOptionContractsAddrState((oldAddr) => ({
       ...oldAddr,
       [chain.chain_id]: {

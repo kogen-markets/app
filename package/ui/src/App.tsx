@@ -23,8 +23,10 @@ import { CosmWasmClient } from "@cosmjs/cosmwasm-stargate";
 typeof CosmWasmClient === "function" && null; // Pretend to use CosmWasmClient to avoid tree shaking, without side effects
 
 const WalletDialog = lazy(() => import("./components/wallet-dialog"));
-const CallOptionPage = lazy(() => import("./pages/options/call"));
-const PutOptionPage = lazy(() => import("./pages/options/put"));
+const CallWeek1OptionPage = lazy(() => import("./pages/options/call-week1"));
+const CallWeek2OptionPage = lazy(() => import("./pages/options/call-week2"));
+const PutWeek1OptionPage = lazy(() => import("./pages/options/put-week1"));
+const PutWeek2OptionPage = lazy(() => import("./pages/options/put-week2"));
 const QuoteDenomTablePage = lazy(
   () => import("./pages/options/quote-denom-table"),
 );
@@ -49,8 +51,10 @@ const router = createBrowserRouter([
         ),
         children: [
           { index: true, element: <Navigate to="call" replace /> },
-          { path: "call", element: <CallOptionPage /> },
-          { path: "put", element: <PutOptionPage /> },
+          { path: "call-week1", element: <CallWeek1OptionPage /> },
+          { path: "put-week1", element: <PutWeek1OptionPage /> },
+          { path: "call-week2", element: <CallWeek2OptionPage /> },
+          { path: "put-week2", element: <PutWeek2OptionPage /> },
           { path: ":quoteDenom", element: <QuoteDenomTablePage /> },
         ],
       },
