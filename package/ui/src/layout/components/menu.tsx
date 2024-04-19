@@ -1,3 +1,4 @@
+import {useState} from 'react';
 import {
   Box,
   List,
@@ -34,7 +35,13 @@ export default function Menu() {
       .join("/");
   }
 
-  const contractBaseDenoms = useRecoilValue(contractBaseDenomsState);
+    // State to control the visibility of submenu items
+    const [submenuOpen, setSubmenuOpen] = useState(true);
+
+    // Toggles the state
+    const toggleSubmenu = () => {
+      setSubmenuOpen(!submenuOpen);
+    };
 
   return (
     <Fragment>
@@ -99,14 +106,15 @@ export default function Menu() {
             >
               <ListItemButton
                 component={Link}
-                to={"/options"}
-                selected={getPathnameElements(2) === "/options"}
+                to={"/options/call-week1"}
+                onClick={toggleSubmenu} // Toggle submenu on click
               >
                 <ListItemIcon>
                   <AltRouteIcon />
                 </ListItemIcon>
                 <ListItemText primary="ATOM/USDT" />
               </ListItemButton>
+              {submenuOpen && (
               <List
                 component="div"
                 disablePadding
@@ -157,6 +165,7 @@ export default function Menu() {
                 </ListItemButton>
 
               </List>
+              )}
               <ListItemButton
                 component={Link}
                 to={"/help"}
