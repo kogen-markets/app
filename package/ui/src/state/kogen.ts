@@ -48,6 +48,12 @@ export const optionTypeState = atom<"put" | "call">({
   default: "call",
 });
 
+export const optionWeekState = atom<1| 2>({ // 2 = MAXWEEK global variable
+  key: "optionWeekState",
+  default: 1,
+});
+
+
 export const optionContractsAddrState = atom<
   Record<string, Record<OptionType, string[]>>
 >({
@@ -64,15 +70,25 @@ export const isCallOptionState = selector<boolean>({
   },
 });
 
+export const whichWeekOptionState = selector<number>({
+  key: "whichWeekOptionState",
+  get: async ({ get }) => {
+    const optionWeek = get(optionWeekState);
+
+    return optionWeek;
+  },
+});
+
 export const contractsState = selector<string>({
   key: "contractsState",
   get: async ({ get }) => {
     const chain = get(chainState);
     const isCallOption = get(isCallOptionState);
     const contracts = get(optionContractsAddrState);
+    const whichWeek = get(whichWeekOptionState);
 
     return contracts[chain.chain_id][isCallOption ? "call" : "put"].slice(
-      -1,
+      whichWeek - 1,
     )[0];
 
     if (isCallOption) {

@@ -1,13 +1,15 @@
 import { useEffect } from "react";
 import { useSetRecoilState } from "recoil";
-import { optionTypeState } from "../../state/kogen";
+import { optionTypeState, optionWeekState } from "../../state/kogen";
 import { BaseOption } from "./base";
 
-export default function PutOption() {
+export default function PutOptionWeek1() {
   const setCallOptionType = useSetRecoilState(optionTypeState);
+  const setOptionWeek = useSetRecoilState(optionWeekState);
   useEffect(() => {
     setCallOptionType("put");
-  }, [setCallOptionType]);
+    setOptionWeek(1);
+  }, [setCallOptionType, setOptionWeek]);
 
   return <BaseOption />;
 }

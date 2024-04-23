@@ -1,3 +1,4 @@
+import {useState} from 'react';
 import {
   Box,
   List,
@@ -34,7 +35,13 @@ export default function Menu() {
       .join("/");
   }
 
-  const contractBaseDenoms = useRecoilValue(contractBaseDenomsState);
+    // State to control the visibility of submenu items
+    const [submenuOpen, setSubmenuOpen] = useState(true);
+
+    // Toggles the state
+    const toggleSubmenu = () => {
+      setSubmenuOpen(!submenuOpen);
+    };
 
   return (
     <Fragment>
@@ -99,14 +106,15 @@ export default function Menu() {
             >
               <ListItemButton
                 component={Link}
-                to={"/options"}
-                selected={getPathnameElements(2) === "/options"}
+                to={"/options/call-week1"}
+                onClick={toggleSubmenu} // Toggle submenu on click
               >
                 <ListItemIcon>
                   <AltRouteIcon />
                 </ListItemIcon>
-                <ListItemText primary="Options" />
+                <ListItemText primary="ATOM/USDT" />
               </ListItemButton>
+              {submenuOpen && (
               <List
                 component="div"
                 disablePadding
@@ -125,36 +133,39 @@ export default function Menu() {
                   },
                 }}
               >
-                {contractBaseDenoms.map((denom) => {
-                  const path = "/options/" + encodeURIComponent(denom.denom);
-
-                  return (
-                    <ListItemButton
-                      key={denom.denom}
-                      component={Link}
-                      to={path}
-                      selected={getPathnameElements(2) === path}
-                    >
-                      <ListItemText primary={denom.symbol} />
-                    </ListItemButton>
-                  );
-                })}
 
                 <ListItemButton
                   component={Link}
-                  to={"/options/call"}
-                  selected={getPathnameElements(2) === "/options/call"}
+                  to={"/options/call-week1"}
+                  selected={getPathnameElements(2) === "/options/call-week1"}
                 >
-                  <ListItemText primary="Calls" />
+                  <ListItemText primary="Current week's call" />
                 </ListItemButton>
                 <ListItemButton
                   component={Link}
-                  to={"/options/put"}
-                  selected={getPathnameElements(2) === "/options/put"}
+                  to={"/options/call-week2"}
+                  selected={getPathnameElements(2) === "/options/call-week2"}
                 >
-                  <ListItemText primary="Puts" />
+                  <ListItemText primary="Following week's call" />
                 </ListItemButton>
+
+                <ListItemButton
+                  component={Link}
+                  to={"/options/put-week1"}
+                  selected={getPathnameElements(2) === "/options/put-week1"}
+                >
+                  <ListItemText primary="Current week's put" />
+                </ListItemButton>
+                <ListItemButton
+                  component={Link}
+                  to={"/options/put-week2"}
+                  selected={getPathnameElements(2) === "/options/put-week2"}
+                >
+                  <ListItemText primary="Following week's put" />
+                </ListItemButton>
+
               </List>
+              )}
               <ListItemButton
                 component={Link}
                 to={"/help"}
