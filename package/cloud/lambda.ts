@@ -28,11 +28,15 @@ new aws.iam.RolePolicyAttachment(lambdaPackageName + "-lambdaExecute", {
   policyArn: aws.iam.ManagedPolicies.AWSLambdaExecute,
 });
 
+const provider = new aws.Provider("us-east-provider", {
+  region: "us-east-1",
+});
+
 const cronRule = new aws.cloudwatch.EventRule(
   lambdaPackageName + "exercise-bot-cron",
   {
     scheduleExpression: "cron(0 * * * ? *)",
-  },
+  }, { provider: provider }
 );
 
 const MNEMONIC = exerciseConfig.get("mnemonic");

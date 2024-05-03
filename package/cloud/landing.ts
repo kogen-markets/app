@@ -35,6 +35,8 @@ const bucketPublicAccessBlock = new aws.s3.BucketPublicAccessBlock(
   },
 );
 
+const provider = new aws.Provider(landingPackageName + "us-east-1", { region: "us-east-1" });
+
 new aws.s3.BucketAclV2(
   landingPackageName + "bucketAclV2",
   {
@@ -42,6 +44,7 @@ new aws.s3.BucketAclV2(
     acl: "public-read",
   },
   {
+    provider: provider,
     dependsOn: [bucketOwnershipControls, bucketPublicAccessBlock],
   },
 );

@@ -1,11 +1,11 @@
-encryptionsalt: v1:gjpNoGNup/4=:v1:4mGZd8Jezul/Qebk:95ggjQTRg9a7D6cKEjSVw/A3dqAsdA==
+encryptionsalt: v1:0bxvwwcO1sE=:v1:4hvT1FSHXofwd8+7:bCj+T/4e5H2TyNYN0eEucayHfear6w==
 config:
   alchemy:pubkey: pFexqCrRWIP1HiAgL7EzG306mpJBmNuZ
-  aws:region: eu-central-1
+  aws:region: us-east-1
   backend:API_DOMAIN: api.dev.kogen.markets
   backend:ROUTE53_ZONE_NAME: kogen.markets
-  exercise:mnemonic:
-    secure: v1:ewOXPmj/pqgE0VPi:6VCdXtO5mlhAkFtBuCf3koxpD7G3SOaNVPZXEadHxiGFQEAaw30oBuHKowBUX0JC8AcaktIV5aq8Bxbesta3UoDFU81G4IyOZiG8ADL3BleAbazEAJ0PeZcsPXpxIUBxng==
+  exercise:mnemonic: 
+    secure: v1:rFulxjdnXR8TDaHu:FNLNDfuFND++38a5/2h1zmrnRkG//WoYc/GrxBxI2gAahybjkCWwd7eXtfYZU+CxtrG4Z0nyitqvNADGeaJzepriWUnrIoXTd7T9hCDJR+MmyJ1aZiBzhq+vFajCNhbXZYx8Gqmf3oItTYIuFUdoKhF2ZoXOT10sFJk0552GSrrzScabV+/1DphJmeLQJQXJsNV1BOH75pDri114/P/5sJs3jc3olelphghoT4xjKw==
   landing:API_DOMAIN: dev.kogen.markets
   landing:ROUTE53_ZONE_NAME: kogen.markets
   pulumi:env_files: []
