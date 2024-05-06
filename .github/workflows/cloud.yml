@@ -48,7 +48,6 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
-          aws-profile: pulumi-s3-user
 
       - name: Install Pulumi CLI
         uses: pulumi/setup-pulumi@v2
@@ -57,6 +56,7 @@ jobs:
         run: |
           pulumi login -C package/cloud
           pulumi stack -C package/cloud select kogen-prod
+          pulumi stack -C package/cloud config
           pulumi -C package/cloud/ up -f --yes
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -64,4 +64,3 @@ jobs:
           AWS_REGION: us-east-1
           PULUMI_CONFIG_PASSPHRASE: ${{ secrets.PULUMI_CONFIG_PASSPHRASE }}
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
-          AWS_PROFILE: pulumi-s3-user
