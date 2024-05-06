@@ -1,4 +1,4 @@
-encryptionsalt: v1:0bxvwwcO1sE=:v1:4hvT1FSHXofwd8+7:bCj+T/4e5H2TyNYN0eEucayHfear6w==
+encryptionsalt: v1:R0RGag4jk90=:v1:sWZPCMvcL5o+eMfZ:tcZ+C5rU3vwa84XkMuq46u2i92Y1Bg==
 config:
   alchemy:pubkey: pFexqCrRWIP1HiAgL7EzG306mpJBmNuZ
   aws:profile: pulumi-s3-user
@@ -6,7 +6,7 @@ config:
   backend:API_DOMAIN: api.kogen.markets
   backend:ROUTE53_ZONE_NAME: kogen.markets
   exercise:mnemonic:
-    secure: v1:rFulxjdnXR8TDaHu:FNLNDfuFND++38a5/2h1zmrnRkG//WoYc/GrxBxI2gAahybjkCWwd7eXtfYZU+CxtrG4Z0nyitqvNADGeaJzepriWUnrIoXTd7T9hCDJR+MmyJ1aZiBzhq+vFajCNhbXZYx8Gqmf3oItTYIuFUdoKhF2ZoXOT10sFJk0552GSrrzScabV+/1DphJmeLQJQXJsNV1BOH75pDri114/P/5sJs3jc3olelphghoT4xjKw==
+    secure: v1:LpjgO61lUKDhk2OD:VGxMugAJ2KYx+ICKoRd2dQQV4bUSJdCblNEPkahUrnw3FvuRNVBJ1L/x8m9fz6iEtyQbv7KiQ6QqhSPbre8vg3imrWCNPSJoD6U1xnO4fErSPtxqp3ewCoo/1O1HP7ia9MZvjYaY0yNIobUAe9GnupjSzZruhHCdU3fBq6+KIDzEHQLjzJFk+oJxJGYFLXUKGqfI57MFzJ3jB5REJ0TfQ4hmMoUeK91TG9Pg/4XS3A==
   kogen:VITE_CONTRACT_ARCHWAY_TESTNET: archway1z0hzpy4p7nfhmykzk0h4axj9y8dc0ljc2wxtn82twfevrjt4vg4s42y0a3
   kogen:VITE_CONTRACT_FACTORY_INJECTIVE_TESTNET: inj1cklln6z48wwnhkuss2gqza2z8slrhjgp4tqnf8
   kogen:VITE_CONTRACT_INJECTIVE_TESTNET: inj1kfqmypr68k3sg7ulvajgf92z79kfpj2zv4xgc9
