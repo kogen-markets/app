@@ -1,19 +1,19 @@
-encryptionsalt: v1:CW9kczZXTBU=:v1:1gB+5xxtCs6svOli:L0f4+8wtXGUyIJD18VsJTiVl8QfRJw==
+encryptionsalt: v1:R0RGag4jk90=:v1:sWZPCMvcL5o+eMfZ:tcZ+C5rU3vwa84XkMuq46u2i92Y1Bg==
 config:
   alchemy:pubkey: pFexqCrRWIP1HiAgL7EzG306mpJBmNuZ
-  aws:region: eu-central-1
+  aws:profile: pulumi-s3-user
+  aws:region: us-east-1
   backend:API_DOMAIN: api.kogen.markets
   backend:ROUTE53_ZONE_NAME: kogen.markets
   exercise:mnemonic:
-    secure: v1:ZR1swEqwdP0bP2u/:5l6KZl1vDBcxWc+g/njfzf7fRJvyS0yTNumCHDdKlFJj6ixxQUkOTVPRZV7KspnhNGsqrEmr4dltRQR9lv7kfNs5qxxaGq9UbFTcf4wOjP/1Km8/Afy3oJNEM6Ok3J7E1A==
+    secure: v1:LpjgO61lUKDhk2OD:VGxMugAJ2KYx+ICKoRd2dQQV4bUSJdCblNEPkahUrnw3FvuRNVBJ1L/x8m9fz6iEtyQbv7KiQ6QqhSPbre8vg3imrWCNPSJoD6U1xnO4fErSPtxqp3ewCoo/1O1HP7ia9MZvjYaY0yNIobUAe9GnupjSzZruhHCdU3fBq6+KIDzEHQLjzJFk+oJxJGYFLXUKGqfI57MFzJ3jB5REJ0TfQ4hmMoUeK91TG9Pg/4XS3A==
+  kogen:VITE_CONTRACT_ARCHWAY_TESTNET: archway1z0hzpy4p7nfhmykzk0h4axj9y8dc0ljc2wxtn82twfevrjt4vg4s42y0a3
+  kogen:VITE_CONTRACT_FACTORY_INJECTIVE_TESTNET: inj1cklln6z48wwnhkuss2gqza2z8slrhjgp4tqnf8
+  kogen:VITE_CONTRACT_INJECTIVE_TESTNET: inj1kfqmypr68k3sg7ulvajgf92z79kfpj2zv4xgc9
+  kogen:VITE_CONTRACT_NEUTRON_TESTNET: neutron1wcfy2mrs2tr055p5jp6sjk4llnetl7lck6q8u2xthazhu4ut8wrsp69yep
+  kogen:VITE_CONTRACT_PUT_INJECTIVE_TESTNET: inj18ps82rf2mprkpckl3dq3dcsd7m0ywtgej39xaw
   landing:API_DOMAIN: kogen.markets
   landing:ROUTE53_ZONE_NAME: kogen.markets
   pulumi:env_files: []
   webapp:API_DOMAIN: app.kogen.markets
   webapp:ROUTE53_ZONE_NAME: kogen.markets
-  kogen:VITE_CONTRACT_INJECTIVE_TESTNET: inj1kfqmypr68k3sg7ulvajgf92z79kfpj2zv4xgc9
-  kogen:VITE_CONTRACT_NEUTRON_TESTNET: neutron1wcfy2mrs2tr055p5jp6sjk4llnetl7lck6q8u2xthazhu4ut8wrsp69yep
-  kogen:VITE_CONTRACT_ARCHWAY_TESTNET: archway1z0hzpy4p7nfhmykzk0h4axj9y8dc0ljc2wxtn82twfevrjt4vg4s42y0a3
-
-  kogen:VITE_CONTRACT_PUT_INJECTIVE_TESTNET: inj18ps82rf2mprkpckl3dq3dcsd7m0ywtgej39xaw
-  kogen:VITE_CONTRACT_FACTORY_INJECTIVE_TESTNET: inj1cklln6z48wwnhkuss2gqza2z8slrhjgp4tqnf8

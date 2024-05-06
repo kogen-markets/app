@@ -48,10 +48,9 @@ jobs:
         uses: pulumi/setup-pulumi@v2
       - name: Get Pulumi stack output properties
         run: |
-          pulumi login s3://pulumi.janfabian.cz
+          pulumi login
           pulumi stack select kogen-${{ matrix.environment }}
           echo "webapp_url=$(pulumi stack output webapp | jq -r '.url')" >> $GITHUB_ENV
-          echo "backend_url=$(pulumi stack output backend | jq -r '.url')" >> $GITHUB_ENV
           echo "alchemy_pubkey=$(pulumi config get --path alchemy:pubkey)" >> $GITHUB_ENV
           echo "VITE_CONTRACT_PUT_INJECTIVE_TESTNET=$(pulumi config get --path kogen:VITE_CONTRACT_PUT_INJECTIVE_TESTNET)" >> $GITHUB_ENV
           echo "VITE_CONTRACT_FACTORY_INJECTIVE_TESTNET=$(pulumi config get --path kogen:VITE_CONTRACT_FACTORY_INJECTIVE_TESTNET)" >> $GITHUB_ENV
@@ -62,14 +61,15 @@ jobs:
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: eu-central-1
+          AWS_REGION: us-east-1
           PULUMI_CONFIG_PASSPHRASE: ${{ secrets.PULUMI_CONFIG_PASSPHRASE }}
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
       - run: npm ci
       - run: npm run -w @kogen/kogen-ui build:${{ matrix.environment }}
         env:
           NODE_OPTIONS: "--max_old_space_size=8192"
           VITE_FRONTEND_URL: ${{ env.webapp_url }}
-          VITE_BACKEND_URL: ${{ env.backend_url }}
+          VITE_BACKEND_URL: ${{ env.webapp_url }}
           VITE_ALCHEMY_PUBKEY: ${{ env.alchemy_pubkey }}
           VITE_CONTRACT_PUT_INJECTIVE_TESTNET: ${{ env.VITE_CONTRACT_PUT_INJECTIVE_TESTNET }}
 
@@ -95,7 +95,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: eu-central-1
+          aws-region: us-east-1
       - uses: actions/download-artifact@v4
         with:
           name: website-kogen-prod
@@ -104,16 +104,17 @@ jobs:
         uses: pulumi/setup-pulumi@v2
       - name: Get Pulumi stack output properties
         run: |
-          pulumi login s3://pulumi.janfabian.cz
-          pulumi stack select kogen-prod
+          pulumi login
+          pulumi stack select Julio75012/kogen-prod
           echo "s3_bucket=$(pulumi stack output webapp | jq -r '.bucketUri')" >> $GITHUB_ENV
           echo "cloudfront_id=$(pulumi stack output webapp | jq -r '.cloudFrontId')" >> $GITHUB_ENV
         working-directory: package/cloud
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: eu-central-1
+          AWS_REGION: us-east-1
           PULUMI_CONFIG_PASSPHRASE: ${{ secrets.PULUMI_CONFIG_PASSPHRASE }}
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
       - run: |
           aws s3 sync ./package/ui/dist ${{ env.s3_bucket }} --delete
       - run: |
