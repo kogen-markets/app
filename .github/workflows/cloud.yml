@@ -47,7 +47,7 @@ jobs:
 
       - name: Create or update stack resources
         run: |
-          pulumi login -C package/cloud s3://pulumi.janfabian.cz
+          pulumi login -C package/cloud
           pulumi stack -C package/cloud select kogen-prod
           pulumi -C package/cloud/ up -f --yes
         env:
@@ -55,3 +55,4 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: us-east-1
           PULUMI_CONFIG_PASSPHRASE: ${{ secrets.PULUMI_CONFIG_PASSPHRASE }}
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
