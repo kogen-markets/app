@@ -56,7 +56,7 @@ jobs:
         run: |
           pulumi login -C package/cloud
           pulumi stack -C package/cloud select kogen-prod
-          pulumi stack -C package/cloud config
+          pulumi -C package/cloud config
           pulumi -C package/cloud/ up -f --yes
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
