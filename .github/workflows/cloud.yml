@@ -56,7 +56,6 @@ jobs:
       - name: Create or update stack resources
         run: |
           pulumi login -C package/cloud
-          pulumi config -C package/cloud set aws:profile pulumi-s3-user
           pulumi stack -C package/cloud select kogen-prod
           pulumi -C package/cloud/ up -f --yes
         env:
