@@ -26,6 +26,6 @@
     "supertest": "7.0.0"
   },
   "dependencies": {
-    "dotenv-cli": "7.4.1"
+    "dotenv-cli": "7.4.2"
   }
 }
