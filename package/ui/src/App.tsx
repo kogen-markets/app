@@ -55,7 +55,7 @@ const router = createBrowserRouter([
           { path: "put-week1", element: <PutWeek1OptionPage /> },
           { path: "call-week2", element: <CallWeek2OptionPage /> },
           { path: "put-week2", element: <PutWeek2OptionPage /> },
-          { path: ":quoteDenom", element: <QuoteDenomTablePage /> },
+          // { path: ":quoteDenom", element: <QuoteDenomTablePage /> }, if uncommented it creates a webpage: https://app.kogen.markets/options/quoteDenom
         ],
       },
     ],
