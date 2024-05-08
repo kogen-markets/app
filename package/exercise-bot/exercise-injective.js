@@ -31,7 +31,7 @@ export default async function exerciseInjective() {
     10,
   );
 
-  const { data, pyth_contract_addr, update_fee } = await getPythData();
+  // const { data, pyth_contract_addr, update_fee } = await getPythData();
 
   const { signBytes, txRaw } = createTransaction({
     message: [
@@ -49,7 +49,9 @@ export default async function exerciseInjective() {
         contractAddress: process.env.OPTION_CONTRACT_ADDR,
         sender: injectivePublicAddress,
         msg: {
-          exercise: {},
+          exercise: {
+            expiry_price: undefined
+          },
         },
       }),
     ],
