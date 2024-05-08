@@ -84,28 +84,28 @@ if (!OPTION_CONTRACT_ADDR_NEUTRON) {
   throw new Error("undefined config kogen:VITE_CONTRACT_NEUTRON_TESTNET");
 }
 
-export const exerciseBotNeutron = new aws.lambda.Function(
-  lambdaPackageName + "-exercise-bot-neutron",
-  {
-    code: buildCodeAsset(
-      require.resolve("@kogen/kogen-exercise-bot/exercise.js"),
-      true,
-    ),
-    handler: "index.handler",
-    runtime: "nodejs18.x",
-    role: lambdaRole.arn,
-    timeout: 55,
-    memorySize: 512,
-    environment: {
-      variables: {
-        MNEMONIC: MNEMONIC,
-        OPTION_CONTRACT_ADDR: OPTION_CONTRACT_ADDR_NEUTRON,
-        CHAIN_ID: "pion-1",
-        PYTH_PRICE_FEED_URL: "https://xc-testnet.pyth.network/api/latest_vaas",
-      },
-    },
-  },
-);
+// export const exerciseBotNeutron = new aws.lambda.Function(
+//   lambdaPackageName + "-exercise-bot-neutron",
+//   {
+//     code: buildCodeAsset(
+//       require.resolve("@kogen/kogen-exercise-bot/exercise.js"),
+//       true,
+//     ),
+//     handler: "index.handler",
+//     runtime: "nodejs18.x",
+//     role: lambdaRole.arn,
+//     timeout: 55,
+//     memorySize: 512,
+//     environment: {
+//       variables: {
+//         MNEMONIC: MNEMONIC,
+//         OPTION_CONTRACT_ADDR: OPTION_CONTRACT_ADDR_NEUTRON,
+//         CHAIN_ID: "pion-1",
+//         PYTH_PRICE_FEED_URL: "https://xc-testnet.pyth.network/api/latest_vaas",
+//       },
+//     },
+//   },
+// );
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const cronTargetInjective = new aws.cloudwatch.EventTarget(
@@ -128,21 +128,21 @@ const cronPermissionInjective = new aws.lambda.Permission(
 );
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const cronTargetNeutron = new aws.cloudwatch.EventTarget(
-  lambdaPackageName + "exercise-bot-event-target-neutron",
-  {
-    arn: exerciseBotNeutron.arn,
-    rule: cronRule.name,
-  },
-);
+// const cronTargetNeutron = new aws.cloudwatch.EventTarget(
+//   lambdaPackageName + "exercise-bot-event-target-neutron",
+//   {
+//     arn: exerciseBotNeutron.arn,
+//     rule: cronRule.name,
+//   },
+// );
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const cronPermissionNeutron = new aws.lambda.Permission(
-  lambdaPackageName + "exercise-bot-permission-neutron",
-  {
-    action: "lambda:InvokeFunction",
-    function: exerciseBotNeutron.name,
-    principal: "events.amazonaws.com",
-    sourceArn: cronRule.arn,
-  },
-);
+// const cronPermissionNeutron = new aws.lambda.Permission(
+//   lambdaPackageName + "exercise-bot-permission-neutron",
+//   {
+//     action: "lambda:InvokeFunction",
+//     function: exerciseBotNeutron.name,
+//     principal: "events.amazonaws.com",
+//     sourceArn: cronRule.arn,
+//   },
+// );

@@ -35,16 +35,16 @@ export default async function exerciseInjective() {
 
   const { signBytes, txRaw } = createTransaction({
     message: [
-      MsgExecuteContractCompat.fromJSON({
-        contractAddress: pyth_contract_addr,
-        sender: injectivePublicAddress,
-        msg: {
-          update_price_feeds: {
-            data: data,
-          },
-        },
-        funds: [update_fee],
-      }),
+      // MsgExecuteContractCompat.fromJSON({
+      //   contractAddress: pyth_contract_addr,
+      //   sender: injectivePublicAddress,
+      //   msg: {
+      //     update_price_feeds: {
+      //       data: data,
+      //     },
+      //   },
+      //   funds: [update_fee],
+      // }),
       MsgExecuteContractCompat.fromJSON({
         contractAddress: process.env.OPTION_CONTRACT_ADDR,
         sender: injectivePublicAddress,
