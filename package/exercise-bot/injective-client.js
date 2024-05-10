@@ -12,4 +12,4 @@ export const injectivePublicKey = injectivePrivateKey.toPublicKey();
 export const injectiveNetwork =
   process.env.CHAIN_ID === "injective-1"
     ? getNetworkInfo(Network.MainnetK8s)
-    : getNetworkInfo(Network.TestnetK8s);
+    : getNetworkInfo(Network.TestnetSentry);
