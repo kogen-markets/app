@@ -14,7 +14,7 @@ import {
   injectivePublicAddress,
   injectivePublicKey,
 } from "./injective-client.js";
-import { getPythData } from "./pyth.js";
+// import { getPythData } from "./pyth.js";
 
 const chain = chains.find((c) => c.chain_id === process.env.CHAIN_ID);
 const fee = chain.fees.fee_tokens.find((t) => t.denom === "inj");
