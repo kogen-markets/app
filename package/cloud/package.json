@@ -6,7 +6,7 @@
         "typescript": "5.4.5"
     },
     "dependencies": {
-        "@pulumi/aws": "6.39.1",
+        "@pulumi/aws": "6.40.0",
         "@pulumi/aws-native": "0.108.3",
         "@pulumi/awsx": "2.12.1",
         "@pulumi/pulumi": "3.119.0",
