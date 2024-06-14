@@ -26,7 +26,7 @@
     "@injectivelabs/ts-types": "1.14.11",
     "@injectivelabs/utils": "1.14.11",
     "@injectivelabs/wallet-ts": "1.14.7",
-    "@keplr-wallet/types": "0.12.102",
+    "@keplr-wallet/types": "0.12.103",
     "@mui/icons-material": "5.15.20",
     "@mui/material": "5.15.20",
     "@rollbar/react": "0.11.2",
