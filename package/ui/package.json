@@ -34,7 +34,7 @@
     "chain-registry": "1.63.3",
     "cosmjs-types": "0.9.0",
     "decimal.js": "10.4.3",
-    "joi": "17.13.1",
+    "joi": "17.13.3",
     "ramda": "0.30.1",
     "react": "18.3.1",
     "react-dom": "18.3.1",
