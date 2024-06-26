@@ -8,7 +8,7 @@
   },
   "type": "module",
   "dependencies": {
-    "@cosmjs/cosmwasm-stargate": "0.32.3",
+    "@cosmjs/cosmwasm-stargate": "0.32.4",
     "@cosmjs/crypto": "0.32.3",
     "@cosmjs/proto-signing": "0.32.3",
     "@cosmjs/stargate": "0.32.3",

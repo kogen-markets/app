@@ -12,7 +12,7 @@
     "test": "exit 0"
   },
   "dependencies": {
-    "@cosmjs/cosmwasm-stargate": "0.32.3",
+    "@cosmjs/cosmwasm-stargate": "0.32.4",
     "@cosmjs/encoding": "0.32.3",
     "@cosmos-kit/core": "2.13.0",
     "@cosmos-kit/react-lite": "2.12.0",
