@@ -5,7 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "npm test -w @kogen/kogen-ui",
-    "postinstall": "patch-package"
+    "dev": "npm -w @kogen/kogen-ui run dev",
+    "build": "npm run -w @kogen/kogen-ui build:prod; npx serve package/ui/dist",
+    "clean": "rm -rf node_modules/ ; rm package-lock.json ; npm vite",
+    "vite": "rm -rf package/ui/node_modules/.vite/deps"
   },
   "author": "",
   "license": "ISC",
@@ -15,8 +18,5 @@
   "overrides": {
     "react-dom": "18.3.1",
     "eslint": "9.6.0"
-  },
-  "devDependencies": {
-    "patch-package": "^8.0.0"
   }
 }
