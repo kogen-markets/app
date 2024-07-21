@@ -1,6 +1,6 @@
 import * as pkg from "@injectivelabs/sdk-ts";
 const {
-  ChainRestAuthApi,
+  ChainRestAuthApi, ChainGrpcWasmApi,
   createTransaction,
   TxGrpcClient,
   MsgExecuteContractCompat,
@@ -21,49 +21,69 @@ const fee = chain.fees.fee_tokens.find((t) => t.denom === "inj");
 const gasAmount = 10000000;
 
 export default async function exerciseInjective() {
-  const accountDetails = await new ChainRestAuthApi(
-    injectiveNetwork.rest,
-  ).fetchAccount(injectivePublicAddress);
+  const chainRestAuthApi = new ChainRestAuthApi(injectiveNetwork.rest);
+  const accountDetails = await chainRestAuthApi.fetchAccount(injectivePublicAddress);
 
   let sequence = parseInt(accountDetails.account.base_account.sequence, 10);
-  let accountNumber = parseInt(
-    accountDetails.account.base_account.account_number,
-    10,
+  let accountNumber = parseInt(accountDetails.account.base_account.account_number, 10);
+
+  // Create a ChainGrpcWasmApi instance
+  const chainGrpcWasmApi = new ChainGrpcWasmApi(injectiveNetwork.grpc);
+
+  // Query deployed options from the factory contract
+  const queryMsg = {
+    deployed_options: {
+      after_date_in_seconds: 0 // Fetch all options
+    }
+  };
+  const queryResponse = await chainGrpcWasmApi.fetchSmartContractState(
+    process.env.FACTORY_CONTRACT_ADDR,
+    Buffer.from(JSON.stringify(queryMsg)).toString('base64')
   );
 
-  // const { data, pyth_contract_addr, update_fee } = await getPythData();
+  const deployedOptions = JSON.parse(Buffer.from(queryResponse.data).toString());
+  const currentTime = Math.floor(Date.now() / 1000); // Current time in seconds
+
+  // Filter expired options and separate calls and puts
+  const expiredCallOptions = deployedOptions
+    .filter(option => option.option_type === "call" && Number(option.option_config.expiry) < currentTime * 100000000000)
+    .sort((a, b) => Number(b.option_config.expiry) - Number(a.option_config.expiry));
+
+  const expiredPutOptions = deployedOptions
+    .filter(option => option.option_type === "put" && Number(option.option_config.expiry) < currentTime * 100000000000)
+    .sort((a, b) => Number(b.option_config.expiry) - Number(a.option_config.expiry));
+
+  // Extract the most recently expired call and put options
+  const lastExpiredCall = expiredCallOptions[0];
+  const lastExpiredPut = expiredPutOptions[0];
+
+  // Create an array of options to exercise (maximum 2 elements)
+  const optionsToExercise = [lastExpiredCall, lastExpiredPut].filter(Boolean);
+
+  // Create exercise messages for the selected options
+  const exerciseMessages = optionsToExercise.map(option =>
+    MsgExecuteContractCompat.fromJSON({
+      contractAddress: option.addr,
+      sender: injectivePublicAddress,
+      msg: {
+        exercise: {
+          expiry_price: undefined
+        },
+      },
+    })
+  );
 
   const { signBytes, txRaw } = createTransaction({
-    message: [
-      // MsgExecuteContractCompat.fromJSON({
-      //   contractAddress: pyth_contract_addr,
-      //   sender: injectivePublicAddress,
-      //   msg: {
-      //     update_price_feeds: {
-      //       data: data,
-      //     },
-      //   },
-      //   funds: [update_fee],
-      // }),
-      MsgExecuteContractCompat.fromJSON({
-        contractAddress: process.env.OPTION_CONTRACT_ADDR,
-        sender: injectivePublicAddress,
-        msg: {
-          exercise: {
-            expiry_price: undefined
-          },
-        },
-      }),
-    ],
+    message: exerciseMessages,
     memo: "",
     fee: {
       amount: [
         {
-          amount: fee.average_gas_price * gasAmount + "",
+          amount: fee.average_gas_price * gasAmount * exerciseMessages.length + "",
           denom: "inj",
         },
       ],
-      gas: gasAmount + "",
+      gas: (gasAmount * exerciseMessages.length) + "",
     },
     pubKey: injectivePublicKey.toBase64(),
     sequence: sequence,
@@ -78,5 +98,10 @@ export default async function exerciseInjective() {
 
   const txResponse = await txService.broadcast(txRaw);
 
-  console.log("%j", txResponse);
+  console.log("Exercised options:", optionsToExercise.map(option => ({
+    type: option.option_type,
+    address: option.addr,
+    expiry: new Date(Number(option.option_config.expiry) / 1e6).toISOString()
+  })));
+  console.log("Transaction response:", txResponse);
 }
