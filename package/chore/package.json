@@ -12,8 +12,8 @@
   "devDependencies": {
     "@cosmwasm/ts-codegen": "1.11.1",
     "@types/jest": "29.5.12",
-    "@typescript-eslint/eslint-plugin": "7.15.0",
-    "@typescript-eslint/parser": "7.15.0",
+    "@typescript-eslint/eslint-plugin": "7.16.1",
+    "@typescript-eslint/parser": "7.16.1",
     "eslint": "9.7.0",
     "eslint-config-prettier": "9.1.0",
     "eslint-plugin-import": "2.29.1",
