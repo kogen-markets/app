@@ -1,6 +1,3 @@
-Certainly! Here's a README.md for the `chore` package:
-
-```markdown:package/chore/README.md
 # Kogen Chore
 
 The `@kogen/kogen-chore` package is responsible for various maintenance tasks, such as code generation and linting, within the Kogen project.
@@ -79,10 +76,3 @@ For a full list of dependencies, please refer to the `package.json` file:
 startLine: 11
 endLine: 29
 ```
-
-## License
-
-[Add your license information here]
-```
-
-This README.md provides an overview of the `chore` package, including its features, setup instructions, available scripts, and key dependencies. You may want to customize this further based on any specific requirements or additional information about your chore package.

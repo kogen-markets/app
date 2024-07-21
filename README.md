@@ -1,6 +1,3 @@
-Certainly! I'll provide you with a more extensive README.md for your Kogen repository, including an explanation of workspaces. Here's a suggested structure for your README.md:
-
-```markdown:README.md
 # Kogen
 
 Kogen is a project that utilizes npm workspaces to manage multiple packages within a single repository.
@@ -46,15 +43,15 @@ In this project, we have a workspace called `@kogen/kogen-ui` located in the `pa
 
 ### Prerequisites
 
-- Node.js (version X.X.X or higher)
-- npm (version X.X.X or higher)
+- Node.js (version 12.22.9 or higher)
+- npm (version 8.19.3 or higher)
 
 ### Installation
 
 1. Clone the repository:
    ```
-   git clone https://github.com/your-username/kogen.git
-   cd kogen
+   git clone https://github.com/kogen-markets/app.git
+   cd app
    ```
 
 2. Set up the environment for the UI package:
@@ -64,7 +61,7 @@ In this project, we have a workspace called `@kogen/kogen-ui` located in the `pa
 
 3. Install dependencies:
    ```
-   npm install
+   npm i
    ```
 
 ## Development
@@ -90,16 +87,3 @@ To build and serve the production version of the UI package:
    ```
    npx serve package/ui/dist
    ```
-
-## Contributing
-
-[Add information about how to contribute to the project]
-
-## License
-
-[Add license information for your project]
-```
-
-This README.md provides a more comprehensive overview of your project, including an explanation of workspaces and how to use them in the context of your project. It also includes sections for getting started, development, testing the production build, and placeholders for contributing guidelines and license information.
-
-Remember to replace placeholder information (like version numbers, repository URL, etc.) with the actual details of your project. You may also want to add more specific information about the Kogen project itself, its purpose, and any other relevant details.

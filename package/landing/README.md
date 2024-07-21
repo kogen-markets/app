@@ -1,6 +1,3 @@
-Sure! Here's a README.md for the `landing` package (brand site):
-
-```markdown:package/landing/README.md
 # Kogen Landing
 
 The `@kogen/kogen-landing` package is the brand site for the Kogen project. It serves as the main entry point for users to learn about Kogen and its offerings.
@@ -98,13 +95,3 @@ The project uses Tailwind CSS for styling. You can customize the Tailwind config
 
 The project is optimized for SEO using the `next-seo` package. You can configure SEO settings in the `next-seo.config.js` file.
 
-## Analytics
-
-To integrate analytics, add your tracking code in the appropriate place within the `app` directory.
-
-## License
-
-[Add your license information here]
-```
-
-This README.md provides an overview of the `landing` package, including its features, setup instructions, development and build commands, environment variables, directory structure, styling, SEO, and analytics integration. You may want to customize this further based on any specific requirements or additional information about your landing package.
