@@ -7,7 +7,7 @@
     "test": "npm test -w @kogen/kogen-ui",
     "dev": "npm -w @kogen/kogen-ui run dev",
     "build": "npm run -w @kogen/kogen-ui build; npx serve package/ui/dist",
-    "clean": "rm -rf node_modules/ ; rm package-lock.json ; npm vite",
+    "clean": "rm -rf node_modules/ ; rm package-lock.json ; npm run vite",
     "vite": "rm -rf package/ui/node_modules/.vite/deps"
   },
   "author": "",
@@ -17,6 +17,6 @@
   ],
   "overrides": {
     "react-dom": "18.3.1",
-    "eslint": "9.6.0"
+    "eslint": "9.7.0"
   }
 }
