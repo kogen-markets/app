@@ -18,7 +18,7 @@ import AppLayout from "./layout/app";
 import rollbar from "./lib/rollbar";
 import Error from "./pages/error";
 import Loading from "./components/loading";
-import { ENABLED_TESTNETS, TESTNET } from "./lib/config";
+import { ENABLED_MAINNETS, MAINNET } from "./lib/config";
 import { CosmWasmClient } from "@cosmjs/cosmwasm-stargate";
 typeof CosmWasmClient === "function" && null; // Pretend to use CosmWasmClient to avoid tree shaking, without side effects
 
