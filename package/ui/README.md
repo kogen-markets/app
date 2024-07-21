@@ -1,6 +1,3 @@
-Certainly! I'll create a README.md for the UI package, making note of the polyfill. Here's the suggested content for the README.md file:
-
-```markdown:package/ui/README.md
 # Kogen UI
 
 This package contains the user interface for the Kogen project, built with React and Vite.
@@ -94,12 +91,3 @@ For a full list of dependencies, please refer to the `package.json` file.
 ## Development Dependencies
 
 The project uses TypeScript, ESLint, and Prettier for code quality and formatting. Vite is used as the build tool.
-
-## License
-
-[Add your license information here]
-```
-
-This README.md provides an overview of the UI package, including its features, setup instructions, development and build commands, and key dependencies. It also mentions the use of the node polyfills plugin, which is important for developers to be aware of when working on the project.
-
-You may want to customize this further based on any specific requirements or additional information about your UI package.
