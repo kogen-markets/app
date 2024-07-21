@@ -7,14 +7,15 @@ export default function Expiry({ config }: { config: Config }) {
     <WithValue value={config.expiry}>
       <Typography variant="caption">Expiry</Typography>
       <Typography variant="body1">
-        {new Date(parseInt(config.expiry) / 1000000).toLocaleDateString(
-          undefined,
-          {
-            month: "long",
-            day: "2-digit",
-            year: "numeric",
-          },
-        )}
+        {new Date(parseInt(config.expiry) / 1000000).toLocaleString('en-GB', {
+          month: 'long',
+          day: '2-digit',
+          year: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit',
+          timeZone: 'UTC',
+          timeZoneName: 'short',
+        })}
       </Typography>
     </WithValue>
   );
