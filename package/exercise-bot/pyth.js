@@ -3,6 +3,7 @@ import { withClient } from "@kogen/kogen-shared/cosmwasm.js";
 export async function getPythData() {
   const config = await withClient(async (client) => {
     return client.queryContractSmart(process.env.OPTION_CONTRACT_ADDR, {
+      //TODO: make a request to factory and filter (like in injective)
       config: {},
     });
   });

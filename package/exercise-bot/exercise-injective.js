@@ -21,6 +21,8 @@ const fee = chain.fees.fee_tokens.find((t) => t.denom === "inj");
 const gasAmount = 10000000;
 
 export default async function exerciseInjective() {
+  console.log("exerciseInjective call");
+
   const chainRestAuthApi = new ChainRestAuthApi(injectiveNetwork.rest);
   const accountDetails = await chainRestAuthApi.fetchAccount(injectivePublicAddress);
 
@@ -36,6 +38,9 @@ export default async function exerciseInjective() {
       after_date_in_seconds: 0 // Fetch all options
     }
   };
+
+  console.log("Starting to fetch deployed options");
+
   const queryResponse = await chainGrpcWasmApi.fetchSmartContractState(
     process.env.FACTORY_CONTRACT_ADDR,
     Buffer.from(JSON.stringify(queryMsg)).toString('base64')
@@ -46,11 +51,11 @@ export default async function exerciseInjective() {
 
   // Filter expired options and separate calls and puts
   const expiredCallOptions = deployedOptions
-    .filter(option => option.option_type === "call" && Number(option.option_config.expiry) < currentTime * 100000000000)
+    .filter(option => option.option_type === "call" && Number(option.option_config.expiry) < currentTime * 1000000000)
     .sort((a, b) => Number(b.option_config.expiry) - Number(a.option_config.expiry));
 
   const expiredPutOptions = deployedOptions
-    .filter(option => option.option_type === "put" && Number(option.option_config.expiry) < currentTime * 100000000000)
+    .filter(option => option.option_type === "put" && Number(option.option_config.expiry) < currentTime * 1000000000)
     .sort((a, b) => Number(b.option_config.expiry) - Number(a.option_config.expiry));
 
   // Extract the most recently expired call and put options
