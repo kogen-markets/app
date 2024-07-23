@@ -21,6 +21,7 @@ export default async function exerciseCosmwasm() {
           },
           {
             contractAddress: process.env.OPTION_CONTRACT_ADDR,
+            //TODO: make a request to factory and filter (like in injective)
             msg: {
               exercise: {},
             },

@@ -49,8 +49,16 @@ const OPTION_CONTRACT_ADDR_INJECTIVE = kogenConfig.get(
   "VITE_CONTRACT_INJECTIVE_TESTNET",
 );
 
+const FACTORY_CONTRACT_ADDR_INJECTIVE = kogenConfig.get(
+  "VITE_CONTRACT_FACTORY_INJECTIVE_TESTNET",
+);
+
 if (!OPTION_CONTRACT_ADDR_INJECTIVE) {
   throw new Error("undefined config kogen:VITE_CONTRACT_INJECTIVE_TESTNET");
+}
+
+if (!FACTORY_CONTRACT_ADDR_INJECTIVE) {
+  throw new Error("undefined config kogen:VITE_CONTRACT_FACTORY_INJECTIVE_TESTNET");
 }
 
 export const exerciseBotInjective = new aws.lambda.Function(
@@ -69,6 +77,7 @@ export const exerciseBotInjective = new aws.lambda.Function(
       variables: {
         MNEMONIC: MNEMONIC,
         OPTION_CONTRACT_ADDR: OPTION_CONTRACT_ADDR_INJECTIVE,
+        FACTORY_CONTRACT_ADDR: FACTORY_CONTRACT_ADDR_INJECTIVE,
         CHAIN_ID: "injective-888",
         PYTH_PRICE_FEED_URL: "https://xc-testnet.pyth.network/api/latest_vaas",
       },
@@ -76,12 +85,12 @@ export const exerciseBotInjective = new aws.lambda.Function(
   },
 );
 
-const OPTION_CONTRACT_ADDR_NEUTRON = kogenConfig.get(
-  "VITE_CONTRACT_NEUTRON_TESTNET",
+const FACTORY_CONTRACT_ADDR_NEUTRON = kogenConfig.get(
+  "VITE_CONTRACT_FACTORY_NEUTRON_TESTNET",
 );
 
-if (!OPTION_CONTRACT_ADDR_NEUTRON) {
-  throw new Error("undefined config kogen:VITE_CONTRACT_NEUTRON_TESTNET");
+if (!FACTORY_CONTRACT_ADDR_NEUTRON) {
+  throw new Error("undefined config kogen:VITE_CONTRACT_FACTORY_NEUTRON_TESTNET");
 }
 
 // export const exerciseBotNeutron = new aws.lambda.Function(
@@ -99,7 +108,7 @@ if (!OPTION_CONTRACT_ADDR_NEUTRON) {
 //     environment: {
 //       variables: {
 //         MNEMONIC: MNEMONIC,
-//         OPTION_CONTRACT_ADDR: OPTION_CONTRACT_ADDR_NEUTRON,
+//         FACTORY_CONTRACT_ADDR: FACTORY_CONTRACT_ADDR_NEUTRON,
 //         CHAIN_ID: "pion-1",
 //         PYTH_PRICE_FEED_URL: "https://xc-testnet.pyth.network/api/latest_vaas",
 //       },
