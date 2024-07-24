@@ -77,6 +77,44 @@ jobs:
           VITE_CONTRACT_NEUTRON_TESTNET: ${{ env.VITE_CONTRACT_NEUTRON_TESTNET }}
           VITE_CONTRACT_ARCHWAY_TESTNET: ${{ env.VITE_CONTRACT_ARCHWAY_TESTNET }}
           VITE_CLIENT_ROLLBAR_ACCESS_TOKEN: ${{ secrets.CLIENT_ROLLBAR_ACCESS_TOKEN }}
+      - name: Install serve
+        run: npm install -g serve
+
+      - name: Start server
+        run: npx serve package/ui/dist &
+        
+      - name: Wait for server
+        run: sleep 10
+
+      - name: Check for errors
+        run: |
+          echo "Checking for errors on the webpage..."
+          webpage_content=$(curl -s http://localhost:3000)
+          
+          # List of errors to check for
+          errors=(
+            "TypeError: define_import_meta_env_default\$1.fetchContractAddressInjective is not a function"
+            # Add more error patterns here
+          )
+          
+          found_errors=false
+          
+          for error in "${errors[@]}"; do
+            if echo "$webpage_content" | grep -q "$error"; then
+              echo "ERROR FOUND: $error"
+              found_errors=true
+            fi
+          done
+          
+          if [ "$found_errors" = true ]; then
+            echo "Errors were found on the webpage. Check the logs above for details."
+            exit 1
+          else
+            echo "No known errors were found on the webpage."
+          fi
+      - name: Stop server
+        run: pkill -f "npx serve"
+        if: always()
       - uses: actions/upload-artifact@v4
         if: github.ref == 'refs/heads/main'
         with:
