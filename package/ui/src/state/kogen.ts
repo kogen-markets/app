@@ -113,16 +113,22 @@ export const contractsState = selector<string>({
   },
 });
 
+async function fetchContractAddressInjective(): Promise<string> {
+  const response = await fetch('https://raw.githubusercontent.com/kogen-markets/app/main/contract_addresses.json');
+  const data = await response.json();
+  return data.FACTORY_INJECTIVE_TESTNET;
+}
+
 export const factoryContractState = selector<string>({
   key: "factoryContractState",
   get: async ({ get }) => {
     const chain = get(chainState);
 
     if (chain.chain_id === TESTNET.INJECTIVE) {
-      return import.meta.env.VITE_CONTRACT_FACTORY_INJECTIVE_TESTNET;
+      return import.meta.env.fetchContractAddressInjective();
     }
 
-    throw new Error(`unknown chain_id ${chain.chain_id} for the put option`);
+    throw new Error(`unknown chain_id ${chain.chain_id}`);
   },
 });
 
