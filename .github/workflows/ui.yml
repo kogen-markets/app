@@ -83,38 +83,19 @@ jobs:
       - name: Start server
         run: npx serve package/ui/dist &
         
-      - name: Wait for server
-        run: sleep 10
+      - name: Install Puppeteer
+        run: npm install puppeteer
 
       - name: Check for errors
         run: |
-          echo "Checking for errors on the webpage..."
-          webpage_content=$(curl -s http://localhost:3000)
-          
-          # List of errors to check for
-          errors=(
-            "TypeError: define_import_meta_env_default\$1.fetchContractAddressInjective is not a function"
-            # Add more error patterns here
-          )
-          
-          found_errors=false
-          
-          for error in "${errors[@]}"; do
-            if echo "$webpage_content" | grep -q "$error"; then
-              echo "ERROR FOUND: $error"
-              found_errors=true
-            fi
-          done
-          
-          if [ "$found_errors" = true ]; then
-            echo "Errors were found on the webpage. Check the logs above for details."
+          node check_errors.js > error_output.txt
+          if grep -q "RELOAD THE PAGE" error_output.txt; then
+            echo "Errors found:"
+            cat error_output.txt
             exit 1
           else
-            echo "No known errors were found on the webpage."
+            echo "No errors found"
           fi
-      - name: Stop server
-        run: pkill -f "npx serve"
-        if: always()
       - uses: actions/upload-artifact@v4
         if: github.ref == 'refs/heads/main'
         with:
