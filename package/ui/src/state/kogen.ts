@@ -125,7 +125,7 @@ export const factoryContractState = selector<string>({
     const chain = get(chainState);
 
     if (chain.chain_id === TESTNET.INJECTIVE) {
-      return weshalors.fetchContractAddressInjective();
+      return import.meta.env.fetchContractAddressInjective();
     }
 
     throw new Error(`unknown chain_id ${chain.chain_id}`);
