@@ -12,7 +12,7 @@ const puppeteer = require('puppeteer');
   });
 
   // Navigate to the page
-  await page.goto('http://localhost:5173', {waitUntil: 'networkidle0'});
+  await page.goto('http://localhost:3000', {waitUntil: 'networkidle0'});
 
   // Check for visible error messages
   const errorMessage = await page.evaluate(() => {
