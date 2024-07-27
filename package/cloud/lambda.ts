@@ -7,6 +7,14 @@ const exerciseConfig = new pulumi.Config("exercise");
 const kogenConfig = new pulumi.Config("kogen");
 const lambdaPackageName = "kogen--package-lambda";
 
+// Fetch the contract address during Pulumi deployment
+const fetchContractAddress = async () => {
+  const response = await fetch("https://raw.githubusercontent.com/kogen-markets/app/main/contract_addresses.json");
+  const data = await response.json();
+  return data.FACTORY_INJECTIVE_TESTNET.toLowerCase();
+};
+
+
 const lambdaRole = new aws.iam.Role(lambdaPackageName, {
   assumeRolePolicy: {
     Version: "2012-10-17",
@@ -49,16 +57,14 @@ const OPTION_CONTRACT_ADDR_INJECTIVE = kogenConfig.get(
   "VITE_CONTRACT_INJECTIVE_TESTNET",
 );
 
-const FACTORY_CONTRACT_ADDR_INJECTIVE = kogenConfig.get(
-  "VITE_CONTRACT_FACTORY_INJECTIVE_TESTNET",
-);
+const FACTORY_CONTRACT_ADDR_INJECTIVE = pulumi.output(fetchContractAddress());
 
 if (!OPTION_CONTRACT_ADDR_INJECTIVE) {
   throw new Error("undefined config kogen:VITE_CONTRACT_INJECTIVE_TESTNET");
 }
 
 if (!FACTORY_CONTRACT_ADDR_INJECTIVE) {
-  throw new Error("undefined config kogen:VITE_CONTRACT_FACTORY_INJECTIVE_TESTNET");
+  throw new Error("undefined factory contract address (https://raw.githubusercontent.com/kogen-markets/app/main/contract_addresses.json)");
 }
 
 export const exerciseBotInjective = new aws.lambda.Function(
