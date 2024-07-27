@@ -77,6 +77,25 @@ jobs:
           VITE_CONTRACT_NEUTRON_TESTNET: ${{ env.VITE_CONTRACT_NEUTRON_TESTNET }}
           VITE_CONTRACT_ARCHWAY_TESTNET: ${{ env.VITE_CONTRACT_ARCHWAY_TESTNET }}
           VITE_CLIENT_ROLLBAR_ACCESS_TOKEN: ${{ secrets.CLIENT_ROLLBAR_ACCESS_TOKEN }}
+      - name: Install serve
+        run: npm install -g serve
+
+      - name: Start server
+        run: npx serve package/ui/dist &
+        
+      - name: Install Puppeteer
+        run: npm install puppeteer
+
+      - name: Check for errors
+        run: |
+          node check_errors.js > error_output.txt
+          if grep -q "RELOAD THE PAGE" error_output.txt; then
+            echo "Errors found:"
+            cat error_output.txt
+            exit 1
+          else
+            echo "No errors found"
+          fi
       - uses: actions/upload-artifact@v4
         if: github.ref == 'refs/heads/main'
         with:
