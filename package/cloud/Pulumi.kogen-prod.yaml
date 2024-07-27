@@ -7,7 +7,7 @@ config:
   exercise:mnemonic:
     secure: v1:LpjgO61lUKDhk2OD:VGxMugAJ2KYx+ICKoRd2dQQV4bUSJdCblNEPkahUrnw3FvuRNVBJ1L/x8m9fz6iEtyQbv7KiQ6QqhSPbre8vg3imrWCNPSJoD6U1xnO4fErSPtxqp3ewCoo/1O1HP7ia9MZvjYaY0yNIobUAe9GnupjSzZruhHCdU3fBq6+KIDzEHQLjzJFk+oJxJGYFLXUKGqfI57MFzJ3jB5REJ0TfQ4hmMoUeK91TG9Pg/4XS3A==
   kogen:VITE_CONTRACT_ARCHWAY_TESTNET: archway1z0hzpy4p7nfhmykzk0h4axj9y8dc0ljc2wxtn82twfevrjt4vg4s42y0a3
-  kogen:VITE_CONTRACT_FACTORY_INJECTIVE_TESTNET: ${fetch("https://raw.githubusercontent.com/kogen-markets/app/main/contract_addresses.json").FACTORY_INJECTIVE_TESTNET}
+  kogen:VITE_CONTRACT_FACTORY_INJECTIVE_TESTNET_URL: https://raw.githubusercontent.com/kogen-markets/app/main/contract_addresses.json
   kogen:VITE_CONTRACT_INJECTIVE_TESTNET: inj1psf0crk854qxthjxq9z24nsk4rv7ardw5m44xq
   kogen:VITE_CONTRACT_NEUTRON_TESTNET: neutron1wcfy2mrs2tr055p5jp6sjk4llnetl7lck6q8u2xthazhu4ut8wrsp69yep
   kogen:VITE_CONTRACT_PUT_INJECTIVE_TESTNET: inj18ps82rf2mprkpckl3dq3dcsd7m0ywtgej39xaw
