@@ -11,7 +11,7 @@ const lambdaPackageName = "kogen--package-lambda";
 const fetchContractAddress = async () => {
   const response = await fetch("https://raw.githubusercontent.com/kogen-markets/app/main/contract_addresses.json");
   const data = await response.json();
-  return data.FACTORY_INJECTIVE_TESTNET.toLowerCase();
+  return data;
 };
 
 
@@ -57,14 +57,14 @@ const OPTION_CONTRACT_ADDR_INJECTIVE = kogenConfig.get(
   "VITE_CONTRACT_INJECTIVE_TESTNET",
 );
 
-const FACTORY_CONTRACT_ADDR_INJECTIVE = pulumi.output(fetchContractAddress());
-
 if (!OPTION_CONTRACT_ADDR_INJECTIVE) {
   throw new Error("undefined config kogen:VITE_CONTRACT_INJECTIVE_TESTNET");
 }
 
+const FACTORY_CONTRACT_ADDR_INJECTIVE = pulumi.output(fetchContractAddress().FACTORY_INJECTIVE_TESTNET.toLowerCase());
+
 if (!FACTORY_CONTRACT_ADDR_INJECTIVE) {
-  throw new Error("undefined factory contract address (https://raw.githubusercontent.com/kogen-markets/app/main/contract_addresses.json)");
+  throw new Error("undefined injective factory contract address (https://raw.githubusercontent.com/kogen-markets/app/main/contract_addresses.json)");
 }
 
 export const exerciseBotInjective = new aws.lambda.Function(
@@ -91,13 +91,13 @@ export const exerciseBotInjective = new aws.lambda.Function(
   },
 );
 
-const FACTORY_CONTRACT_ADDR_NEUTRON = kogenConfig.get(
-  "VITE_CONTRACT_FACTORY_NEUTRON_TESTNET",
-);
+
+const FACTORY_CONTRACT_ADDR_NEUTRON = pulumi.output(fetchContractAddress().FACTORY_NEUTRON_TESTNET.toLowerCase());
 
 if (!FACTORY_CONTRACT_ADDR_NEUTRON) {
-  throw new Error("undefined config kogen:VITE_CONTRACT_FACTORY_NEUTRON_TESTNET");
+  throw new Error("undefined neutron factory contract address (https://raw.githubusercontent.com/kogen-markets/app/main/contract_addresses.json)");
 }
+
 
 // export const exerciseBotNeutron = new aws.lambda.Function(
 //   lambdaPackageName + "-exercise-bot-neutron",
