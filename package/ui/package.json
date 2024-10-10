@@ -16,7 +16,7 @@
     "@cosmos-kit/core": "2.15.0",
     "@cosmos-kit/react-lite": "2.14.0",
     "@cosmos-kit/leap-extension": "2.13.0",
-    "@cosmos-kit/keplr-extension": "2.13.0",
+    "@cosmos-kit/keplr-extension": "2.14.0",
     "@cosmos-kit/cosmostation-extension": "2.15.0",
     "@emotion/react": "11.13.3",
     "@emotion/styled": "11.13.0",
