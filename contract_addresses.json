@@ -1,4 +1,5 @@
 {
-  "FACTORY_INJECTIVE_TESTNET": "inj1cqmk5n48ju94gmj00usq6vth4n06989wds0sj8",
+  "FACTORY_INJECTIVE_TESTNET":"inj1kkkraj7jpwa6wpmmchxkn7l8yy4mx6fma4qppc",
+  "FACTORY_INJECTIVE_TESTNET_prod": "inj1cqmk5n48ju94gmj00usq6vth4n06989wds0sj8",
   "FACTORY_NEUTRON_TESTNET": "tbc"
 }
