@@ -9,7 +9,7 @@
         "@pulumi/aws": "6.60.0",
         "@pulumi/aws-native": "0.126.0",
         "@pulumi/awsx": "2.19.0",
-        "@pulumi/pulumi": "3.140.0",
+        "@pulumi/pulumi": "3.141.0",
         "esbuild": "0.24.0"
     }
 }
