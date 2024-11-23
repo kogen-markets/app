@@ -2,7 +2,7 @@ import * as pkg from "@injectivelabs/sdk-ts";
 const {
   ChainRestAuthApi, ChainGrpcWasmApi,
   createTransaction,
-  TxGrpcClient,
+  TxGrpcApi,
   MsgExecuteContractCompat,
 } = pkg;
 
@@ -52,18 +52,32 @@ export default async function exerciseInjective() {
   // Query deployed options from the factory contract
   const queryMsg = {
     deployed_options: {
-      after_date_in_seconds: 0 // Fetch all options
+      after_date_in_seconds: Math.floor(Date.now() / 1000) - (2 * 60 * 60)  // Last 7 days
     }
   };
 
   console.log("Starting to fetch deployed options");
 
+  // Use only the parameters that the contract accepts
+
+  console.log("Query message:", queryMsg);
+
   const queryResponse = await chainGrpcWasmApi.fetchSmartContractState(
     factoryAddress,
-    Buffer.from(JSON.stringify(queryMsg)).toString('base64')
+    Buffer.from(JSON.stringify(queryMsg)).toString('base64'),
+    {
+      height: "latest",
+      timeout: 10000,
+      gasLimit: 1000000  // Increase gas limit for the query
+
+    }
   );
 
+  console.log("Query response received, data size:", queryResponse.data.length);
+
   const deployedOptions = JSON.parse(Buffer.from(queryResponse.data).toString());
+  console.log("Number of deployed options:", deployedOptions.length);
+
   const currentTime = Math.floor(Date.now() / 1000); // Current time in seconds
 
   // Filter expired options and separate calls and puts
@@ -116,7 +130,7 @@ export default async function exerciseInjective() {
   const signature = await injectivePrivateKey.sign(Buffer.from(signBytes));
   txRaw.signatures = [signature];
 
-  const txService = new TxGrpcClient(injectiveNetwork.grpc);
+  const txService = new TxGrpcApi(injectiveNetwork.grpc);
 
   const txResponse = await txService.broadcast(txRaw);
 
