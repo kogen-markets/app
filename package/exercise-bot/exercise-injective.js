@@ -20,8 +20,25 @@ const chain = chains.find((c) => c.chain_id === process.env.CHAIN_ID);
 const fee = chain.fees.fee_tokens.find((t) => t.denom === "inj");
 const gasAmount = 10000000;
 
+async function getFactoryAddress(jsonUrl) {
+  try {
+    const response = await fetch(jsonUrl);
+    const data = await response.json();
+    return data.FACTORY_INJECTIVE_TESTNET.toLowerCase();
+  } catch (error) {
+    console.error('Error fetching factory address:', error);
+    throw error;
+  }
+}
+
+
+
 export default async function exerciseInjective() {
   console.log("exerciseInjective call");
+
+  // Fetch factory address from JSON
+  const factoryAddress = await getFactoryAddress(process.env.FACTORY_CONTRACT_ADDR_JSON);
+  console.log("Fetched factory address:", factoryAddress);
 
   const chainRestAuthApi = new ChainRestAuthApi(injectiveNetwork.rest);
   const accountDetails = await chainRestAuthApi.fetchAccount(injectivePublicAddress);
@@ -42,7 +59,7 @@ export default async function exerciseInjective() {
   console.log("Starting to fetch deployed options");
 
   const queryResponse = await chainGrpcWasmApi.fetchSmartContractState(
-    process.env.FACTORY_CONTRACT_ADDR,
+    factoryAddress,
     Buffer.from(JSON.stringify(queryMsg)).toString('base64')
   );
 
