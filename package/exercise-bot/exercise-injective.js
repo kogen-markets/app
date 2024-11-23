@@ -37,7 +37,7 @@ export default async function exerciseInjective() {
   console.log("exerciseInjective call");
 
   // Fetch factory address from JSON
-  const factoryAddress = await getFactoryAddress(process.env.FACTORY_CONTRACT_JSON);
+  const factoryAddress = await getFactoryAddress(process.env.FACTORY_CONTRACT_ADDR_JSON);
   console.log("Fetched factory address:", factoryAddress);
 
   const chainRestAuthApi = new ChainRestAuthApi(injectiveNetwork.rest);

@@ -16,3 +16,4 @@ config:
   pulumi:env_files: []
   webapp:API_DOMAIN: app.kogen.markets
   webapp:ROUTE53_ZONE_NAME: kogen.markets
+  aws:profile: pulumi-s3-user
