@@ -35,7 +35,7 @@ export default function App() {
   const options = useKogenFactoryDeployedOptionsQuery({
     client: factoryClient,
     args: {
-      // afterDateInSeconds: 0,
+      afterDateInSeconds: Math.floor(Date.now() / 1000) - (2 * 60 * 60),
     },
     options: {
       suspense: true,
