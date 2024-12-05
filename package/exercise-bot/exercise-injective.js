@@ -52,7 +52,7 @@ export default async function exerciseInjective() {
   // Query deployed options from the factory contract
   const queryMsg = {
     deployed_options: {
-      after_date_in_seconds: Math.floor(Date.now() / 1000) - (2 * 60 * 60)  // Last 7 days
+      after_date_in_seconds: Math.floor(Date.now() / 1000) - (2 * 60 * 60)  // Last 2 hours
     }
   };
 
