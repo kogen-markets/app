@@ -13,7 +13,6 @@ import { GasPrice } from "@cosmjs/stargate";
 import { chains, assets } from "chain-registry";
 import { wallets as keplrWallets } from "@cosmos-kit/keplr-extension";
 import { wallets as leapWallets } from "@cosmos-kit/leap-extension";
-import { wallets as cosmostationWallets } from "@cosmos-kit/cosmostation-extension";
 import AppLayout from "./layout/app";
 import rollbar from "./lib/rollbar";
 import Error from "./pages/error";
@@ -28,7 +27,7 @@ const CallWeek2OptionPage = lazy(() => import("./pages/options/call-week2"));
 const PutWeek1OptionPage = lazy(() => import("./pages/options/put-week1"));
 const PutWeek2OptionPage = lazy(() => import("./pages/options/put-week2"));
 const QuoteDenomTablePage = lazy(
-  () => import("./pages/options/quote-denom-table"),
+  () => import("./pages/options/quote-denom-table")
 );
 
 const router = createBrowserRouter([
@@ -82,14 +81,10 @@ function App() {
           <ErrorBoundary>
             <ChainProvider
               chains={chains.filter((c) =>
-                ENABLED_TESTNETS.includes(c.chain_id as TESTNET),
+                ENABLED_TESTNETS.includes(c.chain_id as TESTNET)
               )}
               assetLists={assets}
-              wallets={[
-                ...keplrWallets,
-                ...leapWallets,
-                ...cosmostationWallets,
-              ]} // supported wallets
+              wallets={[...keplrWallets, ...leapWallets]} // supported wallets
               signerOptions={{
                 signingCosmwasm: (chain) => {
                   if ((chain as Chain).chain_id === TESTNET.NEUTRON) {
