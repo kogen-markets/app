@@ -20,7 +20,7 @@
     "@cosmos-kit/cosmostation-extension": "2.15.0",
     "@emotion/react": "11.13.5",
     "@emotion/styled": "11.13.5",
-    "@injectivelabs/networks": "1.14.32",
+    "@injectivelabs/networks": "1.14.33",
     "@injectivelabs/sdk-ts": "1.14.32",
     "@injectivelabs/ts-types": "1.14.32",
     "@injectivelabs/utils": "1.14.32",
