@@ -9,7 +9,14 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import { Fragment, useCallback, useMemo, useRef } from "react";
+import {
+  Fragment,
+  useState,
+  useEffect,
+  useCallback,
+  useMemo,
+  useRef,
+} from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import Joi from "joi";
@@ -46,13 +53,15 @@ export const optionPriceValidator = Joi.number().label("Price").greater(0);
 
 export default function CallForm() {
   const callFormRef = useRef<HTMLInputElement>(null);
+  const [expiryDate, setExpiryDate] = useState<Date | null>(null);
+
   useCustomEventListener(
     GLOBAL_CUSTOM_EVENTS.SCROLL_CALL_FORM_INTO_VIEW,
     useCallback(() => {
       callFormRef.current?.scrollIntoView({
         behavior: "smooth",
       });
-    }, []),
+    }, [])
   );
 
   const kogenClient = useKogenQueryClient();
@@ -69,11 +78,10 @@ export default function CallForm() {
   const isBid = useMemo(() => formState.type === ORDER_TYPES.BID, [formState]);
 
   const optionSizeValidatorConfig = useOptionSizeValidatorWithConfig(
-    config.data,
+    config.data
   );
-
   const optionPriceValidatorConfig = useOptionPriceValidatorWithConfig(
-    config.data,
+    config.data
   );
 
   const callFormValidatorConfig = useMemo(
@@ -83,7 +91,7 @@ export default function CallForm() {
         optionSize: optionSizeValidatorConfig,
         optionPrice: optionPriceValidatorConfig,
       }).unknown(true),
-    [optionSizeValidatorConfig, optionPriceValidatorConfig],
+    [optionSizeValidatorConfig, optionPriceValidatorConfig]
   );
 
   const orderCreateEnabled = useMemo(() => {
@@ -116,7 +124,7 @@ export default function CallForm() {
     },
   });
   const isOpenOrderInOppositeDirection = Boolean(
-    Boolean(address) && (isBid ? asks.data?.length : bids.data?.length),
+    Boolean(address) && (isBid ? asks.data?.length : bids.data?.length)
   );
 
   const isCall = useRecoilValue(isCallOptionState);
@@ -132,16 +140,24 @@ export default function CallForm() {
       config.data,
       formState.optionSize,
       formState.optionPrice,
-      positionInUserRelativeToTheType,
+      positionInUserRelativeToTheType
     );
   }, [isCall, formState, config.data, positionInUserRelativeToTheType]);
+
+  useEffect(() => {
+    const now = new Date();
+    const utcOffset =
+      now.getUTCHours() < 1 ||
+      (now.getUTCHours() === 0 && now.getUTCMinutes() < 30);
+    const correctedDate = new Date(now.setUTCMinutes(30));
+    setExpiryDate(utcOffset ? correctedDate : now);
+  }, []);
 
   return (
     <Fragment>
       <Typography
         variant="caption"
         ref={callFormRef}
-        // scroll into view offset
         sx={{ mt: "-30px", pt: "30px" }}
       >
         Order type
@@ -180,7 +196,7 @@ export default function CallForm() {
           <StrikePrice config={configData} />
         </Grid>
         <Grid item xs={12} sm={6}>
-          <Expiry config={configData} />
+          <Expiry expiryDate={expiryDate} />
         </Grid>
       </Grid>
       <Grid
@@ -261,12 +277,10 @@ export default function CallForm() {
                             >
                               <span>
                                 Fees are paid by the user who submits the
-                                matching order (the “taker”). If your order is
-                                not the matching one, the fee is sent back
-                                within the same transaction.
+                                matching order (the “taker”).
                               </span>
                             </Typography>
-                          )}{" "}
+                          )}
                         </Fragment>
                       }
                     >
