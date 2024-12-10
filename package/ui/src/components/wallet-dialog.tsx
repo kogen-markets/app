@@ -18,11 +18,10 @@ import { metamaskWalletStrategyState } from "../state/injective";
 import { WalletModalProps } from "@cosmos-kit/core";
 import CloseIcon from "@mui/icons-material/Close";
 
-// Define the wallet icons mapping
 const walletIcons: { [key: string]: string } = {
-  Keplr: "/public/icons/wallet-icons/keplr-icon.png",
-  Leap: "/public/icons/wallet-icons/leap-icon.svg",
-  MetaMask: "/public/icons/wallet-icons/metamask-icon.svg",
+  Keplr: "/icons/wallet-icons/keplr-icon.png",
+  Leap: "/icons/wallet-icons/leap-icon.svg",
+  MetaMask: "/icons/wallet-icons/metamask-icon.svg",
 };
 
 const WalletDialog: React.FC<WalletModalProps> = ({
