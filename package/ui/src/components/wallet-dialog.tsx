@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import {
   Button,
   Dialog,
@@ -38,12 +38,26 @@ const WalletDialog: React.FC<WalletModalProps> = ({
   );
   const [, setSnackbar] = useRecoilState(snackbarState);
 
+  useEffect(() => {
+    if (walletRepo && walletRepo.wallets.length === 0) {
+      setSnackbar({
+        message: "No wallets available. Please try again later.",
+        type: "error",
+      });
+    }
+  }, [walletRepo, setSnackbar]);
+
   const handleConnect = async (
     walletName: string,
     connect: () => Promise<void>
   ) => {
     try {
+      console.log(`Connecting to wallet: ${walletName}`);
       await connect();
+      setSnackbar({
+        message: `${walletName} connected successfully!`,
+        type: "success",
+      });
       setOpen(false);
     } catch (error) {
       console.error(`Failed to connect with ${walletName}:`, error);
@@ -57,21 +71,39 @@ const WalletDialog: React.FC<WalletModalProps> = ({
   const handleMetaMaskConnect = async () => {
     try {
       setOpen(false);
-      const strategy = new WalletStrategy({
-        chainId: chain.chain_id as ChainId,
-        wallet: Wallet.Metamask,
-        ethereumOptions: {
-          ethereumChainId: EthereumChainId.Goerli,
-          rpcUrl: `https://eth-goerli.g.alchemy.com/v2/${
-            import.meta.env.VITE_ALCHEMY_PUBKEY
-          }`,
-        },
-      });
-      setMetamaskWalletStrategy(strategy);
+
+      if (window.ethereum?.request) {
+        const strategy = new WalletStrategy({
+          chainId: chain.chain_id as ChainId,
+          wallet: Wallet.Metamask,
+          ethereumOptions: {
+            ethereumChainId: EthereumChainId.Goerli,
+            rpcUrl: `https://eth-goerli.g.alchemy.com/v2/${
+              import.meta.env.VITE_ALCHEMY_PUBKEY
+            }`,
+          },
+        });
+
+        setMetamaskWalletStrategy(strategy);
+        setSnackbar({
+          message: "MetaMask connected successfully!",
+          type: "success",
+        });
+      } else {
+        console.error("MetaMask is not installed or request is unavailable");
+        setSnackbar({
+          message:
+            "MetaMask is not installed or unavailable. Please install MetaMask.",
+          type: "error",
+        });
+      }
     } catch (error) {
       console.error("Failed to connect with MetaMask:", error);
       setSnackbar({
-        message: "MetaMask connection failed. Please try again.",
+        message:
+          error instanceof Error
+            ? error.message
+            : "MetaMask connection failed. Please try again.",
         type: "error",
       });
     }
