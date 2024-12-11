@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import {
   Button,
   Dialog,
@@ -16,6 +16,7 @@ import { chainState } from "../state/cosmos";
 import { TESTNET } from "../lib/config";
 import { metamaskWalletStrategyState } from "../state/injective";
 import { WalletModalProps } from "@cosmos-kit/core";
+import { snackbarState } from "../state/snackbar";
 import CloseIcon from "@mui/icons-material/Close";
 
 const walletIcons: { [key: string]: string } = {
@@ -29,27 +30,34 @@ const WalletDialog: React.FC<WalletModalProps> = ({
   setOpen,
   walletRepo,
 }) => {
-  const onCloseModal = () => {
-    setOpen(false);
-  };
+  const onCloseModal = useCallback(() => setOpen(false), [setOpen]);
 
   const chain = useRecoilValue(chainState);
   const [, setMetamaskWalletStrategy] = useRecoilState(
     metamaskWalletStrategyState
   );
+  const [, setSnackbar] = useRecoilState(snackbarState);
 
   const handleConnect = async (
     walletName: string,
     connect: () => Promise<void>
   ) => {
-    await connect();
-    setOpen(false);
+    try {
+      await connect();
+      setOpen(false);
+    } catch (error) {
+      console.error(`Failed to connect with ${walletName}:`, error);
+      setSnackbar({
+        message: `Failed to connect to ${walletName}. Please try again.`,
+        type: "error",
+      });
+    }
   };
 
   const handleMetaMaskConnect = async () => {
-    setOpen(false);
-    setMetamaskWalletStrategy(
-      new WalletStrategy({
+    try {
+      setOpen(false);
+      const strategy = new WalletStrategy({
         chainId: chain.chain_id as ChainId,
         wallet: Wallet.Metamask,
         ethereumOptions: {
@@ -58,8 +66,15 @@ const WalletDialog: React.FC<WalletModalProps> = ({
             import.meta.env.VITE_ALCHEMY_PUBKEY
           }`,
         },
-      })
-    );
+      });
+      setMetamaskWalletStrategy(strategy);
+    } catch (error) {
+      console.error("Failed to connect with MetaMask:", error);
+      setSnackbar({
+        message: "MetaMask connection failed. Please try again.",
+        type: "error",
+      });
+    }
   };
 
   return (
