@@ -11,6 +11,7 @@ import {
   Alert,
 } from "@mui/material";
 import { darkTheme, lightTheme } from "@kogen/kogen-ui/src/lib/theme";
+import Footer from "./components/Footer";
 
 function App() {
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
@@ -106,36 +107,7 @@ function App() {
           </Box>
         </Card>
 
-        <Box sx={{ mt: 3, mb: 10, textAlign: "center" }}>
-          <Typography variant="caption">
-            <Link
-              color={"secondary"}
-              href="https://beta.howl.social/kogen"
-              target={"_blank"}
-              rel="noreferrer"
-            >
-              howl
-            </Link>{" "}
-            |{" "}
-            {/* <Link
-              color={"secondary"}
-              href="https://twitter.com/howlpack"
-              target={"_blank"}
-              rel="noreferrer"
-            >
-              twitter
-            </Link>{" "}
-            |{" "} */}
-            <Link
-              color={"secondary"}
-              href="https://github.com/kogen-markets/"
-              target={"_blank"}
-              rel="noreferrer"
-            >
-              github
-            </Link>
-          </Typography>
-        </Box>
+        <Footer />
       </Container>
     </ThemeProvider>
   );
