@@ -40,10 +40,10 @@ const Footer = () => {
                 title={link.text}
                 target="_blank"
                 rel="noreferrer"
+                color="secondary"
                 sx={{
                   fontWeight: "bold",
                   fontSize: 16,
-                  color: "white",
                   display: "flex",
                   alignItems: "center",
                   gap: 1,
