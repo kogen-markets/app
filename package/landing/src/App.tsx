@@ -62,26 +62,25 @@ function App() {
           color="secondary"
         >
           <Typography variant="body1" sx={{ mb: 2 }}>
-            Welcome to Kogen, the ultimate decentralized options trading tool
-            designed to revolutionize the way you trade call options. Built on
+            Welcome to Kogen Markets, the ultimate decentralized options trading platform
+            designed to revolutionize the way you trade call and put options. Built on
             the principles of blockchain technology and powered by smart
-            contracts, Kogen provides a secure, transparent, and decentralized
-            platform for biding and asking call options. With Kogen, you have
-            the freedom to engage in peer-to-peer options trading without the
-            need for intermediaries or centralized authorities.
+            contracts, Kogen Markets provides a secure, transparent, and decentralized
+            platform for trading vanilla options. With Kogen Markets, your orders go on-chain
+            on our decentralized limit order books, giving you the same access as any sophisticated trader.
           </Typography>
           <Typography variant="body1" sx={{ my: 2 }} component="div">
             Our innovative platform empowers you to participate in trustless and
-            efficient bidding and asking processes, ensuring fairness and equal
-            opportunities for all participants. Whether you&apos;re a seasoned
-            options trader or new to the world of call options, Kogen offers a
+            efficient bidding and offering orders, ensuring fairness and equal
+            opportunities for all participants. Whether you are a seasoned
+            options trader or new to the world of derivatives, Kogen Markets offers a
             user-friendly interface and robust features to enhance your trading
             experience.
           </Typography>
           <Typography variant="body1" sx={{ my: 2 }} component="div">
-            Experience the benefits of decentralized options trading with Kogen,
+            Experience the benefits of decentralized options trading with Kogen Markets,
             where you can unleash your trading potential, take control of your
-            investments, and navigate the exciting realm of call options with
+            investments, and navigate the exciting realm of call and put options with
             ease. Join us today and embark on a journey that reshapes the way
             you approach options trading.
           </Typography>
