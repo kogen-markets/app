@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import { darkTheme, lightTheme } from "@kogen/kogen-ui/src/lib/theme";
 import Footer from "./components/Footer";
+import Disclaimer from "./components/Disclaimer";
 
 function App() {
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
@@ -54,16 +55,7 @@ function App() {
             <img src="/kogen-logo-white.png" />
           )}
         </Box>
-        <Alert
-          severity="warning"
-          variant="outlined"
-          sx={{ backdropFilter: "blur(5px)" }}
-        >
-          Please note that Kogen is currently in active development. While we
-          strive to offer you the best user experience possible, it&apos;s
-          important to be aware that there may be occasional glitches or
-          limitations as we continue to refine and enhance the platform.
-        </Alert>
+        <Disclaimer />
         <Card
           sx={{ p: 3, mt: 4, backdropFilter: "blur(5px)" }}
           variant="outlined"
