@@ -1,24 +1,24 @@
-import { Suspense, lazy } from "react";
+import { CosmWasmClient } from "@cosmjs/cosmwasm-stargate";
+import { GasPrice } from "@cosmjs/stargate";
+import { wallets as keplrWallets } from "@cosmos-kit/keplr-extension";
+import { wallets as leapWallets } from "@cosmos-kit/leap-extension";
+import { ChainProvider } from "@cosmos-kit/react-lite";
+import { ErrorBoundary, Provider as RollbarProvider } from "@rollbar/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { assets, chains } from "chain-registry";
+import { lazy, Suspense } from "react";
 import {
   createBrowserRouter,
   Navigate,
   Outlet,
   RouterProvider,
 } from "react-router-dom";
-import { Provider as RollbarProvider, ErrorBoundary } from "@rollbar/react";
 import { RecoilRoot } from "recoil";
-import { ChainProvider } from "@cosmos-kit/react-lite";
-import { GasPrice } from "@cosmjs/stargate";
-import { chains, assets } from "chain-registry";
-import { wallets as keplrWallets } from "@cosmos-kit/keplr-extension";
-import { wallets as leapWallets } from "@cosmos-kit/leap-extension";
+import Loading from "./components/loading";
 import AppLayout from "./layout/app";
+import { ENABLED_TESTNETS, TESTNET } from "./lib/config";
 import rollbar from "./lib/rollbar";
 import Error from "./pages/error";
-import Loading from "./components/loading";
-import { ENABLED_TESTNETS, TESTNET } from "./lib/config";
-import { CosmWasmClient } from "@cosmjs/cosmwasm-stargate";
 typeof CosmWasmClient === "function" && null; // Pretend to use CosmWasmClient to avoid tree shaking, without side effects
 
 const WalletDialog = lazy(() => import("./components/wallet-dialog"));
@@ -30,36 +30,47 @@ const QuoteDenomTablePage = lazy(
   () => import("./pages/options/quote-denom-table")
 );
 
-const router = createBrowserRouter([
+const router = createBrowserRouter(
+  [
+    {
+      path: "/",
+      element: <AppLayout />,
+      errorElement: (
+        <div style={{ width: "50%", margin: "50px auto" }}>
+          <Error />
+        </div>
+      ),
+      children: [
+        { index: true, element: <Navigate to="/options/call-week1" replace /> },
+        {
+          path: "options",
+          element: (
+            <Suspense fallback={<Loading />}>
+              <Outlet />
+            </Suspense>
+          ),
+          children: [
+            { index: true, element: <Navigate to="call" replace /> },
+            { path: "call-week1", element: <CallWeek1OptionPage /> },
+            { path: "put-week1", element: <PutWeek1OptionPage /> },
+            { path: "call-week2", element: <CallWeek2OptionPage /> },
+            { path: "put-week2", element: <PutWeek2OptionPage /> },
+            // { path: ":quoteDenom", element: <QuoteDenomTablePage /> }, if uncommented it creates a webpage: https://app.kogen.markets/options/quoteDenom
+          ],
+        },
+      ],
+    },
+  ],
   {
-    path: "/",
-    element: <AppLayout />,
-    errorElement: (
-      <div style={{ width: "50%", margin: "50px auto" }}>
-        <Error />
-      </div>
-    ),
-    children: [
-      { index: true, element: <Navigate to="/options/call-week1" replace /> },
-      {
-        path: "options",
-        element: (
-          <Suspense fallback={<Loading />}>
-            <Outlet />
-          </Suspense>
-        ),
-        children: [
-          { index: true, element: <Navigate to="call" replace /> },
-          { path: "call-week1", element: <CallWeek1OptionPage /> },
-          { path: "put-week1", element: <PutWeek1OptionPage /> },
-          { path: "call-week2", element: <CallWeek2OptionPage /> },
-          { path: "put-week2", element: <PutWeek2OptionPage /> },
-          // { path: ":quoteDenom", element: <QuoteDenomTablePage /> }, if uncommented it creates a webpage: https://app.kogen.markets/options/quoteDenom
-        ],
-      },
-    ],
-  },
-]);
+    future: {
+      v7_relativeSplatPath: true,
+      v7_partialHydration: true,
+      v7_skipActionErrorRevalidation: true,
+      v7_fetcherPersist: true,
+      v7_normalizeFormMethod: true,
+    } as any,
+  }
+);
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -99,13 +110,24 @@ function App() {
                     };
                   }
 
+                  if ((chain as Chain).chain_id === TESTNET.SEI) {
+                    return {
+                      gasPrice: GasPrice.fromString("0.01usei"),
+                    };
+                  }
+
                   return {};
                 },
               }}
               //@ts-ignore
               walletModal={WalletDialog}
             >
-              <RouterProvider router={router} />
+              <RouterProvider
+                router={router}
+                future={{
+                  v7_startTransition: true,
+                }}
+              />
             </ChainProvider>
           </ErrorBoundary>
         </QueryClientProvider>
