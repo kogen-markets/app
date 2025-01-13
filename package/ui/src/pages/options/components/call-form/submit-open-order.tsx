@@ -9,6 +9,7 @@ import { useCallOptionMutation } from "../../tx";
 import { useOptionSizeValidatorWithConfig } from "./option-size-input";
 import { useOptionPriceValidatorWithConfig } from "./option-price-input";
 import Joi from "joi";
+import axios from "axios";
 import { ORDER_TYPES } from "../../../../types/types";
 
 export default function SubmitOpenOrder({
@@ -31,7 +32,7 @@ export default function SubmitOpenOrder({
       formState.type,
       config,
       formState.optionSize,
-      formState.optionPrice,
+      formState.optionPrice
     );
   }, [isCall, formState, config]);
 
@@ -45,7 +46,7 @@ export default function SubmitOpenOrder({
         optionSize: optionSizeValidatorConfig,
         optionPrice: optionPriceValidatorConfig,
       }).unknown(true),
-    [optionSizeValidatorConfig, optionPriceValidatorConfig],
+    [optionSizeValidatorConfig, optionPriceValidatorConfig]
   );
 
   const orderCreateEnabled = useMemo(() => {
@@ -54,6 +55,16 @@ export default function SubmitOpenOrder({
       null
     );
   }, [callFormValidatorConfig, formState]);
+
+  const saveTrade = async (trade: any) => {
+    try {
+      const apiUrl = process.env.KOGEN_APP_API_URL || "http://localhost:3000";
+      await axios.post(`${apiUrl}/api/trades/save`, trade);
+      setSnackbar({ message: "Trade successfully saved!" });
+    } catch (error: any) {
+      setSnackbar({ message: "Error saving trade: " + error.message });
+    }
+  };
 
   return (
     <Fragment>
@@ -69,15 +80,15 @@ export default function SubmitOpenOrder({
           }
 
           try {
-            await createOrder({
+            const order = {
               type: formState.type,
               price: toBaseToken(
                 formState.optionPrice,
-                config.quote_decimals,
+                config.quote_decimals
               ).toFixed(0),
               quantity: toBaseToken(
                 formState.optionSize,
-                config.base_decimals,
+                config.base_decimals
               ).toFixed(0),
               funds: [
                 {
@@ -85,23 +96,23 @@ export default function SubmitOpenOrder({
                   denom: collateral.denom,
                 },
               ],
-            });
+            };
 
-            setSnackbar({
-              message: `Order successfully created`,
-            });
+            // Create the order
+            await createOrder(order);
+
+            // Save the trade to the backend
+            await saveTrade(order);
+
+            setSnackbar({ message: `Order successfully created` });
           } catch (e: any) {
             if (e?.originalMessage?.includes("Matched own position")) {
               setSnackbar({
                 message: "Matched your own position, the order is rejected",
               });
-
               return;
             }
-            setSnackbar({
-              message: "Error creating order: " + e.message,
-            });
-
+            setSnackbar({ message: "Error creating order: " + e.message });
             throw e.originalMessage;
           }
         }}
