@@ -1,0 +1,46 @@
+{
+  "name": "kogen-admin-frontend",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --port 3001",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.5",
+    "@files-ui/react": "^1.2.4",
+    "@mui/icons-material": "^5.15.20",
+    "@mui/material": "^5.15.20",
+    "@types/js-cookie": "^3.0.6",
+    "autoprefixer": "^10.4.20",
+    "axios": "^1.7.2",
+    "copy-to-clipboard": "^3.3.3",
+    "flowbite": "^2.3.0",
+    "flowbite-react": "^0.9.0",
+    "js-cookie": "^3.0.5",
+    "local-storage": "^2.0.0",
+    "next": "^14.2.15",
+    "react": "^18",
+    "react-dom": "^18",
+    "react-hook-form": "^7.51.5",
+    "react-icons": "^5.2.1",
+    "sharp": "^0.33.5",
+    "sweetalert2": "^11.6.13",
+    "swr": "^2.2.5",
+    "yarn": "^1.22.22",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "eslint": "^8",
+    "eslint-config-next": "14.2.4",
+    "postcss": "^8.4.45",
+    "tailwindcss": "^3.4.10",
+    "typescript": "^5"
+  }
+}
