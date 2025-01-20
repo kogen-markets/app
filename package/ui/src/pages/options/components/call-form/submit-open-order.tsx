@@ -11,6 +11,10 @@ import { useOptionPriceValidatorWithConfig } from "./option-price-input";
 import Joi from "joi";
 import axios from "axios";
 import { ORDER_TYPES } from "../../../../types/types";
+import {
+  walletAddressState,
+  prettyNameState,
+} from "../../../../state/walletState";
 
 export default function SubmitOpenOrder({
   config,
@@ -19,6 +23,9 @@ export default function SubmitOpenOrder({
   config: Config;
   isCall: boolean;
 }) {
+  const walletAddress = useRecoilValue(walletAddressState);
+  const prettyName = useRecoilValue(prettyNameState);
+
   const [, setSnackbar] = useRecoilState(snackbarState);
   const formState = useRecoilValue(openOrderFormState);
   const isBid = useMemo(() => formState.type === ORDER_TYPES.BID, [formState]);
@@ -58,8 +65,14 @@ export default function SubmitOpenOrder({
 
   const saveTrade = async (trade: any) => {
     try {
-      const apiUrl = process.env.KOGEN_APP_API_URL || "http://localhost:3000";
-      await axios.post(`${apiUrl}/api/trades/save`, trade);
+      console.log("apiUrl", import.meta.env.VITE_ALCHEMY_PUBKEY);
+      const apiUrl = import.meta.env.VITE_KOGEN_APP_API_URL;
+
+      await axios.post(`${apiUrl}/api/trades/save`, {
+        ...trade,
+        walletAddress,
+        prettyName,
+      });
       setSnackbar({ message: "Trade successfully saved!" });
     } catch (error: any) {
       setSnackbar({ message: "Error saving trade: " + error.message });

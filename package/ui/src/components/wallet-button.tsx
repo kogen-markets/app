@@ -1,15 +1,13 @@
-import { useChain } from "@cosmos-kit/react-lite";
+import React, { useEffect, Fragment } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { Button, ButtonProps } from "@mui/material";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { chainState } from "../state/cosmos";
-import { Fragment } from "react";
+import { walletAddressState, prettyNameState } from "../state/walletState"; // Import the atoms
 import { addressShort } from "../lib/token";
-import {
-  metamaskAddressState,
-  metamaskWalletStrategyState,
-} from "../state/injective";
+import { metamaskAddressState } from "../state/injective";
 import { snackbarState } from "../state/snackbar";
+import { useChain } from "@cosmos-kit/react-lite";
 
 export default function WalletButton({
   ButtonProps,
@@ -17,15 +15,22 @@ export default function WalletButton({
   ButtonProps?: ButtonProps;
 }) {
   const [, setSnackbar] = useRecoilState(snackbarState);
+  const [, setWalletAddress] = useRecoilState(walletAddressState); // Recoil state for wallet address
+  const [, setPrettyName] = useRecoilState(prettyNameState); // Recoil state for pretty name
+
   const chain = useRecoilValue(chainState);
   const { address, connect, disconnect, wallet, isWalletConnected } = useChain(
     chain.chain_name
   );
-
-  const [metamaskWalletStrategy, setMetamaskWalletStrategy] = useRecoilState(
-    metamaskWalletStrategyState
-  );
   const metamaskAddress = useRecoilValue(metamaskAddressState);
+
+  useEffect(() => {
+    if (address || metamaskAddress) {
+      // Update the wallet address and pretty name in Recoil state
+      setWalletAddress(address || metamaskAddress?.injective || "");
+      setPrettyName(wallet?.prettyName || "Metamask");
+    }
+  }, [address, metamaskAddress, wallet, setWalletAddress, setPrettyName]);
 
   const handleDisconnect = async () => {
     try {
@@ -78,10 +83,8 @@ export default function WalletButton({
         onClick={(e) => {
           e.preventDefault(); // Prevent default action if it's a link
 
-          if (metamaskWalletStrategy) {
-            setMetamaskWalletStrategy(null);
-          } else {
-            handleDisconnect();
+          if (wallet) {
+            handleDisconnect(); // Disconnect if wallet is connected
           }
         }}
       >
