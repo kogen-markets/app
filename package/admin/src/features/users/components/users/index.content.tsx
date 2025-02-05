@@ -154,7 +154,7 @@ export const UserContentComponent = ({
             </TableBody>
           </Table>
         </TableContainer>
-        <Box sx={{ display: "flex", flexDirection: "row-reverse" }}>
+        <Box sx={{ display: "flex", justifyContent: "center", my: 2 }}>
           <Pagination
             color={"primary"}
             count={count}
