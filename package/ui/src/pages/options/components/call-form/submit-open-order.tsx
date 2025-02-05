@@ -5,7 +5,7 @@ import { snackbarState } from "../../../../state/snackbar";
 import { Config } from "../../../../codegen/KogenMarkets.types";
 import { getCollateralSize, toBaseToken } from "../../../../lib/token";
 import { openOrderFormState } from "../../../../state/kogen";
-import { useCallOptionMutation } from "../../tx";
+import { useInjectiveCallOptionMutation } from "../../tx/injective"; // Use updated hook
 import { useOptionSizeValidatorWithConfig } from "./option-size-input";
 import { useOptionPriceValidatorWithConfig } from "./option-price-input";
 import Joi from "joi";
@@ -23,7 +23,7 @@ export default function SubmitOpenOrder({
   const isBid = useMemo(() => formState.type === ORDER_TYPES.BID, [formState]);
 
   const { mutateAsync: createOrder, isLoading: isCreateOrderLoading } =
-    useCallOptionMutation();
+    useInjectiveCallOptionMutation();
 
   const collateral = useMemo(() => {
     return getCollateralSize(
@@ -31,7 +31,7 @@ export default function SubmitOpenOrder({
       formState.type,
       config,
       formState.optionSize,
-      formState.optionPrice,
+      formState.optionPrice
     );
   }, [isCall, formState, config]);
 
@@ -45,7 +45,7 @@ export default function SubmitOpenOrder({
         optionSize: optionSizeValidatorConfig,
         optionPrice: optionPriceValidatorConfig,
       }).unknown(true),
-    [optionSizeValidatorConfig, optionPriceValidatorConfig],
+    [optionSizeValidatorConfig, optionPriceValidatorConfig]
   );
 
   const orderCreateEnabled = useMemo(() => {
@@ -54,6 +54,21 @@ export default function SubmitOpenOrder({
       null
     );
   }, [callFormValidatorConfig, formState]);
+
+  const saveTrade = async (trade: any) => {
+    try {
+      const apiUrl = import.meta.env.VITE_KOGEN_APP_API_URL;
+
+      await axios.post(`${apiUrl}/api/trades/save`, {
+        ...trade,
+        walletAddress,
+        prettyName,
+      });
+      setSnackbar({ message: "Trade successfully saved!" });
+    } catch (error: any) {
+      setSnackbar({ message: "Error saving trade: " + error.message });
+    }
+  };
 
   return (
     <Fragment>
@@ -73,11 +88,11 @@ export default function SubmitOpenOrder({
               type: formState.type,
               price: toBaseToken(
                 formState.optionPrice,
-                config.quote_decimals,
+                config.quote_decimals
               ).toFixed(0),
               quantity: toBaseToken(
                 formState.optionSize,
-                config.base_decimals,
+                config.base_decimals
               ).toFixed(0),
               funds: [
                 {
@@ -87,9 +102,14 @@ export default function SubmitOpenOrder({
               ],
             });
 
-            setSnackbar({
-              message: `Order successfully created`,
+            const result = await createOrder(order);
+
+            await saveTrade({
+              order,
+              result: result,
             });
+
+            setSnackbar({ message: `Order successfully created` });
           } catch (e: any) {
             if (e?.originalMessage?.includes("Matched own position")) {
               setSnackbar({
