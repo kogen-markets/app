@@ -87,31 +87,65 @@ export const contractsState = selector<string>({
     const contracts = get(optionContractsAddrState);
     const whichWeek = get(whichWeekOptionState);
 
-    return contracts[chain.chain_id][isCallOption ? "call" : "put"].slice(
-      whichWeek - 1
-    )[0];
+    const currentContracts = contracts[chain.chain_id];
 
-    if (isCallOption) {
-      if (chain.chain_id === TESTNET.INJECTIVE) {
-        return import.meta.env.VITE_CONTRACT_INJECTIVE_TESTNET;
-      }
-      if (chain.chain_id === TESTNET.NEUTRON) {
-        return import.meta.env.VITE_CONTRACT_NEUTRON_TESTNET;
-      }
-      if (chain.chain_id === TESTNET.ARCHWAY) {
-        return import.meta.env.VITE_CONTRACT_ARCHWAY_TESTNET;
-      }
-
-      throw new Error(`unknown chain_id ${chain.chain_id} for the call option`);
-    } else {
-      if (chain.chain_id === TESTNET.INJECTIVE) {
-        return import.meta.env.VITE_CONTRACT_PUT_INJECTIVE_TESTNET;
-      }
-
-      throw new Error(`unknown chain_id ${chain.chain_id} for the put option`);
+    if (!currentContracts) {
+      throw new Error(`No contracts found for chain_id ${chain.chain_id}`);
     }
+
+    const contractType = isCallOption ? "call" : "put";
+    const contractAddresses = currentContracts[contractType];
+
+    if (!contractAddresses || contractAddresses.length === 0) {
+      if (chain.chain_id === TESTNET.SEI) {
+        return import.meta.env.VITE_CONTRACT_SEI_TESTNET;
+      }
+
+      throw new Error(
+        `No contract addresses found for ${contractType} option on chain ${chain.chain_id}`
+      );
+    }
+
+    return contractAddresses.slice(whichWeek - 1)[0];
   },
 });
+
+// export const contractsState = selector<string>({
+//   key: "contractsState",
+//   get: async ({ get }) => {
+//     const chain = get(chainState);
+//     const isCallOption = get(isCallOptionState);
+//     const contracts = get(optionContractsAddrState);
+//     const whichWeek = get(whichWeekOptionState);
+
+//     return contracts[chain.chain_id][isCallOption ? "call" : "put"].slice(
+//       whichWeek - 1
+//     )[0];
+
+//     if (isCallOption) {
+//       if (chain.chain_id === TESTNET.INJECTIVE) {
+//         return import.meta.env.VITE_CONTRACT_INJECTIVE_TESTNET;
+//       }
+//       if (chain.chain_id === TESTNET.SEI) {
+//         return import.meta.env.VITE_CONTRACT_SEI_TESTNET;
+//       }
+//       if (chain.chain_id === TESTNET.NEUTRON) {
+//         return import.meta.env.VITE_CONTRACT_NEUTRON_TESTNET;
+//       }
+//       if (chain.chain_id === TESTNET.ARCHWAY) {
+//         return import.meta.env.VITE_CONTRACT_ARCHWAY_TESTNET;
+//       }
+
+//       throw new Error(`unknown chain_id ${chain.chain_id} for the call option`);
+//     } else {
+//       if (chain.chain_id === TESTNET.INJECTIVE) {
+//         return import.meta.env.VITE_CONTRACT_PUT_INJECTIVE_TESTNET;
+//       }
+
+//       throw new Error(`unknown chain_id ${chain.chain_id} for the put option`);
+//     }
+//   },
+// });
 
 async function fetchContractAddressInjective(): Promise<string> {
   const response = await fetch(

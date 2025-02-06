@@ -52,9 +52,20 @@ export class KogenMarketsQueryClient implements KogenMarketsReadOnlyInterface {
 
   config = async (): Promise<Config> => {
     try {
-      return await this.client.queryContractSmart(this.contractAddress, {
-        config: {},
-      });
+      const response = await this.client.queryContractSmart(
+        this.contractAddress,
+        {
+          config: {},
+        }
+      );
+
+      if (!response.strike_price_in_quote) {
+        console.warn(
+          "Warning: missing field 'strike_price_in_quote' in config response."
+        );
+      }
+
+      return response;
     } catch (error) {
       console.error("Error fetching config:", error);
       throw error;
@@ -69,11 +80,14 @@ export class KogenMarketsQueryClient implements KogenMarketsReadOnlyInterface {
     sender?: Addr;
   }): Promise<ArrayOfOrdersResponse> => {
     try {
-      return (
-        (await this.client.queryContractSmart(this.contractAddress, {
-          bids: { price, sender },
-        })) ?? []
+      const response = await this.client.queryContractSmart(
+        this.contractAddress,
+        {
+          deployed_options: { price, sender },
+        }
       );
+
+      return response ?? [];
     } catch (error) {
       console.error("Error fetching bids:", error);
       return [];
@@ -88,11 +102,14 @@ export class KogenMarketsQueryClient implements KogenMarketsReadOnlyInterface {
     sender?: Addr;
   }): Promise<ArrayOfOrdersResponse> => {
     try {
-      return (
-        (await this.client.queryContractSmart(this.contractAddress, {
-          asks: { price, sender },
-        })) ?? []
+      const response = await this.client.queryContractSmart(
+        this.contractAddress,
+        {
+          deployed_options: { price, sender },
+        }
       );
+
+      return response ?? [];
     } catch (error) {
       console.error("Error fetching asks:", error);
       return [];
