@@ -10,9 +10,18 @@ import {
 
 type Chain = (typeof chains)[0];
 
+console.log(
+  "Atlantic-2 Chain:",
+  chains.find((chain) => chain.chain_id === "atlantic-2")
+);
+console.log(
+  "TESTNET.SEI Chain:",
+  chains.find((chain) => chain.chain_id === TESTNET.SEI)
+);
+
 export const chainState = atom<Chain>({
   key: "chainState",
-  default: chains.find((c) => c.chain_id === TESTNET.INJECTIVE),
+  default: chains.find((c) => c.chain_id === TESTNET.SEI),
 });
 
 export const keplrInteractedState = atom({
@@ -28,14 +37,14 @@ export const pythServiceState = selector<URL>({
     if (ENABLED_MAINNETS.includes(chain.chain_id as MAINNET)) {
       return new URL(
         "/api/latest_price_feeds",
-        "https://xc-mainnet.pyth.network",
+        "https://xc-mainnet.pyth.network"
       );
     }
 
     if (ENABLED_TESTNETS.includes(chain.chain_id as TESTNET)) {
       return new URL(
         "/api/latest_price_feeds",
-        "https://xc-testnet.pyth.network",
+        "https://xc-testnet.pyth.network"
       );
     }
 

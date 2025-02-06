@@ -13,7 +13,7 @@ export default function ChainSelect({
 }) {
   const [chain, setChain] = useRecoilState(chainState);
   const [, setMetamaskWalletStrategy] = useRecoilState(
-    metamaskWalletStrategyState,
+    metamaskWalletStrategyState
   );
 
   return (
@@ -44,6 +44,7 @@ export default function ChainSelect({
           }}
         >
           <MenuItem value={TESTNET.INJECTIVE}>Injective (Testnet)</MenuItem>
+          <MenuItem value={TESTNET.SEI}>SEI (Testnet)</MenuItem>
           {/* <MenuItem value={TESTNET.NEUTRON}>Neutron (Testnet)</MenuItem>
           <MenuItem value={TESTNET.ARCHWAY}>Archway (Testnet)</MenuItem> */}
         </Select>

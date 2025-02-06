@@ -48,11 +48,11 @@ export const optionTypeState = atom<"put" | "call">({
   default: "call",
 });
 
-export const optionWeekState = atom<1| 2>({ // 2 = MAXWEEK global variable
+export const optionWeekState = atom<1 | 2>({
+  // 2 = MAXWEEK global variable
   key: "optionWeekState",
   default: 1,
 });
-
 
 export const optionContractsAddrState = atom<
   Record<string, Record<OptionType, string[]>>
@@ -88,7 +88,7 @@ export const contractsState = selector<string>({
     const whichWeek = get(whichWeekOptionState);
 
     return contracts[chain.chain_id][isCallOption ? "call" : "put"].slice(
-      whichWeek - 1,
+      whichWeek - 1
     )[0];
 
     if (isCallOption) {
@@ -114,9 +114,19 @@ export const contractsState = selector<string>({
 });
 
 async function fetchContractAddressInjective(): Promise<string> {
-  const response = await fetch('https://raw.githubusercontent.com/kogen-markets/app/main/contract_addresses.json');
+  const response = await fetch(
+    "https://raw.githubusercontent.com/kogen-markets/app/main/contract_addresses.json"
+  );
   const data = await response.json();
   return data.FACTORY_INJECTIVE_TESTNET;
+}
+
+async function fetchContractAddressSEI(): Promise<string> {
+  const response = await fetch(
+    "https://raw.githubusercontent.com/kogen-markets/app/main/contract_addresses.json"
+  );
+  const data = await response.json();
+  return data.FACTORY_SEI_TESTNET;
 }
 
 export const factoryContractState = selector<string>({
@@ -126,6 +136,10 @@ export const factoryContractState = selector<string>({
 
     if (chain.chain_id === TESTNET.INJECTIVE) {
       return fetchContractAddressInjective();
+    }
+
+    if (chain.chain_id === TESTNET.SEI) {
+      return fetchContractAddressSEI();
     }
 
     throw new Error(`unknown chain_id ${chain.chain_id}`);
