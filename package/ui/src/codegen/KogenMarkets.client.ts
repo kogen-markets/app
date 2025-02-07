@@ -52,12 +52,17 @@ export class KogenMarketsQueryClient implements KogenMarketsReadOnlyInterface {
 
   config = async (): Promise<Config> => {
     try {
+      console.log("Contract address being used:", this.contractAddress);
+
       const response = await this.client.queryContractSmart(
         this.contractAddress,
         {
           config: {},
         }
       );
+
+      // Log the full response for debugging
+      console.log("Raw config response:", response);
 
       if (!response.strike_price_in_quote) {
         console.warn(
