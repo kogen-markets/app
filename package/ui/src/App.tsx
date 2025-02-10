@@ -19,7 +19,9 @@ import AppLayout from "./layout/app";
 import { ENABLED_TESTNETS, TESTNET } from "./lib/config";
 import rollbar from "./lib/rollbar";
 import Error from "./pages/error";
-typeof CosmWasmClient === "function" && null; // Pretend to use CosmWasmClient to avoid tree shaking, without side effects
+import { SigningCosmWasmClientOptions } from "@cosmjs/cosmwasm-stargate";
+
+typeof CosmWasmClient === "function" && null; // Avoid tree shaking
 
 const WalletDialog = lazy(() => import("./components/wallet-dialog"));
 const CallWeek1OptionPage = lazy(() => import("./pages/options/call-week1"));
@@ -97,26 +99,24 @@ function App() {
               assetLists={assets}
               wallets={[...keplrWallets, ...leapWallets]} // supported wallets
               signerOptions={{
-                signingCosmwasm: (chain) => {
-                  if ((chain as Chain).chain_id === TESTNET.NEUTRON) {
+                signingCosmwasm: (
+                  chain
+                ): SigningCosmWasmClientOptions | undefined => {
+                  const gasPriceMap: Record<string, string> = {
+                    [TESTNET.NEUTRON]: "0.01untrn",
+                    [TESTNET.ARCHWAY]: "900000000000.0aconst",
+                    [TESTNET.SEI]: "0.01usei",
+                  };
+
+                  const gasPriceStr = gasPriceMap[(chain as Chain).chain_id];
+
+                  if (gasPriceStr) {
                     return {
-                      gasPrice: GasPrice.fromString("0.01untrn"),
-                    };
+                      gasPrice: GasPrice.fromString(gasPriceStr),
+                    } as SigningCosmWasmClientOptions;
                   }
 
-                  if ((chain as Chain).chain_id === TESTNET.ARCHWAY) {
-                    return {
-                      gasPrice: GasPrice.fromString("900000000000.0aconst"),
-                    };
-                  }
-
-                  if ((chain as Chain).chain_id === TESTNET.SEI) {
-                    return {
-                      gasPrice: GasPrice.fromString("0.01usei"),
-                    };
-                  }
-
-                  return {};
+                  return undefined;
                 },
               }}
               //@ts-ignore
