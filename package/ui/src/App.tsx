@@ -103,13 +103,11 @@ function App() {
               assetLists={assets}
               wallets={[...keplrWallets, ...leapWallets]} // Supported wallets
               signerOptions={{
-                signingCosmwasm: (
-                  chain
-                ): SigningCosmWasmClientOptions | undefined => {
+                signingCosmwasm: (chain) => {
                   if ((chain as Chain).chain_id === TESTNET.NEUTRON) {
                     return {
                       gasPrice: GasPrice.fromString("0.01untrn"),
-                    } as SigningCosmWasmClientOptions;
+                    } as SigningCosmWasmClientOptions; // Explicit type assertion
                   }
 
                   if ((chain as Chain).chain_id === TESTNET.ARCHWAY) {
@@ -124,7 +122,7 @@ function App() {
                     } as SigningCosmWasmClientOptions;
                   }
 
-                  return undefined;
+                  return {} as SigningCosmWasmClientOptions;
                 },
               }}
               //@ts-ignore
