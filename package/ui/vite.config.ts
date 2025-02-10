@@ -3,19 +3,21 @@ import react from "@vitejs/plugin-react";
 import { nodePolyfills } from "vite-plugin-node-polyfills";
 
 export default defineConfig({
-  plugins: [react(), 
+  base: "./", // Ensure proper asset loading in production
+  plugins: [
+    react(),
     nodePolyfills({
-      include: ['crypto', 'stream', 'assert', 'util'],
+      include: ["crypto", "stream", "assert", "util"],
     }),
   ],
   resolve: {
     alias: {
-      stream: 'stream-browserify',
-      assert: 'assert',
-      util: 'util'
-    }
+      stream: "stream-browserify",
+      assert: "assert",
+      util: "util",
+    },
   },
   optimizeDeps: {
-    include: ['@metamask/obs-store']
-  }
+    include: ["@metamask/obs-store"],
+  },
 });
