@@ -1,4 +1,7 @@
-import { CosmWasmClient } from "@cosmjs/cosmwasm-stargate";
+import {
+  CosmWasmClient,
+  SigningCosmWasmClientOptions,
+} from "@cosmjs/cosmwasm-stargate";
 import { GasPrice } from "@cosmjs/stargate";
 import { wallets as keplrWallets } from "@cosmos-kit/keplr-extension";
 import { wallets as leapWallets } from "@cosmos-kit/leap-extension";
@@ -19,9 +22,9 @@ import AppLayout from "./layout/app";
 import { ENABLED_TESTNETS, TESTNET } from "./lib/config";
 import rollbar from "./lib/rollbar";
 import Error from "./pages/error";
-import { SigningCosmWasmClientOptions } from "@cosmjs/cosmwasm-stargate";
 
-typeof CosmWasmClient === "function" && null; // Avoid tree shaking
+// Pretend to use CosmWasmClient to avoid tree shaking, without side effects
+typeof CosmWasmClient === "function" && null;
 
 const WalletDialog = lazy(() => import("./components/wallet-dialog"));
 const CallWeek1OptionPage = lazy(() => import("./pages/options/call-week1"));
@@ -57,7 +60,8 @@ const router = createBrowserRouter(
             { path: "put-week1", element: <PutWeek1OptionPage /> },
             { path: "call-week2", element: <CallWeek2OptionPage /> },
             { path: "put-week2", element: <PutWeek2OptionPage /> },
-            // { path: ":quoteDenom", element: <QuoteDenomTablePage /> }, if uncommented it creates a webpage: https://app.kogen.markets/options/quoteDenom
+            // { path: ":quoteDenom", element: <QuoteDenomTablePage /> },
+            // If uncommented, it creates a webpage: https://app.kogen.markets/options/quoteDenom
           ],
         },
       ],
@@ -97,22 +101,26 @@ function App() {
                 ENABLED_TESTNETS.includes(c.chain_id as TESTNET)
               )}
               assetLists={assets}
-              wallets={[...keplrWallets, ...leapWallets]} // supported wallets
+              wallets={[...keplrWallets, ...leapWallets]} // Supported wallets
               signerOptions={{
                 signingCosmwasm: (
                   chain
                 ): SigningCosmWasmClientOptions | undefined => {
-                  const gasPriceMap: Record<string, string> = {
-                    [TESTNET.NEUTRON]: "0.01untrn",
-                    [TESTNET.ARCHWAY]: "900000000000.0aconst",
-                    [TESTNET.SEI]: "0.01usei",
-                  };
-
-                  const gasPriceStr = gasPriceMap[(chain as Chain).chain_id];
-
-                  if (gasPriceStr) {
+                  if ((chain as Chain).chain_id === TESTNET.NEUTRON) {
                     return {
-                      gasPrice: GasPrice.fromString(gasPriceStr),
+                      gasPrice: GasPrice.fromString("0.01untrn"),
+                    } as SigningCosmWasmClientOptions;
+                  }
+
+                  if ((chain as Chain).chain_id === TESTNET.ARCHWAY) {
+                    return {
+                      gasPrice: GasPrice.fromString("900000000000.0aconst"),
+                    } as SigningCosmWasmClientOptions;
+                  }
+
+                  if ((chain as Chain).chain_id === TESTNET.SEI) {
+                    return {
+                      gasPrice: GasPrice.fromString("0.01usei"),
                     } as SigningCosmWasmClientOptions;
                   }
 
