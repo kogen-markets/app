@@ -1,6 +1,4 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {
-  output: 'standalone', // Enable standalone output mode
-};
+const nextConfig = {};
 
-module.exports = nextConfig;
+export default nextConfig;
