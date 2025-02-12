@@ -5,7 +5,7 @@ import { client } from "@/libs/axios";
 
 export const fetchTradeHistory = async (): Promise<TradeModel[]> => {
   const response = await client.get<TradeResponse>("/trades/history");
-  return response.data;
+  return response.data.data;
 };
 
 export const fetchTradeById = async (tradeId: string): Promise<TradeModel> => {

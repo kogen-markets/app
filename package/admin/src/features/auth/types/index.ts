@@ -18,6 +18,7 @@ export interface UserModel {
   role: string;
   email: string;
   is_actived: boolean;
+  token: string;
   created_at: Date;
   updated_at: Date;
 }
