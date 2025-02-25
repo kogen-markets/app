@@ -82,6 +82,8 @@ export function useInjectiveCallOptionMutation() {
       });
 
       console.log(result);
+
+      return result;
     },
     {
       onSuccess: () => {
@@ -91,7 +93,7 @@ export function useInjectiveCallOptionMutation() {
         queryClient.refetchQueries([{ method: "position" }]);
         queryClient.refetchQueries(["get_balance", address]);
       },
-    },
+    }
   );
 }
 
@@ -239,7 +241,7 @@ export function useInjectiveExerciseCallOptionMutation() {
         queryClient.refetchQueries([{ method: "position" }]);
         queryClient.refetchQueries(["get_balance", address]);
       },
-    },
+    }
   );
 }
 
@@ -315,6 +317,6 @@ export function useInjectiveCancelOrderMutation() {
         queryClient.refetchQueries([{ method: "position" }]);
         queryClient.refetchQueries(["get_balance", address]);
       },
-    },
+    }
   );
 }
