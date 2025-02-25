@@ -6,7 +6,7 @@ const version = "v1";
 
 export const client = axios.create({
   // baseURL: `${process.env.NEXT_PUBLIC_BACKEND_URL}/${version}`,
-  baseURL: `${process.env.NEXT_PUBLIC_BACKEND_URL || "https://kogen-backend.vercel.app/api"}/`,
+  baseURL: `${process.env.NEXT_PUBLIC_BACKEND_URL || "https://w5zttn3gg4rbenncxt2uklpfiy0vjddx.lambda-url.us-east-1.on.aws/api"}/`,
   headers: {
     "Content-Type": "application/json",
   },

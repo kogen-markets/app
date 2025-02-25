@@ -29,16 +29,19 @@ const TradeTable: React.FC<TradeTableProps> = ({ trades }) => {
     setPage(value);
   };
 
-  const filteredTrades = trades.filter((trade) => {
-    const lowercasedFilterText = filterText.toLowerCase();
-    return (
-      (trade.type && trade.type.toLowerCase().includes(lowercasedFilterText)) ||
-      (trade.prettyName &&
-        trade.prettyName.toLowerCase().includes(lowercasedFilterText)) ||
-      (trade.walletAddress &&
-        trade.walletAddress.toLowerCase().includes(lowercasedFilterText))
-    );
-  });
+  const filteredTrades = (Array.isArray(trades) ? trades : []).filter(
+    (trade) => {
+      const lowercasedFilterText = filterText.toLowerCase();
+      return (
+        (trade.type &&
+          trade.type.toLowerCase().includes(lowercasedFilterText)) ||
+        (trade.prettyName &&
+          trade.prettyName.toLowerCase().includes(lowercasedFilterText)) ||
+        (trade.walletAddress &&
+          trade.walletAddress.toLowerCase().includes(lowercasedFilterText))
+      );
+    }
+  );
 
   const sortedTrades = [...filteredTrades].sort((a, b) => {
     const timestampA = a.result?.timestamp
