@@ -14,9 +14,19 @@ const TradeRouter = require("./routes/TradeRouter");
 
 const app = express();
 
-app.use(cors());
-app.use(express.json({ limit: '50mb' }));
-app.use(express.urlencoded({ limit: '50mb', extended: true }));
+// ✅ Proper CORS Middleware Configuration (Avoids duplicate headers)
+app.use(
+  cors({
+    origin: "https://admin.kogen.markets",
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true,
+  })
+);
+
+// ✅ Remove redundant custom CORS headers (Handled by cors middleware)
+app.use(express.json({ limit: "50mb" }));
+app.use(express.urlencoded({ limit: "50mb", extended: true }));
 
 const db = config.db_url;
 mongoose
@@ -24,7 +34,7 @@ mongoose
     connectTimeoutMS: 30000, // Increase timeout to 30 seconds
   })
   .then(() => {
-    console.log("mongodb connected");
+    console.log("MongoDB connected");
   })
   .catch((error) => {
     console.log("MongoDB connection error:", error);
@@ -46,6 +56,37 @@ app.use("/api/trades", TradeRouter);
 // Create server for AWS Lambda
 const server = awsServerlessExpress.createServer(app);
 
-exports.handler = (event, context) => {
-  return awsServerlessExpress.proxy(server, event, context);
+exports.handler = async (event, context) => {
+  console.log("Incoming event:", JSON.stringify(event, null, 2));
+
+  const headers = {
+    "Access-Control-Allow-Origin": "https://admin.kogen.markets",
+    "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type, Authorization",
+    "Access-Control-Allow-Credentials": "true",
+  };
+
+  // ✅ Handle OPTIONS Preflight Requests (Handled in one place)
+  if (event.httpMethod === "OPTIONS") {
+    return {
+      statusCode: 200,
+      headers,
+      body: "",
+    };
+  }
+
+  try {
+    // ✅ Ensure API Gateway event format for AWS Lambda
+    const response = await awsServerlessExpress.proxy(server, event, context, "PROMISE").promise;
+
+    return response;
+  } catch (error) {
+    console.error("Lambda Error:", error);
+
+    return {
+      statusCode: 500,
+      headers, // ✅ Include CORS headers even in errors
+      body: JSON.stringify({ error: "Internal Server Error" }),
+    };
+  }
 };
