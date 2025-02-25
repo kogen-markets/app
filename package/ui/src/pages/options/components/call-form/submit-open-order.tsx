@@ -9,7 +9,12 @@ import { useInjectiveCallOptionMutation } from "../../tx/injective"; // Use upda
 import { useOptionSizeValidatorWithConfig } from "./option-size-input";
 import { useOptionPriceValidatorWithConfig } from "./option-price-input";
 import Joi from "joi";
+import axios from "axios";
 import { ORDER_TYPES } from "../../../../types/types";
+import {
+  walletAddressState,
+  prettyNameState,
+} from "../../../../state/walletState";
 
 export default function SubmitOpenOrder({
   config,
@@ -18,6 +23,9 @@ export default function SubmitOpenOrder({
   config: Config;
   isCall: boolean;
 }) {
+  const walletAddress = useRecoilValue(walletAddressState);
+  const prettyName = useRecoilValue(prettyNameState);
+
   const [, setSnackbar] = useRecoilState(snackbarState);
   const formState = useRecoilValue(openOrderFormState);
   const isBid = useMemo(() => formState.type === ORDER_TYPES.BID, [formState]);
@@ -84,7 +92,7 @@ export default function SubmitOpenOrder({
           }
 
           try {
-            await createOrder({
+            const order = {
               type: formState.type,
               price: toBaseToken(
                 formState.optionPrice,
@@ -100,7 +108,7 @@ export default function SubmitOpenOrder({
                   denom: collateral.denom,
                 },
               ],
-            });
+            };
 
             const result = await createOrder(order);
 
@@ -115,13 +123,9 @@ export default function SubmitOpenOrder({
               setSnackbar({
                 message: "Matched your own position, the order is rejected",
               });
-
               return;
             }
-            setSnackbar({
-              message: "Error creating order: " + e.message,
-            });
-
+            setSnackbar({ message: "Error creating order: " + e.message });
             throw e.originalMessage;
           }
         }}
