@@ -46,7 +46,7 @@ export interface Config {
   quote_decimals: number;
   quote_denom: string;
   quote_symbol: string;
-  strike_price_in_quote: Uint128;
+  strike_price_in_quote: String;
 }
 export type QueryMsg =
   | {

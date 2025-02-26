@@ -43,40 +43,20 @@ export class KogenMarketsQueryClient implements KogenMarketsReadOnlyInterface {
   contractAddress: string;
 
   constructor(client: CosmWasmClient, contractAddress: string) {
-    if (!contractAddress) {
-      throw new Error("KogenMarketsQueryClient: contractAddress is required");
-    }
     this.client = client;
     this.contractAddress = contractAddress;
+    this.config = this.config.bind(this);
+    this.bids = this.bids.bind(this);
+    this.asks = this.asks.bind(this);
+    this.lockedAmount = this.lockedAmount.bind(this);
+    this.position = this.position.bind(this);
   }
 
   config = async (): Promise<Config> => {
-    try {
-      console.log("Contract address being used:", this.contractAddress);
-
-      const response = await this.client.queryContractSmart(
-        this.contractAddress,
-        {
-          config: {},
-        }
-      );
-
-      // Log the full response for debugging
-      console.log("Raw config response:", response);
-
-      if (!response.strike_price_in_quote) {
-        console.warn(
-          "Warning: missing field 'strike_price_in_quote' in config response."
-        );
-      }
-
-      return response;
-    } catch (error) {
-      console.error("Error fetching config:", error);
-      throw error;
-    }
+    return this.client.queryContractSmart(this.contractAddress, {
+      config: {},
+    });
   };
-
   bids = async ({
     price,
     sender,
@@ -84,21 +64,13 @@ export class KogenMarketsQueryClient implements KogenMarketsReadOnlyInterface {
     price?: Uint128;
     sender?: Addr;
   }): Promise<ArrayOfOrdersResponse> => {
-    try {
-      const response = await this.client.queryContractSmart(
-        this.contractAddress,
-        {
-          deployed_options: { price, sender },
-        }
-      );
-
-      return response ?? [];
-    } catch (error) {
-      console.error("Error fetching bids:", error);
-      return [];
-    }
+    return this.client.queryContractSmart(this.contractAddress, {
+      bids: {
+        price,
+        sender,
+      },
+    });
   };
-
   asks = async ({
     price,
     sender,
@@ -106,48 +78,32 @@ export class KogenMarketsQueryClient implements KogenMarketsReadOnlyInterface {
     price?: Uint128;
     sender?: Addr;
   }): Promise<ArrayOfOrdersResponse> => {
-    try {
-      const response = await this.client.queryContractSmart(
-        this.contractAddress,
-        {
-          deployed_options: { price, sender },
-        }
-      );
-
-      return response ?? [];
-    } catch (error) {
-      console.error("Error fetching asks:", error);
-      return [];
-    }
+    return this.client.queryContractSmart(this.contractAddress, {
+      asks: {
+        price,
+        sender,
+      },
+    });
   };
-
   lockedAmount = async ({
     owner,
   }: {
     owner: Addr;
   }): Promise<LockedAmountResponse> => {
-    try {
-      return await this.client.queryContractSmart(this.contractAddress, {
-        locked_amount: { owner },
-      });
-    } catch (error) {
-      console.error("Error fetching locked amount:", error);
-      return {} as LockedAmountResponse;
-    }
+    return this.client.queryContractSmart(this.contractAddress, {
+      locked_amount: {
+        owner,
+      },
+    });
   };
-
   position = async ({ owner }: { owner: Addr }): Promise<PositionResponse> => {
-    try {
-      return await this.client.queryContractSmart(this.contractAddress, {
-        position: { owner },
-      });
-    } catch (error) {
-      console.error("Error fetching position:", error);
-      return {} as PositionResponse;
-    }
+    return this.client.queryContractSmart(this.contractAddress, {
+      position: {
+        owner,
+      },
+    });
   };
 }
-
 export interface KogenMarketsInterface extends KogenMarketsReadOnlyInterface {
   contractAddress: string;
   sender: string;
