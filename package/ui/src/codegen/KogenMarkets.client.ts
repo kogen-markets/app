@@ -77,7 +77,17 @@ export class KogenMarketsQueryClient implements KogenMarketsReadOnlyInterface {
       return response;
     } catch (error) {
       console.error("Error fetching config:", error);
-      throw error;
+
+      // Log structured error details
+      if (error instanceof Error) {
+        console.error("Error message:", error.message);
+      }
+
+      if (typeof error === "object") {
+        console.error("Error details:", JSON.stringify(error, null, 2));
+      }
+
+      throw error; // Rethrow to ensure visibility in UI or debugging tools
     }
   };
 
