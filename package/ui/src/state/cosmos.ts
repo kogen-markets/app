@@ -11,15 +11,6 @@ import {
 
 type Chain = (typeof chains)[0];
 
-console.log(
-  "Atlantic-2 Chain:",
-  chains.find((chain) => chain.chain_id === "atlantic-2")
-);
-console.log(
-  "TESTNET.SEI Chain:",
-  chains.find((chain) => chain.chain_id === TESTNET.SEI)
-);
-
 export const chainState = atom<Chain>({
   key: "chainState",
   default: chains.find((c) => c.chain_id === TESTNET.SEI),
