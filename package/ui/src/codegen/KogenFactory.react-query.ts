@@ -34,7 +34,7 @@ export const kogenFactoryQueryKeys = {
     ] as const,
   config: (
     contractAddress: string | undefined,
-    args?: Record<string, unknown>,
+    args?: Record<string, unknown>
   ) =>
     [
       {
@@ -45,7 +45,7 @@ export const kogenFactoryQueryKeys = {
     ] as const,
   deployedOptions: (
     contractAddress: string | undefined,
-    args?: Record<string, unknown>,
+    args?: Record<string, unknown>
   ) =>
     [
       {
@@ -82,7 +82,7 @@ export const kogenFactoryQueries = {
   > => ({
     queryKey: kogenFactoryQueryKeys.deployedOptions(
       client?.contractAddress,
-      args,
+      args
     ),
     queryFn: () =>
       client
@@ -125,7 +125,7 @@ export function useKogenFactoryDeployedOptionsQuery<
       ...options,
       enabled:
         !!client && (options?.enabled != undefined ? options.enabled : true),
-    },
+    }
   );
 }
 export interface KogenFactoryConfigQuery<TData>
@@ -142,7 +142,7 @@ export function useKogenFactoryConfigQuery<TData = FactoryConfig>({
       ...options,
       enabled:
         !!client && (options?.enabled != undefined ? options.enabled : true),
-    },
+    }
   );
 }
 export interface KogenFactoryDeployMutation {
@@ -162,12 +162,12 @@ export function useKogenFactoryDeployMutation(
   options?: Omit<
     UseMutationOptions<ExecuteResult, Error, KogenFactoryDeployMutation>,
     "mutationFn"
-  >,
+  >
 ) {
   return useMutation<ExecuteResult, Error, KogenFactoryDeployMutation>(
     ({ client, msg, args: { fee, memo, funds } = {} }) =>
       client.deploy(msg, fee, memo, funds),
-    options,
+    options
   );
 }
 export interface KogenFactoryUpdateConfigMutation {
@@ -185,11 +185,11 @@ export function useKogenFactoryUpdateConfigMutation(
   options?: Omit<
     UseMutationOptions<ExecuteResult, Error, KogenFactoryUpdateConfigMutation>,
     "mutationFn"
-  >,
+  >
 ) {
   return useMutation<ExecuteResult, Error, KogenFactoryUpdateConfigMutation>(
     ({ client, msg, args: { fee, memo, funds } = {} }) =>
       client.updateConfig(msg, fee, memo, funds),
-    options,
+    options
   );
 }

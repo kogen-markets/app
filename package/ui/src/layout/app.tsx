@@ -8,7 +8,7 @@ import {
   IconButton,
 } from "@mui/material";
 import { Helmet } from "react-helmet";
-import { useEffect } from "react";
+import { useEffect, startTransition, useState } from "react";
 import { darkTheme, lightTheme } from "../lib/theme";
 import Header from "./components/header";
 import Footer from "./components/footer";
@@ -42,34 +42,40 @@ export default function App() {
     },
   });
 
+  // Loading state to prevent UI blocking
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     let isMounted = true;
 
     if (options.data && isMounted) {
-      const callOptionsAddr = options.data
-        ?.filter((v) => v.option_type === "call")
-        .sort(
-          (b, a) =>
-            Number(b.option_config.expiry) - Number(a.option_config.expiry)
-        )
-        .map((v) => v.addr)
-        .slice(-2);
-      const putOptionsAddr = options.data
-        ?.filter((v) => v.option_type === "put")
-        .sort(
-          (b, a) =>
-            Number(b.option_config.expiry) - Number(a.option_config.expiry)
-        )
-        .map((v) => v.addr)
-        .slice(-2);
+      startTransition(() => {
+        const callOptionsAddr = options.data
+          ?.filter((v) => v.option_type === "call")
+          .sort(
+            (b, a) =>
+              Number(b.option_config.expiry) - Number(a.option_config.expiry)
+          )
+          .map((v) => v.addr)
+          .slice(-2);
+        const putOptionsAddr = options.data
+          ?.filter((v) => v.option_type === "put")
+          .sort(
+            (b, a) =>
+              Number(b.option_config.expiry) - Number(a.option_config.expiry)
+          )
+          .map((v) => v.addr)
+          .slice(-2);
 
-      setOptionContractsAddrState((oldAddr) => ({
-        ...oldAddr,
-        [chain.chain_id]: {
-          call: callOptionsAddr ?? [],
-          put: putOptionsAddr ?? [],
-        },
-      }));
+        setOptionContractsAddrState((oldAddr) => ({
+          ...oldAddr,
+          [chain.chain_id]: {
+            call: callOptionsAddr ?? [],
+            put: putOptionsAddr ?? [],
+          },
+        }));
+        setLoading(false);
+      });
     }
 
     return () => {
@@ -125,7 +131,7 @@ export default function App() {
           <Header />
 
           <Box sx={{ px: { xs: 2, lg: 4 }, py: 2 }}>
-            {options.isLoading ? (
+            {loading ? (
               <div>Loading...</div>
             ) : options.error ? (
               <div>Error loading options data.</div>
