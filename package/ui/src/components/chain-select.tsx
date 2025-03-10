@@ -1,21 +1,15 @@
 import { FormControl, FormControlProps, MenuItem, Select } from "@mui/material";
 import { Fragment } from "react";
-import { useRecoilState } from "recoil";
-import { chains } from "chain-registry";
-import { chainState } from "../state/cosmos";
-import { TESTNET } from "../lib/config";
-import { metamaskWalletStrategyState } from "../state/injective";
+
+const INJECTIVE_URL =
+  import.meta.env.VITE_INJECTIVE_URL || "https://app.injective.kogen.markets";
+const SEI_URL = import.meta.env.VITE_SEI_URL || "https://app.sei.kogen.markets";
 
 export default function ChainSelect({
   FormControlProps,
 }: {
   FormControlProps?: FormControlProps;
 }) {
-  const [chain, setChain] = useRecoilState(chainState);
-  const [, setMetamaskWalletStrategy] = useRecoilState(
-    metamaskWalletStrategyState,
-  );
-
   return (
     <Fragment>
       <FormControl {...FormControlProps}>
@@ -31,21 +25,19 @@ export default function ChainSelect({
           }}
           size="small"
           color="secondary"
-          value={chain.chain_id}
+          defaultValue="injective"
           onChange={(event) => {
-            const chain = chains.find((c) => c.chain_id === event.target.value);
+            const selectedChain = event.target.value;
 
-            if (!chain) {
-              throw new Error("chain not found");
+            if (selectedChain === "injective") {
+              window.location.href = INJECTIVE_URL;
+            } else if (selectedChain === "sei") {
+              window.location.href = SEI_URL;
             }
-
-            setChain(chain);
-            setMetamaskWalletStrategy(null);
           }}
         >
-          <MenuItem value={TESTNET.INJECTIVE}>Injective (Testnet)</MenuItem>
-          {/* <MenuItem value={TESTNET.NEUTRON}>Neutron (Testnet)</MenuItem>
-          <MenuItem value={TESTNET.ARCHWAY}>Archway (Testnet)</MenuItem> */}
+          <MenuItem value="injective">Injective (Testnet)</MenuItem>
+          <MenuItem value="sei">SEI (Testnet)</MenuItem>
         </Select>
       </FormControl>
     </Fragment>
