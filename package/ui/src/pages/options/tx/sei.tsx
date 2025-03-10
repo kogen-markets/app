@@ -144,7 +144,7 @@ export function useSeiExerciseCallOptionMutation() {
           sender: address,
           msg: toUtf8(
             JSON.stringify({
-              exercise: {
+              exercise_call_option: {
                 expiry_price,
               },
             })
@@ -211,55 +211,6 @@ export function useSeiCancelOrderMutation() {
         [cancelOrderMsg],
         "auto"
       );
-    },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries(["asks"]);
-        queryClient.invalidateQueries(["bids"]);
-        queryClient.invalidateQueries(["locked_amount"]);
-        queryClient.invalidateQueries(["position"]);
-        queryClient.invalidateQueries(["get_balance", address]);
-      },
-    }
-  );
-}
-
-export function useSeiExerciseOptionMutation() {
-  const chain = useRecoilValue(chainState);
-  const queryClient = useQueryClient();
-  const { getSigningCosmWasmClient } = useChain(chain.chain_name);
-  const address = useGetAddress();
-  const contracts = useRecoilValue(contractsState);
-
-  return useMutation(
-    ["exerciseOption"],
-    async ({
-      type,
-      expiry_price,
-    }: {
-      type: ORDER_TYPE;
-      expiry_price?: string;
-    }) => {
-      if (!address) return null;
-
-      const exerciseMsg = {
-        typeUrl: "/cosmwasm.wasm.v1.MsgExecuteContract",
-        value: MsgExecuteContract.fromPartial({
-          contract: contracts,
-          sender: address,
-          msg: toUtf8(
-            JSON.stringify({
-              [`exercise_${type}_option`]: {
-                expiry_price,
-              },
-            })
-          ),
-          funds: [],
-        }),
-      };
-
-      const signClient = await getSigningCosmWasmClient();
-      return await signClient.signAndBroadcast(address, [exerciseMsg], "auto");
     },
     {
       onSuccess: () => {

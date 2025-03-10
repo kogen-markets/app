@@ -16,7 +16,7 @@ import {
   useSeiCallOptionMutation,
   useSeiCancelOrderMutation,
   useSeiClosePositionOrderMutation,
-  useSeiExerciseOptionMutation as useSeiExerciseOptionMutation,
+  useSeiExerciseCallOptionMutation as useSeiExerciseCallOptionMutation,
 } from "./sei";
 import { TESTNET } from "../../../lib/config";
 
@@ -66,7 +66,7 @@ export function useExerciseOptionMutation() {
   const chain = useRecoilValue(chainState);
   const inj = useInjectiveExerciseOptionMutation();
   const neutron = useNeutronExerciseOptionMutation();
-  const sei = useSeiExerciseOptionMutation();
+  const sei = useSeiExerciseCallOptionMutation();
 
   if (chain.chain_id === TESTNET.INJECTIVE) return inj;
   if (chain.chain_id === TESTNET.NEUTRON) return neutron;
