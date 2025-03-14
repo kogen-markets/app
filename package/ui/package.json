@@ -13,7 +13,7 @@
   "dependencies": {
     "@chain-registry/types": "^0.50.30",
     "@cosmjs/cosmwasm-stargate": "0.32.4",
-    "@cosmjs/encoding": "0.33.0",
+    "@cosmjs/encoding": "0.33.1",
     "@cosmos-kit/core": "2.15.1",
     "@cosmos-kit/cosmostation-extension": "2.15.2",
     "@cosmos-kit/keplr": "^2.14.1",
