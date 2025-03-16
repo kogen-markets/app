@@ -11,7 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@injectivelabs/sdk-ts": "1.14.33",
+    "@injectivelabs/sdk-ts": "1.14.41",
     "chain-registry": "1.69.95"
   }
 }
