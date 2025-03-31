@@ -203,6 +203,7 @@ export default function CallForm() {
         sx={{
           display: { xs: "block", sm: "flex" },
           alignItems: "center",
+          justifyContent: "space-between",
           gap: 2,
         }}
       >
