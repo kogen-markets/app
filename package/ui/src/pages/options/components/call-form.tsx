@@ -40,6 +40,7 @@ import SubmitClosePositionOrder from "./call-form/submit-close-position-order";
 import useCustomEventListener, {
   GLOBAL_CUSTOM_EVENTS,
 } from "../../../hooks/use-event-listener";
+import PythPrice from "./call-form/spot-price";
 
 export const optionSizeValidator = Joi.number().label("Option size");
 export const optionPriceValidator = Joi.number().label("Price").greater(0);
@@ -176,8 +177,11 @@ export default function CallForm() {
         spacing={3}
         sx={{ mb: 3 }}
       >
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={12} sm={2}>
           <StrikePrice config={configData} />
+        </Grid>
+        <Grid item xs={12} sm={4}>
+          <PythPrice config={configData} />
         </Grid>
         <Grid item xs={12} sm={6}>
           <Expiry config={configData} />
