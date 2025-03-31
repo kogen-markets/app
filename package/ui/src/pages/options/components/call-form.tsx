@@ -177,11 +177,8 @@ export default function CallForm() {
         spacing={3}
         sx={{ mb: 3 }}
       >
-        <Grid item xs={12} sm={2}>
+        <Grid item xs={12} sm={6}>
           <StrikePrice config={configData} />
-        </Grid>
-        <Grid item xs={12} sm={4}>
-          <PythPrice config={configData} />
         </Grid>
         <Grid item xs={12} sm={6}>
           <Expiry config={configData} />
@@ -202,11 +199,22 @@ export default function CallForm() {
         </Grid>
       </Grid>
 
-      <Box>
-        <Typography variant="caption">Price and collateral</Typography>
+      <Box
+        sx={{
+          display: { xs: "block", sm: "flex" },
+          alignItems: "center",
+          gap: 2,
+        }}
+      >
         {Boolean(collateral?.amount) && orderCreateEnabled && (
-          <PriceAndCollateral isCall={isCall} config={configData} />
+          <Box>
+            <Typography variant="caption">Price and collateral</Typography>
+            <PriceAndCollateral isCall={isCall} config={configData} />
+          </Box>
         )}
+        <Grid item xs={12} sm={4}>
+          <PythPrice config={configData} />
+        </Grid>
       </Box>
 
       <Box>
