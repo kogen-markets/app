@@ -40,6 +40,7 @@ import SubmitClosePositionOrder from "./call-form/submit-close-position-order";
 import useCustomEventListener, {
   GLOBAL_CUSTOM_EVENTS,
 } from "../../../hooks/use-event-listener";
+import PythPrice from "./call-form/spot-price";
 
 export const optionSizeValidator = Joi.number().label("Option size");
 export const optionPriceValidator = Joi.number().label("Price").greater(0);
@@ -198,11 +199,23 @@ export default function CallForm() {
         </Grid>
       </Grid>
 
-      <Box>
-        <Typography variant="caption">Price and collateral</Typography>
+      <Box
+        sx={{
+          display: { xs: "block", sm: "flex" },
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: 2,
+        }}
+      >
         {Boolean(collateral?.amount) && orderCreateEnabled && (
-          <PriceAndCollateral isCall={isCall} config={configData} />
+          <Box>
+            <Typography variant="caption">Price and collateral</Typography>
+            <PriceAndCollateral isCall={isCall} config={configData} />
+          </Box>
         )}
+        <Grid item xs={12} sm={4}>
+          <PythPrice config={configData} />
+        </Grid>
       </Box>
 
       <Box>
