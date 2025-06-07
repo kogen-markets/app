@@ -12,6 +12,6 @@
   "license": "ISC",
   "dependencies": {
     "@injectivelabs/sdk-ts": "1.15.26",
-    "chain-registry": "1.69.235"
+    "chain-registry": "1.69.237"
   }
 }
