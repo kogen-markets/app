@@ -1,16 +1,8 @@
-import { Alert } from "@mui/material";
-import disclaimerText from "./Disclaimer.txt?raw";
+import { Box } from "@mui/material";
 
+// This component is no longer needed as disclaimer is integrated into main App
 const Disclaimer = () => {
-  return (
-    <Alert
-      severity="warning"
-      variant="outlined"
-      sx={{ backdropFilter: "blur(5px)" }}
-    >
-      {disclaimerText}
-    </Alert>
-  );
+  return <Box />;
 };
 
 export default Disclaimer;
