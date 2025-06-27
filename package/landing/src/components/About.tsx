@@ -86,6 +86,12 @@ const About = ({ prefersDarkMode }: AboutProps) => {
             options trader or new to the world of derivatives, Kogen Markets
             offers a user-friendly interface and robust features to enhance your
             trading experience.
+            <br />
+            Experience the benefits of decentralized options trading with Kogen
+            Markets, where you can unleash your trading potential, take control
+            of your investments, and navigate the exciting realm of call and put
+            options with ease. Join us today and embark on a journey that
+            reshapes the way you approach options trading.
           </Typography>
         </Box>
 
