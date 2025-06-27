@@ -22,7 +22,7 @@
     "@cosmos-kit/react": "^2.20.1",
     "@cosmos-kit/react-lite": "2.16.0",
     "@emotion/react": "11.14.0",
-    "@emotion/styled": "11.14.0",
+    "@emotion/styled": "11.14.1",
     "@injectivelabs/networks": "1.15.33",
     "@injectivelabs/sdk-ts": "1.15.35",
     "@injectivelabs/ts-types": "^1.14.33",
