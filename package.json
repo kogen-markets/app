@@ -17,7 +17,7 @@
   ],
   "overrides": {
     "react-dom": "18.3.1",
-    "eslint": "9.30.0"
+    "eslint": "9.30.1"
   },
   "dependencies": {
     "puppeteer": "^22.13.1"
